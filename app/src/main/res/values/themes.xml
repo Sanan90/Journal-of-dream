@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Базовая тема для всего приложения -->
+    <style name="Theme.JournalOfDream" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Настройки основной темы вашего приложения -->
+    </style>
+
+    <!-- Тема для SplashActivity -->
+    <style name="Theme.JournalOfDream22" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/zastavka7</item>
+    </style>
+
+    <style name="Theme.JournalOfDream2" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+
+</resources>
