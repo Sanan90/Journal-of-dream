@@ -4,13 +4,20 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -46,6 +53,8 @@ import java.util.Locale
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.graphicsLayer
+import kotlinx.coroutines.delay
 
 
 class MainActivity : ComponentActivity() {
@@ -106,198 +115,287 @@ fun BackgroundScreen() {
 // Главный экран приложения
 @Composable
 fun MainScreen(navController: NavHostController) {
-    var isVisible by remember { mutableStateOf(false) }
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate("addDream") },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Добавить сон")
+            }
+        },
+        content = { paddingValues ->
+            Box(modifier = Modifier.fillMaxSize()) {
+                BackgroundScreen()
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Анимированный заголовок приложения
+                    AnimatedVisibility(
+                        visible = true,
+                        enter = fadeIn() + scaleIn(initialScale = 0.8f)
+                    ) {
+                        Text(
+                            text = "Дневник сновидений",
+                            color = Color.Gray.copy(alpha = 0.95f),
+                            fontSize = 32.sp,
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 32.dp)
+                        )
+                    }
+
+                    // Кнопка для перехода на экран сновидений
+                    Button(
+                        onClick = { navController.navigate("dreams") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(160.dp)
+                            .shadow(50.dp, shape = RoundedCornerShape(24.dp)),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        colors = listOf(
+                                            Color(0xFF1A237E).copy(alpha = 0.5f),
+                                            Color(0xFF283593).copy(alpha = 0.5f)
+                                        )
+                                    ),
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "Записать сновидение",
+                                color = Color.White,
+                                fontSize = 24.sp
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Кнопка для перехода на экран локаций
+                    Button(
+                        onClick = { navController.navigate("locations") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(160.dp)
+                            .shadow(50.dp, shape = RoundedCornerShape(24.dp)),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        colors = listOf(
+                                            Color(0xFF4A148C).copy(alpha = 0.5f),
+                                            Color(0xFF6A1B9A).copy(alpha = 0.5f)
+                                        )
+                                    ),
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "Локации",
+                                color = Color.White,
+                                fontSize = 24.sp
+                            )
+                        }
+                    }
+
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+
+                    // Кнопка для перехода на экран техник (пока не реализована)
+                    Button(
+                        onClick = {
+                            // Действие для третьей кнопки (техники)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(160.dp)
+                            .shadow(50.dp, shape = RoundedCornerShape(24.dp)),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        colors = listOf(
+                                            Color(0xFF1B5E20).copy(alpha = 0.5f), // Применяем прозрачность
+                                            Color(0xFF2E7D32).copy(alpha = 0.5f)  // Применяем прозрачность
+                                        )
+                                    ),
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "Техники",
+                                color = Color.White,
+                                fontSize = 24.sp)
+                        }
+                    }
+                }
+            }
+        }
+    )
+}
+
+
+@Composable
+fun OpeningBookAnimation(navController: NavHostController) {
+    var animationPlayed by remember { mutableStateOf(false) }
+    val rotation by animateFloatAsState(
+        targetValue = if (animationPlayed) 0f else 90f, // Поворот на 90 градусов
+        animationSpec = tween(durationMillis = 1500) // Продолжительность анимации
+    )
+    val scale by animateFloatAsState(
+        targetValue = if (animationPlayed) 1f else 0.8f, // Масштабирование
+        animationSpec = tween(durationMillis = 1500)
+    )
 
     LaunchedEffect(Unit) {
-        isVisible = true
+        delay(2000) // Задержка для отображения заставки
+        animationPlayed = true // Запускаем анимацию разворота
+        delay(1500) // Длительность анимации
+        navController.navigate("main") // Переход на основной экран после анимации
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        BackgroundScreen()
-
-        Column(
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        // Имитируем левую страницу
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(0.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .size(200.dp, 300.dp)
+                .graphicsLayer {
+                    rotationY = rotation // Поворот по оси Y
+                    scaleX = scale
+                    scaleY = scale
+                }
+                .background(Color.LightGray)
         ) {
-            // Анимированный заголовок приложения
-            AnimatedVisibility(
-                visible = isVisible,
-                enter = fadeIn() + scaleIn(initialScale = 0.8f)
-            ) {
-                Text(
-                    text = "Дневник сновидений",
-                    color = Color.Gray.copy(alpha = 0.95f),
-                    modifier = Modifier.padding(bottom = 32.dp),
-                    fontSize = 32.sp,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
-                )
-            }
-            // Кнопка для перехода на экран сновидений
-            Button(
-                onClick = {
-                    navController.navigate("dreams")
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp)
-                    .shadow(50.dp, shape = RoundedCornerShape(24.dp)),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(
-                                    Color(0xFF1A237E).copy(alpha = 0.5f), // Применяем прозрачность
-                                    Color(0xFF283593).copy(alpha = 0.5f)  // Применяем прозрачность
-                                )
-                            ),
-                            shape = RoundedCornerShape(16.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        "Записать сновидение",
-                        color = Color.White,
-                        fontSize = 24.sp)
+            Text(
+                "Левая страница",
+                modifier = Modifier.align(Alignment.Center),
+                color = Color.Black
+            )
+        }
+
+        Spacer(modifier = Modifier.width(16.dp)) // Промежуток между страницами
+
+        // Имитируем правую страницу
+        Box(
+            modifier = Modifier
+                .size(200.dp, 300.dp)
+                .graphicsLayer {
+                    rotationY = -rotation // Поворот в другую сторону для правой страницы
+                    scaleX = scale
+                    scaleY = scale
                 }
-            }
-
-
-
-            Spacer(modifier = Modifier.height(16.dp)) // Разделитель между кнопками
-
-            // Кнопка для перехода на экран локаций
-            Button(
-                onClick = {
-                    navController.navigate("locations")
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp)
-                    .shadow(50.dp, shape = RoundedCornerShape(24.dp)),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(
-                                    Color(0xFF4A148C).copy(alpha = 0.5f), // Применяем прозрачность
-                                    Color(0xFF6A1B9A).copy(alpha = 0.5f)  // Применяем прозрачность
-                                )
-                            ),
-                            shape = RoundedCornerShape(16.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        "Локации",
-                        color = Color.White,
-                        fontSize = 24.sp)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp)) // Разделитель между кнопками
-
-            // Кнопка для перехода на экран техник (пока не реализована)
-            Button(
-                onClick = {
-                    // Действие для третьей кнопки (техники)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp)
-                    .shadow(50.dp, shape = RoundedCornerShape(24.dp)),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(
-                                    Color(0xFF1B5E20).copy(alpha = 0.5f), // Применяем прозрачность
-                                    Color(0xFF2E7D32).copy(alpha = 0.5f)  // Применяем прозрачность
-                                )
-                            ),
-                            shape = RoundedCornerShape(16.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        "Техники",
-                        color = Color.White,
-                        fontSize = 24.sp)
-                }
-            }
-
+                .background(Color.White)
+        ) {
+            Text(
+                "Правая страница",
+                modifier = Modifier.align(Alignment.Center),
+                color = Color.Black
+            )
         }
     }
 }
 
 
+
 // Экран для отображения списка снов
 @Composable
 fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewModel) {
-    // Получаем список снов из ViewModel как LiveData и конвертируем в Compose State
     val allDreams by dreamViewModel.allDreams.observeAsState(listOf())
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        BackgroundScreen()
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 48.dp, start = 16.dp, end = 16.dp) // Увеличенный отступ сверху для всей колонки
-        ) {
-            // Кнопка "Назад" с отступом
-            Button(
-                onClick = { navController.popBackStack() },
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(bottom = 16.dp) // Отступ снизу после кнопки "Назад"
-            ) {
-                Text("Назад", color = Color.White)
-            }
-
-            // Заголовок экрана
-            Text(
-                text = "Сны",
-                style = androidx.compose.ui.text.TextStyle(fontSize = 24.sp, color = Color.White),
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            // Кнопка для добавления нового сновидения
-            Button(
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
                 onClick = { navController.navigate("addDream") },
-                modifier = Modifier.padding(bottom = 16.dp)
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Text("Записать сновидение")
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Добавить сон")
             }
+        },
+        content = { paddingValues ->
+            Box(modifier = Modifier.fillMaxSize()) {
+                BackgroundScreen()
 
-            // Список снов
-            allDreams.forEach { dream ->
-                Button(
-                    onClick = { navController.navigate("editDream/${dream.id}") },
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(16.dp) // Отступы для содержимого
                 ) {
-                    Text(text = "${dream.date}: ${dream.title}", modifier = Modifier.padding(8.dp))
+                    // Кнопка "Назад"
+                    Button(
+                        onClick = { navController.popBackStack() },
+                        modifier = Modifier.align(Alignment.Start)
+                    ) {
+                        Text("Назад", color = Color.White)
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Заголовок экрана
+                    Text(
+                        text = "Сны",
+                        style = MaterialTheme.typography.headlineMedium.copy(color = Color.White),
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
+                    // Список снов в LazyColumn
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(allDreams) { dream ->
+                            DreamItem(dream) {
+                                navController.navigate("editDream/${dream.id}")
+                            }
+                        }
+                    }
                 }
             }
+        }
+    )
+}
+
+@Composable
+fun DreamItem(dream: Dream, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(text = dream.title, style = MaterialTheme.typography.titleMedium)
+            Text(text = dream.date, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
         }
     }
 }
@@ -630,6 +728,13 @@ fun AddLocationScreen(navController: NavHostController, locationViewModel: Locat
         }
     }
 }
+
+
+
+
+
+
+
 
 
 @Composable

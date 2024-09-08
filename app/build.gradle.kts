@@ -60,7 +60,11 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.navigation:navigation-compose:2.8.0")
+    implementation ("com.google.android.material:material:1.12.0")
+    implementation ("androidx.viewpager2:viewpager2:1.1.0")
+
+
 
     // Room dependencies
     implementation("androidx.room:room-runtime:2.6.1")
