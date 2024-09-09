@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -49,12 +50,16 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+
 // Правильные импорты для Material3
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.style.TextOverflow
 import kotlinx.coroutines.delay
+
+val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
 
 class MainActivity : ComponentActivity() {
@@ -115,13 +120,20 @@ fun BackgroundScreen() {
 // Главный экран приложения
 @Composable
 fun MainScreen(navController: NavHostController) {
+    var isVisible by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) } // Для отображения диалога выбора
+
+    LaunchedEffect(Unit) {
+        isVisible = true
+    }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate("addDream") },
+                onClick = { showDialog = true }, // Показать диалог при нажатии на кнопку
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Добавить сон")
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Добавить запись")
             }
         },
         content = { paddingValues ->
@@ -132,21 +144,21 @@ fun MainScreen(navController: NavHostController) {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
-                        .padding(16.dp),
+                        .padding(0.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Анимированный заголовок приложения
                     AnimatedVisibility(
-                        visible = true,
+                        visible = isVisible,
                         enter = fadeIn() + scaleIn(initialScale = 0.8f)
                     ) {
                         Text(
                             text = "Дневник сновидений",
                             color = Color.Gray.copy(alpha = 0.95f),
+                            modifier = Modifier.padding(bottom = 32.dp),
                             fontSize = 32.sp,
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 32.dp)
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
                         )
                     }
 
@@ -218,9 +230,7 @@ fun MainScreen(navController: NavHostController) {
                         }
                     }
 
-
                     Spacer(modifier = Modifier.height(16.dp))
-
 
                     // Кнопка для перехода на экран техник (пока не реализована)
                     Button(
@@ -241,8 +251,8 @@ fun MainScreen(navController: NavHostController) {
                                 .background(
                                     brush = Brush.horizontalGradient(
                                         colors = listOf(
-                                            Color(0xFF1B5E20).copy(alpha = 0.5f), // Применяем прозрачность
-                                            Color(0xFF2E7D32).copy(alpha = 0.5f)  // Применяем прозрачность
+                                            Color(0xFF1B5E20).copy(alpha = 0.5f),
+                                            Color(0xFF2E7D32).copy(alpha = 0.5f)
                                         )
                                     ),
                                     shape = RoundedCornerShape(16.dp)
@@ -252,14 +262,71 @@ fun MainScreen(navController: NavHostController) {
                             Text(
                                 "Техники",
                                 color = Color.White,
-                                fontSize = 24.sp)
+                                fontSize = 24.sp
+                            )
                         }
+                    }
+
+                    // Диалог выбора действия
+                    if (showDialog) {
+                        ChooseActionDialog(
+                            onDismiss = { showDialog = false },
+                            onDreamSelected = {
+                                navController.navigate("addDream")
+                                showDialog = false
+                            },
+                            onLocationSelected = {
+                                navController.navigate("addLocation")
+                                showDialog = false
+                            }
+                        )
                     }
                 }
             }
         }
     )
 }
+
+
+
+
+@Composable
+fun ChooseActionDialog(
+    onDismiss: () -> Unit,
+    onDreamSelected: () -> Unit,
+    onLocationSelected: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Выберите действие") },
+        text = {
+            Column {
+                Button(
+                    onClick = onDreamSelected,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Записать сновидение")
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = onLocationSelected,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Добавить локацию")
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Отмена")
+            }
+        }
+    )
+}
+
+
+
+
 
 
 @Composable
@@ -327,60 +394,97 @@ fun OpeningBookAnimation(navController: NavHostController) {
 // Экран для отображения списка снов
 @Composable
 fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewModel) {
+    // Получаем список снов и сортируем по дате
     val allDreams by dreamViewModel.allDreams.observeAsState(listOf())
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate("addDream") },
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Добавить сон")
+    // Сортировка снов по дате создания (новые сверху)
+    val sortedDreams = allDreams
+        .filter { it.content.isNotBlank() && it.date.isNotBlank() }
+        .sortedByDescending { dream ->
+            try {
+                dateFormat.parse(dream.date)
+            } catch (e: Exception) {
+                null // Игнорируем ошибки преобразования даты
             }
+        }
+
+    // Интерфейс с верхней панелью и контентом
+    Scaffold(
+        topBar = {
+            // Верхняя панель с кнопкой "назад" и кнопкой "добавить"
+            TopBar(
+                navController = navController,
+                onSaveClick = { navController.navigate("addDream") } // Переход на экран добавления снов
+            )
         },
         content = { paddingValues ->
             Box(modifier = Modifier.fillMaxSize()) {
-                BackgroundScreen()
+                BackgroundScreen() // Фоновое изображение
 
-                Column(
+                // Список снов
+                LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
-                        .padding(16.dp) // Отступы для содержимого
+                        .padding(16.dp), // Отступы для контента
+                    verticalArrangement = Arrangement.spacedBy(16.dp) // Промежутки между элементами
                 ) {
-                    // Кнопка "Назад"
-                    Button(
-                        onClick = { navController.popBackStack() },
-                        modifier = Modifier.align(Alignment.Start)
-                    ) {
-                        Text("Назад", color = Color.White)
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Заголовок экрана
-                    Text(
-                        text = "Сны",
-                        style = MaterialTheme.typography.headlineMedium.copy(color = Color.White),
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-
-                    // Список снов в LazyColumn
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(allDreams) { dream ->
-                            DreamItem(dream) {
-                                navController.navigate("editDream/${dream.id}")
-                            }
-                        }
+                    // Отображение элементов списка
+                    items(sortedDreams) { dream ->
+                        DreamListItem(dream, navController)
                     }
                 }
             }
         }
     )
 }
+
+// Отдельный элемент для отображения каждого сна
+@Composable
+fun DreamListItem(dream: Dream, navController: NavHostController) {
+    // Отображаем первые 30 символов записи, если текст длиннее
+    val previewText = dream.content.take(30) + if (dream.content.length > 30) "..." else ""
+
+    // Кнопка для выбора записи
+    Button(
+        onClick = { navController.navigate("editDream/${dream.id}") }, // Переход на экран редактирования
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .shadow(8.dp, shape = RoundedCornerShape(16.dp)),
+        shape = RoundedCornerShape(16.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start
+        ) {
+            // Отображаем заголовок записи
+            Text(
+                text = previewText,
+                color = Color.Black,
+                fontSize = 18.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis // Обрезаем текст, если слишком длинный
+            )
+
+            // Отображаем дату серым цветом и меньшим шрифтом
+            Text(
+                text = dream.date,
+                color = Color.Gray,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+    }
+}
+
+
+
+
 
 @Composable
 fun DreamItem(dream: Dream, onClick: () -> Unit) {
@@ -594,47 +698,37 @@ fun LocationsScreen(navController: NavHostController) {
 fun LocationListScreen(navController: NavHostController, locationViewModel: LocationViewModel) {
     val allLocations by locationViewModel.allLocations.observeAsState(listOf())
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        BackgroundScreen()
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 48.dp, start = 16.dp, end = 16.dp)
-        ) {
-            Button(
-                onClick = { navController.popBackStack() },
-                modifier = Modifier.align(Alignment.Start)
-            ) {
-                Text("Назад", color = Color.White)
-            }
-
-            Text(
-                text = "Локации",
-                style = TextStyle(fontSize = 24.sp, color = Color.White),
-                modifier = Modifier.padding(bottom = 16.dp)
+    Scaffold(
+        topBar = {
+            TopBar(
+                navController = navController,
+                onSaveClick = { navController.navigate("addLocation") } // Открываем экран добавления локации
             )
+        },
+        content = { paddingValues ->
+            Box(modifier = Modifier.fillMaxSize()) {
+                BackgroundScreen()
 
-            Button(
-                onClick = { navController.navigate("addLocation") },
-                modifier = Modifier.padding(bottom = 16.dp)
-            ) {
-                Text("Добавить новую локацию")
-            }
-
-            for (location in allLocations) {
-                Button(
-                    onClick = { navController.navigate("viewLocation/${location.id}") },
+                LazyColumn(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Text(text = location.name, modifier = Modifier.padding(8.dp))
+                    items(allLocations) { location ->
+                        CustomButton(
+                            text = location.name,
+                            onClick = { navController.navigate("viewLocation/${location.id}") }
+                        )
+                    }
                 }
             }
         }
-    }
+    )
 }
+
+
 
 
 
@@ -1056,6 +1150,92 @@ fun LocationDetailsScreen(
         }
     }
 }
+
+
+@Composable
+fun CustomStyledButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .shadow(8.dp, shape = RoundedCornerShape(12.dp)),
+        shape = RoundedCornerShape(12.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+        contentPadding = PaddingValues(0.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            Color(0xFF1A237E).copy(alpha = 0.7f),
+                            Color(0xFF283593).copy(alpha = 0.7f)
+                        )
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = text, color = Color.White, fontSize = 18.sp)
+        }
+    }
+}
+
+
+@Composable
+fun CustomButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .shadow(8.dp, shape = RoundedCornerShape(16.dp)),
+        shape = RoundedCornerShape(16.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+    ) {
+        Text(text = text, color = Color.Black, fontSize = 18.sp)
+    }
+}
+
+
+@Composable
+fun TopBar(navController: NavHostController, onSaveClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 24.dp) // Увеличиваем верхний отступ
+            .height(60.dp), // Задаём высоту для большей площади
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier.size(48.dp) // Увеличиваем размер иконки
+        ) {
+            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Назад", tint = Color.White, modifier = Modifier.size(36.dp)) // Иконка увеличена до 36dp
+        }
+
+        IconButton(
+            onClick = onSaveClick,
+            modifier = Modifier.size(48.dp) // Увеличиваем размер иконки
+        ) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = "Сохранить", tint = Color.White, modifier = Modifier.size(36.dp)) // Иконка увеличена до 36dp
+        }
+    }
+}
+
+
+
 
 
 // Превью экрана для быстрой проверки интерфейса в Android Studio
