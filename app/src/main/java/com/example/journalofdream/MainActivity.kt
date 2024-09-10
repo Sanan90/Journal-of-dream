@@ -20,6 +20,7 @@ import com.example.journalofdream.ui.dreams.EditDreamScreen
 import com.example.journalofdream.ui.locations.AddLocationScreen
 import com.example.journalofdream.ui.locations.EditLocationScreen
 import com.example.journalofdream.ui.locations.ViewLocationScreen
+import com.example.journalofdream.ui.theme.AppTheme
 import com.example.journalofdream.ui.theme.DreamsScreen
 import com.example.journalofdream.ui.theme.LocationListScreen
 import com.example.journalofdream.ui.theme.MainScreen
@@ -32,35 +33,38 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            val navController = rememberNavController()
-            val dreamViewModel: DreamViewModel = viewModel()
-            val locationViewModel: LocationViewModel = viewModel()
+            AppTheme { // Применение темы ко всему контенту
+                val navController = rememberNavController()
+                val dreamViewModel: DreamViewModel = viewModel()
+                val locationViewModel: LocationViewModel = viewModel()
 
-            NavHost(navController, startDestination = "main") {
-                composable("main") { MainScreen(navController) }
-                composable("dreams") { DreamsScreen(navController, dreamViewModel) }
-                composable("addDream") { AddDreamScreen(navController, dreamViewModel) }
-                composable("editDream/{id}") { backStackEntry ->
-                    val dreamId = backStackEntry.arguments?.getString("id")?.toInt()
-                    if (dreamId != null) {
-                        EditDreamScreen(navController, dreamId, dreamViewModel)
+                NavHost(navController, startDestination = "main") {
+                    composable("main") { MainScreen(navController) }
+                    composable("dreams") { DreamsScreen(navController, dreamViewModel) }
+                    composable("addDream") { AddDreamScreen(navController, dreamViewModel) }
+                    composable("editDream/{id}") { backStackEntry ->
+                        val dreamId = backStackEntry.arguments?.getString("id")?.toInt()
+                        if (dreamId != null) {
+                            EditDreamScreen(navController, dreamId, dreamViewModel)
+                        }
                     }
-                }
-                composable("locations") { LocationListScreen(navController, locationViewModel) }
-                composable("addLocation") { AddLocationScreen(navController, locationViewModel) }
-                composable("editLocation/{id}") { backStackEntry ->
-                    val locationId = backStackEntry.arguments?.getString("id")?.toInt()
-                    if (locationId != null) {
-                        EditLocationScreen(navController, locationId, locationViewModel)
+                    composable("locations") { LocationListScreen(navController, locationViewModel) }
+                    composable("addLocation") { AddLocationScreen(navController, locationViewModel) }
+                    composable("editLocation/{id}") { backStackEntry ->
+                        val locationId = backStackEntry.arguments?.getString("id")?.toInt()
+                        if (locationId != null) {
+                            EditLocationScreen(navController, locationId, locationViewModel)
+                        }
                     }
-                }
-                composable("viewLocation/{locationId}") { backStackEntry ->
-                    val locationId = backStackEntry.arguments?.getString("locationId")?.toInt()
-                        ?: return@composable
-                    ViewLocationScreen(navController, locationId, locationViewModel)
+                    composable("viewLocation/{locationId}") { backStackEntry ->
+                        val locationId = backStackEntry.arguments?.getString("locationId")?.toInt()
+                            ?: return@composable
+                        ViewLocationScreen(navController, locationId, locationViewModel)
+                    }
                 }
             }
         }
+
     }
 
 }

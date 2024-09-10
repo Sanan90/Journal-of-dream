@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.font.FontWeight
 import com.example.journalofdream.ui.common.BackgroundScreen
 
 @Composable
@@ -65,7 +66,7 @@ fun MainScreen(navController: NavHostController) {
                             color = Color.Gray.copy(alpha = 0.95f),
                             modifier = Modifier.padding(bottom = 32.dp),
                             fontSize = 32.sp,
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                            fontWeight = FontWeight.Bold
                         )
                     }
 

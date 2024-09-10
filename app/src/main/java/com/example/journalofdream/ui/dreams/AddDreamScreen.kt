@@ -41,7 +41,6 @@ fun AddDreamScreen(navController: NavHostController, dreamViewModel: DreamViewMo
                 .align(Alignment.TopEnd)
                 .padding(top = 24.dp, end = 16.dp),
             shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Gray.copy(alpha = 0.5f))
         ) {
             Text("Отмена", color = Color.White)
         }
@@ -80,7 +79,6 @@ fun AddDreamScreen(navController: NavHostController, dreamViewModel: DreamViewMo
                 },
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 shape = RoundedCornerShape(50),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Gray.copy(alpha = 0.5f))
             ) {
                 Text("Сохранить", color = Color.White)
             }

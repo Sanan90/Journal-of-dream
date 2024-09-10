@@ -18,7 +18,11 @@ import com.example.journalofdream.ui.common.BackgroundScreen
 import com.example.journalofdream.viewmodel.LocationViewModel
 
 @Composable
-fun ViewLocationScreen(navController: NavHostController, locationId: Int, locationViewModel: LocationViewModel = viewModel()) {
+fun ViewLocationScreen(
+    navController: NavHostController,
+    locationId: Int,
+    locationViewModel: LocationViewModel = viewModel()
+) {
     val location by locationViewModel.getLocationById(locationId).observeAsState()
 
     var isEditing by remember { mutableStateOf(false) }
@@ -35,6 +39,7 @@ fun ViewLocationScreen(navController: NavHostController, locationId: Int, locati
     Box(modifier = Modifier.fillMaxSize()) {
         BackgroundScreen()
 
+        // Кнопка "Назад" в правом верхнем углу
         Button(
             onClick = { navController.popBackStack() },
             modifier = Modifier
@@ -53,7 +58,7 @@ fun ViewLocationScreen(navController: NavHostController, locationId: Int, locati
         ) {
             Spacer(modifier = Modifier.height(56.dp))
 
-            // Отображение названия и описания локации
+            // Отображение названия и описания локации без редактирования
             Text(
                 text = name,
                 style = TextStyle(color = Color.White, fontSize = 24.sp),
@@ -66,7 +71,36 @@ fun ViewLocationScreen(navController: NavHostController, locationId: Int, locati
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
+            // Кнопки "Редактировать" и "Удалить"
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Button(onClick = { isEditing = true }) {
+                    Text("Редактировать")
+                }
+
+                Button(
+                    onClick = {
+                        location?.let {
+                            locationViewModel.deleteLocation(it)
+                            navController.popBackStack()
+                        }
+                    }
+                ) {
+                    Text("Удалить")
+                }
+            }
+
             if (isEditing) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Название локации",
+                    style = TextStyle(color = Color.White, fontSize = 18.sp),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
                 BasicTextField(
                     value = name,
                     onValueChange = { name = it },
@@ -78,6 +112,12 @@ fun ViewLocationScreen(navController: NavHostController, locationId: Int, locati
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Описание локации",
+                    style = TextStyle(color = Color.White, fontSize = 18.sp),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
 
                 BasicTextField(
                     value = description,
@@ -92,16 +132,39 @@ fun ViewLocationScreen(navController: NavHostController, locationId: Int, locati
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Button(onClick = {
-                    val updatedLocation = location?.copy(name = name, description = description)
-                    if (updatedLocation != null) {
-                        locationViewModel.updateLocation(updatedLocation)
-                    }
-                    isEditing = false
-                }) {
+                // Кнопка "Сохранить изменения"
+                Button(
+                    onClick = {
+                        val updatedLocation = location?.copy(
+                            name = name,
+                            description = description
+                        )
+                        if (updatedLocation != null) {
+                            locationViewModel.updateLocation(updatedLocation)
+                        }
+                        isEditing = false // Завершаем режим редактирования
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
                     Text("Сохранить изменения")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Список снов, связанных с этой локацией
+            Text(
+                text = "Связанные сны:",
+                style = TextStyle(color = Color.White, fontSize = 18.sp),
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            location?.let {
+                val relatedDreams by locationViewModel.getDreamsByLocation(it.id).observeAsState(listOf())
+                relatedDreams.forEach { dream ->
+                    Text(text = "${dream.date}: ${dream.title}", color = Color.White, modifier = Modifier.padding(8.dp))
                 }
             }
         }
     }
 }
+
