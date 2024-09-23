@@ -9,5 +9,7 @@ data class Dream(
     val title: String,
     val content: String,
     val date: String,
-    val locationId: Int = 0 // Новое поле для связи с локацией
+    val locationId: Int = 0,
+    val category: String = "Без категории", // Добавляем поле категории
+
 )

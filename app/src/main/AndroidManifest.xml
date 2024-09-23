@@ -12,23 +12,26 @@
         android:theme="@style/Theme.JournalOfDream"
         tools:targetApi="31">
 
-        <!-- SplashActivity с темой заставки -->
+        <!-- SplashActivity с темой приложения -->
         <activity
             android:name=".SplashActivity"
-            android:exported="true"
-            android:theme="@style/Theme.JournalOfDream">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-
-
+        <!-- MainActivity с темой приложения -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.JournalOfDream"/>
+            android:label="@string/app_name">
+        </activity>
+
+        <meta-data
+            android:name="com.google.firebase.auth.API_KEY"
+            android:value="@string/default_web_client_id"/>
+
     </application>
 </manifest>

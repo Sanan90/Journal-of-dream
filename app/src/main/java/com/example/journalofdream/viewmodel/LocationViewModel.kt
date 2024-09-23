@@ -1,48 +1,50 @@
 package com.example.journalofdream.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
-import com.example.journalofdream.model.Dream
-import com.example.journalofdream.model.Location
-import com.example.journalofdream.util.DatabaseBuilder
+import androidx.lifecycle.*
+import com.example.journalofdream.database.AppDatabase
+import com.example.journalofdream.model.*
 import kotlinx.coroutines.launch
 
 class LocationViewModel(application: Application) : AndroidViewModel(application) {
-    private val db = DatabaseBuilder.getInstance(application)
+    private val db = AppDatabase.getInstance(application)
 
-    // Получение всех локаций
+    // LiveData list of all locations
     val allLocations: LiveData<List<Location>> = db.locationDao().getAllLocations()
 
-    // Метод для добавления новой локации
+    // Method to add a new location
     fun addLocation(location: Location) {
         viewModelScope.launch {
             db.locationDao().insert(location)
         }
     }
 
-    // Метод для получения локации по её ID
+    // Method to get a location by its ID
     fun getLocationById(locationId: Int): LiveData<Location> {
         return db.locationDao().getLocationById(locationId)
     }
 
-    // Метод для удаления локации
+    // Method to delete a location
     fun deleteLocation(location: Location) {
         viewModelScope.launch {
             db.locationDao().delete(location)
         }
     }
 
-    // Метод для обновления локации
+    // Method to update a location
     fun updateLocation(location: Location) {
         viewModelScope.launch {
             db.locationDao().update(location)
         }
     }
 
-    // Метод для получения списка снов, связанных с локацией
+    // Method to get dreams associated with a location
     fun getDreamsByLocation(locationId: Int): LiveData<List<Dream>> {
         return db.dreamDao().getDreamsByLocation(locationId)
+    }
+
+    // Method to get a location with its associated dreams
+    fun getLocationWithDreams(locationId: Int): LiveData<LocationWithDreams> {
+        return db.locationDao().getLocationWithDreams(locationId)
     }
 }

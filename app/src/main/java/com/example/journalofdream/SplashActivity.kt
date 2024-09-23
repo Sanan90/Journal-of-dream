@@ -8,9 +8,8 @@ import android.os.Looper
 import androidx.activity.ComponentActivity
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
-import androidx.core.animation.addListener
+import androidx.core.animation.doOnEnd
 
-@Suppress("DEPRECATION")
 class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,9 +19,10 @@ class SplashActivity : ComponentActivity() {
         val logo: ImageView = findViewById(R.id.logo)
 
         // Создание анимации
-        val fadeOut = ObjectAnimator.ofFloat(logo, "alpha", 1f, 0f)
-        fadeOut.duration = 500 // Длительность анимации
-        fadeOut.interpolator = AccelerateDecelerateInterpolator()
+        val fadeOut = ObjectAnimator.ofFloat(logo, "alpha", 1f, 0f).apply {
+            duration = 500 // Длительность анимации
+            interpolator = AccelerateDecelerateInterpolator()
+        }
 
         // Запуск анимации с задержкой
         Handler(Looper.getMainLooper()).postDelayed({
@@ -30,7 +30,7 @@ class SplashActivity : ComponentActivity() {
         }, 1000)
 
         // Переход на MainActivity после завершения анимации
-        fadeOut.addListener(onEnd = {
+        fadeOut.doOnEnd {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
 
@@ -38,6 +38,6 @@ class SplashActivity : ComponentActivity() {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
 
             finish()
-        })
+        }
     }
 }

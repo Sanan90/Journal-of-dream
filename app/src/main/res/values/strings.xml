@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Journal of dream</string>
+    <string name="default_web_client_id">journalofdream-90266</string>
 </resources>

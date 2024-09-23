@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "502456233313",
+    "project_id": "journalofdream-90266",
+    "storage_bucket": "journalofdream-90266.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502456233313:android:4703566404dc91e3aee920",
+        "android_client_info": {
+          "package_name": "com.example.journalofdream"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIwOvv8DlCQSTndqGPlVrELIxg5ZJ2iZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
