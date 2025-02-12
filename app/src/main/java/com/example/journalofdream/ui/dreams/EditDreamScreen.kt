@@ -1,3 +1,5 @@
+// Файл: com/example/journalofdream/ui/dreams/EditDreamScreen.kt
+
 package com.example.journalofdream.ui.dreams
 
 import androidx.compose.foundation.background
@@ -8,7 +10,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -17,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
@@ -30,30 +32,30 @@ import com.example.journalofdream.model.Category
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditDreamScreen(navController: NavHostController, dreamId: Int, dreamViewModel: DreamViewModel) {
+fun EditDreamScreen(
+    navController: NavHostController,
+    dreamId: String,
+    dreamViewModel: DreamViewModel
+) {
     val dreamWithLocations by dreamViewModel.getDreamWithLocationsById(dreamId).observeAsState()
     val categories by dreamViewModel.categories.observeAsState(listOf())
     val allLocations by dreamViewModel.allLocations.observeAsState(listOf())
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     dreamWithLocations?.let { dreamWithLocs ->
         val dream = dreamWithLocs.dream
         var title by remember { mutableStateOf(dream.title) }
         var content by remember { mutableStateOf(dream.content) }
-        var selectedCategory by remember { mutableStateOf<Category?>(null) }
+        var selectedCategory by remember { mutableStateOf<Category?>(categories.find { it.name == dream.category }) }
         var isCategoryMenuExpanded by remember { mutableStateOf(false) }
         var isLocationDialogOpen by remember { mutableStateOf(false) }
-        val keyboardController = LocalSoftwareKeyboardController.current
 
-        // Объявляем selectedLocationIds и инициализируем его
+        // Инициализируем выбранные локации
         val selectedLocationIds = remember { mutableStateListOf<Int>() }
         LaunchedEffect(dreamWithLocs) {
             selectedLocationIds.clear()
             selectedLocationIds.addAll(dreamWithLocs.locations.map { it.id })
-        }
-
-        // Устанавливаем выбранную категорию при загрузке
-        LaunchedEffect(dream) {
-            selectedCategory = categories.find { it.name == dream.category }
         }
 
         Scaffold(
@@ -112,7 +114,11 @@ fun EditDreamScreen(navController: NavHostController, dreamId: Int, dreamViewMod
                                 focusedIndicatorColor = Color.White,
                                 unfocusedIndicatorColor = Color.White,
                                 focusedLabelColor = Color.White,
-                                unfocusedLabelColor = Color.White
+                                unfocusedLabelColor = Color.White,
+                                focusedTextColor = Color.White,
+                                unfocusedTextColor = Color.White,
+                                focusedPlaceholderColor = Color.White.copy(alpha = 0.5f),
+                                unfocusedPlaceholderColor = Color.White.copy(alpha = 0.5f)
                             ),
                             textStyle = TextStyle(
                                 color = Color.White,
@@ -136,7 +142,11 @@ fun EditDreamScreen(navController: NavHostController, dreamId: Int, dreamViewMod
                                 focusedIndicatorColor = Color.White,
                                 unfocusedIndicatorColor = Color.White,
                                 focusedLabelColor = Color.White,
-                                unfocusedLabelColor = Color.White
+                                unfocusedLabelColor = Color.White,
+                                focusedTextColor = Color.White,
+                                unfocusedTextColor = Color.White,
+                                focusedPlaceholderColor = Color.White.copy(alpha = 0.5f),
+                                unfocusedPlaceholderColor = Color.White.copy(alpha = 0.5f)
                             ),
                             textStyle = TextStyle(
                                 color = Color.White,

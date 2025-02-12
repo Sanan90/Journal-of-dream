@@ -1,3 +1,5 @@
+// Файл: com/example/journalofdream/database/DreamDao.kt
+
 package com.example.journalofdream.database
 
 import androidx.lifecycle.LiveData
@@ -8,44 +10,42 @@ import com.example.journalofdream.model.DreamLocationCrossRef
 
 @Dao
 interface DreamDao {
-
-    // Insert a new dream and return its ID
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(dream: Dream): Long
+    suspend fun insert(dream: Dream)
 
-
-
-    // Insert a cross-reference between a dream and a location
+    // Вставка связи между сном и локацией
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDreamLocationCrossRef(crossRef: DreamLocationCrossRef)
 
-    // Update an existing dream
     @Update
     suspend fun update(dream: Dream)
 
-    // Delete a dream
     @Delete
     suspend fun delete(dream: Dream)
 
-    // Get all dreams
+    // Получение всех снов
     @Query("SELECT * FROM dreams")
     fun getAllDreams(): LiveData<List<Dream>>
 
-    // Get all dreams with their associated locations
+    // Получение всех снов с их локациями
     @Transaction
     @Query("SELECT * FROM dreams")
     fun getAllDreamsWithLocations(): LiveData<List<DreamWithLocations>>
 
-    // Get a specific dream with its associated locations by ID
+    // Получение конкретного сна с его локациями по ID
     @Transaction
     @Query("SELECT * FROM dreams WHERE id = :dreamId")
-    fun getDreamWithLocationsById(dreamId: Int): LiveData<DreamWithLocations>
+    fun getDreamWithLocationsById(dreamId: String): LiveData<DreamWithLocations>
 
-    // Delete all cross-references for a specific dream
+    // Удаление всех связей для конкретного сна
     @Query("DELETE FROM DreamLocationCrossRef WHERE dreamId = :dreamId")
-    suspend fun deleteDreamLocationCrossRefs(dreamId: Int)
+    suspend fun deleteDreamLocationCrossRefs(dreamId: String)
 
-    // **Add this method to get dreams associated with a specific location**
+    // Метод для получения всех снов без LiveData
+    @Query("SELECT * FROM dreams")
+    suspend fun getAllDreamsOnce(): List<Dream>
+
+    // Метод для получения снов, связанных с конкретной локацией
     @Transaction
     @Query("""
         SELECT D.* FROM dreams D

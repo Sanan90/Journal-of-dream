@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "502456233313",
     "project_id": "journalofdream-90266",
-    "storage_bucket": "journalofdream-90266.appspot.com"
+    "storage_bucket": "journalofdream-90266.firebasestorage.app"
   },
   "client": [
     {
@@ -12,7 +12,20 @@
           "package_name": "com.example.journalofdream"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "502456233313-tfbl4bhauvgtlq6tl9qlagbmuiv9eoj6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.journalofdream",
+            "certificate_hash": "2783ae9f6b1f651f14e6ba0a087a368a3f21c128"
+          }
+        },
+        {
+          "client_id": "502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBIwOvv8DlCQSTndqGPlVrELIxg5ZJ2iZI"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

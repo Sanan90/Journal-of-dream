@@ -1,3 +1,5 @@
+// Файл: com/example/journalofdream/MainActivity.kt
+
 package com.example.journalofdream
 
 import android.os.Bundle
@@ -13,6 +15,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 
 //// Превью экрана для быстрой проверки интерфейса в Android Studio

@@ -1,4 +1,7 @@
+// Файл: com/example/journalofdream/ui/theme/MainScreen.kt
+
 package com.example.journalofdream.ui.theme
+import com.example.journalofdream.ui.theme.ChooseActionDialog
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -8,26 +11,23 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-
-
-// Правильные импорты для Material3
-import androidx.compose.material3.Text
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.text.font.FontWeight
 import com.example.journalofdream.ui.common.BackgroundScreen
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(navController: NavHostController, onLogout: () -> Unit) {
     var isVisible by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) } // Для отображения диалога выбора
 
@@ -36,12 +36,38 @@ fun MainScreen(navController: NavHostController) {
     }
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Дневник сновидений",
+                        color = Color.White
+                    )
+                },
+                actions = {
+                    // Добавляем кнопку выхода
+                    IconButton(onClick = onLogout) {
+                        Icon(
+                            imageVector = Icons.Default.ExitToApp,
+                            contentDescription = "Выйти",
+                            tint = Color.White
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                )
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showDialog = true }, // Показать диалог при нажатии на кнопку
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Добавить запись")
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Добавить запись"
+                )
             }
         },
         content = { paddingValues ->

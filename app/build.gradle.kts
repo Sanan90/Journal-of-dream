@@ -60,8 +60,6 @@ dependencies {
     // Firebase Authentication
     implementation("com.google.firebase:firebase-auth-ktx")
 
-    // Firebase Authentication
-    implementation("com.google.firebase:firebase-auth-ktx")
 
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:20.6.0")
@@ -84,6 +82,8 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore.ktx)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
@@ -98,4 +98,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
 }

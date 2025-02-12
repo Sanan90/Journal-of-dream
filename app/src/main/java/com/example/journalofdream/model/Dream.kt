@@ -1,15 +1,16 @@
+// Файл: com/example/journalofdream/model/Dream.kt
+
 package com.example.journalofdream.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.UUID
 
 @Entity(tableName = "dreams")
 data class Dream(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val title: String,
-    val content: String,
-    val date: String,
-    val locationId: Int = 0,
-    val category: String = "Без категории", // Добавляем поле категории
-
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+    val title: String = "",
+    val content: String = "",
+    val date: String = "",
+    val category: String = "Без категории"
 )

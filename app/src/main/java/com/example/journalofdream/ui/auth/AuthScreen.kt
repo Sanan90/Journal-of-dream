@@ -1,30 +1,54 @@
+// Файл: com/example/journalofdream/ui/auth/AuthScreen.kt
+
 package com.example.journalofdream.ui.auth
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import com.example.journalofdream.R
 import com.google.android.gms.auth.api.signin.*
-import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 
 @Composable
-fun AuthScreen(onAuthSuccess: () -> Unit, onSkipAuth: () -> Unit) {
-    val context = LocalContext.current
-    val activity = context as? Activity
+fun AuthScreen(
+    onAuthSuccess: () -> Unit,
+    onSkipAuth: () -> Unit
+) {
     val auth = FirebaseAuth.getInstance()
 
-    var isLoading by remember { mutableStateOf(false) }
+    // Переменные состояния для ввода электронной почты и пароля
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
-    // Лаунчер для результата активности Google Sign-In
+    // Переменная состояния для отображения ошибки
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    val context = LocalContext.current
+    val activity = context as? Activity
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    // Состояние для Snackbar
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Лаунчер для активности Google Sign-In
     val googleSignInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -34,58 +58,122 @@ fun AuthScreen(onAuthSuccess: () -> Unit, onSkipAuth: () -> Unit) {
             val credential = GoogleAuthProvider.getCredential(account.idToken, null)
             auth.signInWithCredential(credential)
                 .addOnCompleteListener(activity!!) { authResult ->
-                    isLoading = false
                     if (authResult.isSuccessful) {
                         // Успешная авторизация
                         onAuthSuccess()
                     } else {
                         // Ошибка авторизации
-                        // Обработайте ошибку (например, покажите сообщение)
+                        errorMessage = authResult.exception?.message
                     }
                 }
         } catch (e: Exception) {
-            isLoading = false
-            e.printStackTrace()
-            // Обработайте ошибку (например, покажите сообщение)
+            errorMessage = e.message
         }
     }
 
-    // UI для экрана авторизации
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            if (isLoading) {
-                // Показать индикатор загрузки
-                Text(text = "Загрузка...")
-            } else {
-                Button(onClick = {
-                    isLoading = true
-                    // Настройка параметров Google Sign-In
-                    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(context.getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build()
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
+                // Поле ввода электронной почты
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Электронная почта") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
 
-                    val googleSignInClient = GoogleSignIn.getClient(context, gso)
-                    val signInIntent = googleSignInClient.signInIntent
-                    googleSignInLauncher.launch(signInIntent)
-                }) {
-                    Text(text = "Войти с помощью Google")
-                }
-
+                // Поле ввода пароля
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Пароль") },
+                    modifier = Modifier.fillMaxWidth(),
+                    visualTransformation = PasswordVisualTransformation()
+                )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Button(onClick = {
-                    // Переход без авторизации
-                    onSkipAuth()
-                }) {
-                    Text(text = "Войти без авторизации")
+                // Кнопка регистрации
+                Button(
+                    onClick = {
+                        keyboardController?.hide()
+                        auth.createUserWithEmailAndPassword(email.trim(), password)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    onAuthSuccess()
+                                } else {
+                                    errorMessage = task.exception?.message
+                                }
+                            }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Регистрация")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Кнопка входа
+                Button(
+                    onClick = {
+                        keyboardController?.hide()
+                        auth.signInWithEmailAndPassword(email.trim(), password)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    onAuthSuccess()
+                                } else {
+                                    errorMessage = task.exception?.message
+                                }
+                            }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Войти")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Кнопка входа как гость
+                Button(
+                    onClick = {
+                        onSkipAuth()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Войти как гость")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Кнопка входа через Google
+                Button(
+                    onClick = {
+                        // Настройка Google Sign-In
+                        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestIdToken(context.getString(R.string.default_web_client_id))
+                            .requestEmail()
+                            .build()
+                        val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                        val signInIntent = googleSignInClient.signInIntent
+                        googleSignInLauncher.launch(signInIntent)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Войти через Google")
                 }
             }
+        }
+    )
+
+    // Отображение ошибки в Snackbar
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            errorMessage = null
         }
     }
 }

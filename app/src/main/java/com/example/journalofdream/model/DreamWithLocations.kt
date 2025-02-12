@@ -1,3 +1,5 @@
+// Файл: com/example/journalofdream/model/DreamWithLocations.kt
+
 package com.example.journalofdream.model
 
 import androidx.room.Embedded
@@ -7,12 +9,12 @@ import androidx.room.Relation
 data class DreamWithLocations(
     @Embedded val dream: Dream,
     @Relation(
-        parentColumn = "id", // Колонка из таблицы Dream
-        entityColumn = "id", // Колонка из таблицы Location
+        parentColumn = "id",
+        entityColumn = "id",
         associateBy = Junction(
             value = DreamLocationCrossRef::class,
-            parentColumn = "dreamId", // Колонка из DreamLocationCrossRef, связанная с Dream
-            entityColumn = "locationId" // Колонка из DreamLocationCrossRef, связанная с Location
+            parentColumn = "dreamId",
+            entityColumn = "locationId"
         )
     )
     val locations: List<Location>
