@@ -26,7 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.TextStyle
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.journalofdream.viewmodel.CategoryViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,8 +35,11 @@ import androidx.compose.ui.text.TextStyle
 fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewModel) {
     // Получаем список всех снов и категорий из ViewModel
     val allDreams by dreamViewModel.allDreams.observeAsState(listOf())
-    val categories by dreamViewModel.categories.observeAsState(listOf())
+    // 1. Получаем CategoryViewModel
+    val categoryViewModel: CategoryViewModel = viewModel()
 
+    // 2. Наблюдаем за списком категорий
+    val categories by categoryViewModel.allCategories.observeAsState(listOf())
     // Переменные состояния для выбранной категории, раскрытия меню и поискового запроса
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var expanded by remember { mutableStateOf(false) }

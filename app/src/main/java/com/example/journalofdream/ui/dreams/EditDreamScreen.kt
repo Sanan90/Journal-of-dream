@@ -25,10 +25,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.journalofdream.ui.common.BackgroundScreen
 import com.example.journalofdream.viewmodel.DreamViewModel
 import com.example.journalofdream.model.Category
+import com.example.journalofdream.viewmodel.CategoryViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,7 +40,14 @@ fun EditDreamScreen(
     dreamViewModel: DreamViewModel
 ) {
     val dreamWithLocations by dreamViewModel.getDreamWithLocationsById(dreamId).observeAsState()
-    val categories by dreamViewModel.categories.observeAsState(listOf())
+
+
+    // 1. Получаем CategoryViewModel
+    val categoryViewModel: CategoryViewModel = viewModel()
+
+    // 2. Наблюдаем за списком категорий
+    val categories by categoryViewModel.allCategories.observeAsState(listOf())
+
     val allLocations by dreamViewModel.allLocations.observeAsState(listOf())
 
     val keyboardController = LocalSoftwareKeyboardController.current

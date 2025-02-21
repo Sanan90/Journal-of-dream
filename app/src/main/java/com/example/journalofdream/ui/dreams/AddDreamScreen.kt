@@ -20,11 +20,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.journalofdream.model.Category
 import com.example.journalofdream.model.Dream
 import com.example.journalofdream.model.Location
 import com.example.journalofdream.ui.common.BackgroundScreen
+import com.example.journalofdream.viewmodel.CategoryViewModel
 import com.example.journalofdream.viewmodel.DreamViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -47,8 +49,12 @@ fun AddDreamScreen(navController: NavHostController, dreamViewModel: DreamViewMo
     var isLocationDialogOpen by remember { mutableStateOf(false) }
     val selectedLocationIds = remember { mutableStateListOf<Int>() }
 
-    // Получаем данные из ViewModel
-    val categories by dreamViewModel.categories.observeAsState(listOf())
+    // 1. Получаем CategoryViewModel
+    val categoryViewModel: CategoryViewModel = viewModel()
+
+    // 2. Наблюдаем за списком категорий
+    val categories by categoryViewModel.allCategories.observeAsState(listOf())
+
     val allLocations by dreamViewModel.allLocations.observeAsState(listOf())
 
     Scaffold(

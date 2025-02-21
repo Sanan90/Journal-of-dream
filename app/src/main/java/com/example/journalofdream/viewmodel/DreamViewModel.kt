@@ -12,140 +12,162 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 class DreamViewModel(application: Application) : AndroidViewModel(application) {
+
+    // Firebase Auth
     private val auth = FirebaseAuth.getInstance()
-    private val localDb = AppDatabase.getInstance(application)
+
+    // Firestore
     private val remoteDb = FirebaseFirestore.getInstance()
 
-    val allDreams: LiveData<List<Dream>> = if (auth.currentUser != null) {
-        MutableLiveData<List<Dream>>().also { liveData ->
-            val userId = auth.currentUser!!.uid
-            remoteDb.collection("users").document(userId).collection("dreams")
-                .addSnapshotListener { snapshot, e ->
-                    if (e != null) {
-                        // Обработка ошибки
-                        Log.e("DreamViewModel", "Error fetching dreams", e)
-                        return@addSnapshotListener
-                    }
-                    if (snapshot != null) {
-                        val dreamList = snapshot.documents.mapNotNull { doc ->
-                            val dream = doc.toObject(Dream::class.java)
-                            dream?.copy(id = doc.id)
-                        }
-                        liveData.value = dreamList
-                    }
-                }
-        }
-    } else {
-        localDb.dreamDao().getAllDreams()
-    }
+    // Локальная база
+    private val localDb = AppDatabase.getInstance(application)
 
+
+    // 1) Берём все сны из Room (или Firestore, если хотим синхронизировать),
+    //    но, как мы договаривались, основа — Room.
+    //    Если у вас уже настроена логика "Room + Firestore" => оставьте как есть.
+    //    Я просто показываю, что вы можете хранить все сны в Room и дублировать в Firestore при авторизации.
+    val allDreams: LiveData<List<Dream>> = localDb.dreamDao().getAllDreams()
+
+    // 2) Локации из локальной базы
     val allLocations: LiveData<List<Location>> = localDb.locationDao().getAllLocations()
 
+
     // LiveData список категорий
-    private val _categories = MutableLiveData<List<Category>>()
-    val categories: LiveData<List<Category>> = _categories
+//    private val _categories = MutableLiveData<List<Category>>()
+//    val categories: LiveData<List<Category>> = _categories
 
-    init {
-        // Инициализируем категории
-        _categories.value = listOf(
-            Category(2, "Кошмары", false),
-            Category(3, "Осознанные сны", false),
-            Category(4, "Сюжетные сны", false),
-            Category(5, "Личные сны", false),
-            Category(6, "Без категории", false)
-        )
-    }
+//    init {
+//        // Инициализируем категории
+//        _categories.value = listOf(
+//            Category(2, "Кошмары", false),
+//            Category(3, "Осознанные сны", false),
+//            Category(4, "Сюжетные сны", false),
+//            Category(5, "Личные сны", false),
+//            Category(6, "Без категории", false)
+//        )
+//    }
+//
+//    // Метод для добавления категории
+//    fun addCategory(category: Category) {
+//        val currentCategories = _categories.value ?: emptyList()
+//        _categories.value = currentCategories + category
+//    }
+//
+//    // Метод для удаления категории
+//    fun deleteCategory(categoryId: Int) {
+//        _categories.value = _categories.value?.filter { it.id != categoryId }
+//    }
 
-    // Метод для добавления категории
-    fun addCategory(category: Category) {
-        val currentCategories = _categories.value ?: emptyList()
-        _categories.value = currentCategories + category
-    }
-
-    // Метод для удаления категории
-    fun deleteCategory(categoryId: Int) {
-        _categories.value = _categories.value?.filter { it.id != categoryId }
-    }
-
-    // Метод для добавления нового сна с локациями
+    // Добавляем сон + связи
     fun addDream(dream: Dream, locationIds: List<Int>) {
-        if (auth.currentUser != null) {
-            // Пользователь авторизован, сохраняем в Firestore
-            val userId = auth.currentUser!!.uid
-            remoteDb.collection("users").document(userId).collection("dreams")
-                .document(dream.id)
-                .set(dream)
-                .addOnSuccessListener {
-                    // Успешно сохранено
-                }
-                .addOnFailureListener { e ->
-                    // Обработка ошибки
-                    Log.e("DreamViewModel", "Error adding dream", e)
-                }
-        } else {
-            // Пользователь не авторизован, сохраняем в локальную базу данных
-            viewModelScope.launch {
-                // Вставляем сон
-                localDb.dreamDao().insert(dream)
-                // Добавляем связи с локациями
-                locationIds.forEach { locationId ->
-                    val crossRef = DreamLocationCrossRef(dream.id, locationId)
-                    localDb.dreamDao().insertDreamLocationCrossRef(crossRef)
-                }
+        // 1. Локально в Room
+        viewModelScope.launch {
+            localDb.dreamDao().insert(dream)
+            locationIds.forEach { locationId ->
+                localDb.dreamDao().insertDreamLocationCrossRef(
+                    DreamLocationCrossRef(dream.id, locationId)
+                )
             }
         }
+
+        // 2. При желании синхронизируем в Firestore, если пользователь авторизован
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            remoteDb.collection("users")
+                .document(userId)
+                .collection("dreams")
+                .document(dream.id)
+                .set(dream)
+                .addOnFailureListener { e ->
+                    Log.e("DreamViewModel", "Error adding dream to Firestore", e)
+                }
+        }
     }
+
 
 
     // Метод для удаления сна и его связей с локациями
+    // Удаляем сон
     fun deleteDream(dream: Dream) {
-        if (auth.currentUser != null) {
-            val userId = auth.currentUser!!.uid
-            remoteDb.collection("users").document(userId).collection("dreams").document(dream.id)
+        viewModelScope.launch {
+            // Удаляем связи
+            localDb.dreamDao().deleteDreamLocationCrossRefs(dream.id)
+            // Удаляем сам сон
+            localDb.dreamDao().delete(dream)
+        }
+
+        // Firestore
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            remoteDb.collection("users")
+                .document(userId)
+                .collection("dreams")
+                .document(dream.id)
                 .delete()
-                .addOnSuccessListener {
-                    // Успешно удалено
-                }
                 .addOnFailureListener { e ->
-                    // Обработка ошибки
-                    Log.e("DreamViewModel", "Error deleting dream", e)
+                    Log.e("DreamViewModel", "Error deleting dream from Firestore", e)
                 }
-        } else {
-            viewModelScope.launch {
-                localDb.dreamDao().deleteDreamLocationCrossRefs(dream.id)
-                localDb.dreamDao().delete(dream)
-            }
         }
     }
 
     // Метод для обновления сна и его локаций
     fun updateDream(updatedDream: Dream, locationIds: List<Int>) {
-        if (auth.currentUser != null) {
-            val userId = auth.currentUser!!.uid
-            remoteDb.collection("users").document(userId).collection("dreams").document(updatedDream.id)
-                .set(updatedDream)
-                .addOnSuccessListener {
-                    // Успешно обновлено
-                }
-                .addOnFailureListener { e ->
-                    // Обработка ошибки
-                    Log.e("DreamViewModel", "Error updating dream", e)
-                }
-        } else {
-            viewModelScope.launch {
-                localDb.dreamDao().update(updatedDream)
-                // Обновляем связи с локациями
-                localDb.dreamDao().deleteDreamLocationCrossRefs(updatedDream.id)
-                locationIds.forEach { locationId ->
-                    val crossRef = DreamLocationCrossRef(updatedDream.id, locationId)
-                    localDb.dreamDao().insertDreamLocationCrossRef(crossRef)
-                }
+        // Локально
+        viewModelScope.launch {
+            localDb.dreamDao().update(updatedDream)
+            // Сначала удалим старые связи:
+            localDb.dreamDao().deleteDreamLocationCrossRefs(updatedDream.id)
+            // Добавим заново:
+            locationIds.forEach { locationId ->
+                localDb.dreamDao().insertDreamLocationCrossRef(
+                    DreamLocationCrossRef(updatedDream.id, locationId))
             }
         }
+
+        // Firestore
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            remoteDb.collection("users")
+                .document(userId)
+                .collection("dreams")
+                .document(updatedDream.id)
+                .set(updatedDream)
+                .addOnFailureListener { e ->
+                    Log.e("DreamViewModel", "Error updating dream in Firestore", e)
+                }
+            }
     }
 
     // Метод для получения сна с локациями по ID
     fun getDreamWithLocationsById(dreamId: String): LiveData<DreamWithLocations> {
         return localDb.dreamDao().getDreamWithLocationsById(dreamId)
     }
+
+
+
+//    // 1. Когда пользователь авторизовался — подгрузить данные из Firestore в Room
+//    fun syncFromFirestoreToLocal() {
+//        val userId = auth.currentUser?.uid ?: return
+//        remoteDb.collection("users")
+//            .document(userId)
+//            .collection("dreams")
+//            .get()
+//            .addOnSuccessListener { documents ->
+//                viewModelScope.launch {
+//                    // Пробегаемся по всем документам
+//                    for (doc in documents) {
+//                        val dream = doc.toObject(Dream::class.java)
+//                            ?.copy(id = doc.id) // ID = имя документа
+//
+//                        if (dream != null) {
+//                            localDb.dreamDao().insert(dream)
+//                        }
+//                    }
+//                }
+//            }
+//    }
+
+
+
 }

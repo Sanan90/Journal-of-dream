@@ -27,7 +27,12 @@ import com.example.journalofdream.ui.common.BackgroundScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavHostController, onLogout: () -> Unit) {
+fun MainScreen(
+    navController: NavHostController,
+    onLogout: () -> Unit,
+    isGuest: Boolean,        // Гость или авторизованный пользователь
+    displayName: String?     // Имя пользователя или email
+) {
     var isVisible by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) } // Для отображения диалога выбора
 
@@ -39,19 +44,33 @@ fun MainScreen(navController: NavHostController, onLogout: () -> Unit) {
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = "Дневник сновидений",
-                        color = Color.White
-                    )
+                    // Если гость - показываем кнопку «Авторизуйтесь»
+                    // Иначе - показываем «Сновидец: (displayName)»
+                    if (isGuest) {
+                        TextButton(
+                            onClick = {
+                                // Действие при нажатии: можно сразу navController.navigate("auth")
+                                // Но вы писали, что пока не хотите «авторизовываться без выхода».
+                                // Можно просто ничего не делать, или перейти на экран auth:
+                                navController.navigate("auth")
+                            }
+                        ) {
+                            Text("Авторизуйтесь")
+                        }
+                    } else {
+                        // Отображаем имя пользователя
+                        Text("Сновидец: ${displayName ?: "Неизвестно"}")
+                    }
                 },
                 actions = {
-                    // Добавляем кнопку выхода
-                    IconButton(onClick = onLogout) {
-                        Icon(
-                            imageVector = Icons.Default.ExitToApp,
-                            contentDescription = "Выйти",
-                            tint = Color.White
-                        )
+                    // Можно добавить иконку выхода, но только если пользователь НЕ гость
+                    if (!isGuest) {
+                        IconButton(onClick = { onLogout() }) {
+                            Icon(
+                                imageVector = Icons.Default.ExitToApp,
+                                contentDescription = "Выйти"
+                            )
+                        }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
