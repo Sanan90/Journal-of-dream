@@ -8,7 +8,7 @@ import com.example.journalofdream.model.*
 
 @Database(
     entities = [Dream::class, Location::class, DreamLocationCrossRef::class, Category::class],
-    version = 3, // Увеличьте версию базы данных
+    version = 1,  // Ставим 1, раз нет старых версий у пользователей
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -28,7 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "dream_database"
                 )
-                    .fallbackToDestructiveMigration() // Если вы не хотите определять миграции
+//                    .fallbackToDestructiveMigration() // Если вы не хотите определять миграции
                     .build()
                 INSTANCE = instance
                 instance

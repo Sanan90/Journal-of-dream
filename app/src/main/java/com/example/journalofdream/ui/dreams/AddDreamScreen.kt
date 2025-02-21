@@ -30,6 +30,8 @@ import com.example.journalofdream.viewmodel.CategoryViewModel
 import com.example.journalofdream.viewmodel.DreamViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.material3.Scaffold
+
 
 fun getCurrentDate(): String {
     val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())

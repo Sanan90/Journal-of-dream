@@ -28,6 +28,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.TextStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.journalofdream.viewmodel.CategoryViewModel
+import androidx.compose.material3.Scaffold
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)

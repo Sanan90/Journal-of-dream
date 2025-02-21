@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.journalofdream.ui.common.BackgroundScreen
+import androidx.compose.material3.Scaffold
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

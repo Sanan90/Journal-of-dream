@@ -1,50 +1,58 @@
 package com.example.journalofdream.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 
-// Определяем светлую цветовую палитру
-val LightColorPalette = lightColorScheme(
-    primary = Color(0xFF6200EA),
-    onPrimary = Color.White,
-    secondary = Color(0xFF03DAC6),
-    onSecondary = Color.Black,
-    background = Color(0xFFF5F5F5),
-    onBackground = Color.Black,
-    surface = Color.White,
-    onSurface = Color.Black
+/**
+ * Файл для настройки Material 3 (светлой/тёмной темы).
+ */
+
+// 1) Определим Light-схему (светлую)
+private val LightColors = lightColorScheme(
+    // Эти цвета можете заменить на любые свои.
+    // Пример: для primary/secondary/background вы можете выбрать любые hex-значения
+    primary = Purple40,
+    onPrimary = White,
+    secondary = PurpleGrey40,
+    onSecondary = White,
+    background = Grey99,
+    onBackground = Grey10,
+    // etc...
 )
 
-// Определяем тёмную цветовую палитру
-val DarkColorPalette = darkColorScheme(
-    primary = Color(0xFFBB86FC),
-    onPrimary = Color.Black,
-    secondary = Color(0xFF03DAC6),
-    onSecondary = Color.Black,
-    background = Color(0xFF121212),
-    onBackground = Color.White,
-    surface = Color(0xFF1F1F1F),
-    onSurface = Color.White
+// 2) Определим Dark-схему (тёмную)
+private val DarkColors = darkColorScheme(
+    primary = Purple80,
+    onPrimary = Grey20,
+    secondary = PurpleGrey80,
+    onSecondary = Grey20,
+    background = Grey10,
+    onBackground = Grey90,
+    // etc...
 )
 
+/**
+ * Основная тема приложения.
+ *
+ * @param darkTheme Если true, насильно включаем тёмную тему.
+ *                  По умолчанию берём системную настройку через [isSystemInDarkTheme].
+ */
 @Composable
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
+    // Выбираем, какие цвета использовать
+    val colorScheme = if (darkTheme) DarkColors else LightColors
 
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = colorScheme,
+        // Если у вас есть собственные Fonts / Shapes / Typography - подключите их тоже
         typography = Typography,
-        shapes = CustomShapes,  // Используем CustomShapes вместо Shapes
+        shapes = MyShapes,
         content = content
     )
-
 }

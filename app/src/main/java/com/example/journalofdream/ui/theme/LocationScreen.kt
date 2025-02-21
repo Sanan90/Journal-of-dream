@@ -14,6 +14,8 @@ import com.example.journalofdream.ui.common.CustomButton
 import com.example.journalofdream.ui.common.TopBar
 import com.example.journalofdream.model.Location
 import com.example.journalofdream.viewmodel.LocationViewModel
+import androidx.compose.material3.Scaffold
+
 
 @Composable
 fun LocationListScreen(navController: NavHostController, locationViewModel: LocationViewModel) {

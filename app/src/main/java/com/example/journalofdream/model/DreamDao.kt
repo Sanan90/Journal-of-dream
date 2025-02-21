@@ -53,4 +53,9 @@ interface DreamDao {
         WHERE DLCR.locationId = :locationId
     """)
     fun getDreamsByLocation(locationId: Int): LiveData<List<Dream>>
+
+
+    @Query("SELECT * FROM dreams WHERE title LIKE :query OR content LIKE :query")
+    fun searchDreams(query: String): LiveData<List<Dream>>
+
 }

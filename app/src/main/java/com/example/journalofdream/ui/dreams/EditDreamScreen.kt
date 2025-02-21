@@ -31,6 +31,8 @@ import com.example.journalofdream.ui.common.BackgroundScreen
 import com.example.journalofdream.viewmodel.DreamViewModel
 import com.example.journalofdream.model.Category
 import com.example.journalofdream.viewmodel.CategoryViewModel
+import androidx.compose.material3.Scaffold
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

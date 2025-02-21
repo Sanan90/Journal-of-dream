@@ -145,6 +145,12 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
+    fun searchDreams(searchText: String): LiveData<List<Dream>> {
+        val query = "%$searchText%"
+        return localDb.dreamDao().searchDreams(query)
+    }
+
+
 
 //    // 1. Когда пользователь авторизовался — подгрузить данные из Firestore в Room
 //    fun syncFromFirestoreToLocal() {
