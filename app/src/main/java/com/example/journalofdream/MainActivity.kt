@@ -1,6 +1,8 @@
 package com.example.journalofdream
 
 import android.Manifest
+import android.app.TimePickerDialog
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -10,10 +12,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.example.journalofdream.ui.JournalOfDreamApp
-import com.example.journalofdream.util.REMINDER_HOUR
-import com.example.journalofdream.util.REMINDER_MINUTE
-import com.example.journalofdream.util.createNotificationChannel
 import com.example.journalofdream.util.scheduleDailyReminder
+import com.example.journalofdream.util.createNotificationChannel
+import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
 
@@ -23,7 +24,6 @@ class MainActivity : ComponentActivity() {
         // Создаём канал уведомлений
         createNotificationChannel(this)
 
-        // Если Android 13 или выше, проверяем разрешение на уведомления
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permissionCheck = ContextCompat.checkSelfPermission(
                 this,
@@ -32,16 +32,54 @@ class MainActivity : ComponentActivity() {
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                 requestPostNotificationPermission()
             } else {
-                // Планируем ежедневное напоминание на 8:00
-                scheduleDailyReminder(this, REMINDER_HOUR, REMINDER_MINUTE)
+                handleNotificationTime()
             }
         } else {
-            // Для версий ниже Android 13 разрешение не требуется
-            scheduleDailyReminder(this, REMINDER_HOUR, REMINDER_MINUTE)
+            handleNotificationTime()
         }
 
         setContent {
             JournalOfDreamApp()
+        }
+    }
+
+    /**
+     * Если время для уведомлений не задано, показываем TimePickerDialog,
+     * иначе планируем уведомление согласно сохранённому времени.
+     */
+    private fun handleNotificationTime() {
+        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        if (!prefs.contains("notification_hour") || !prefs.contains("notification_minute")) {
+            // Время не выбрано – предлагаем пользователю выбрать
+            showTimePickerDialog()
+        } else {
+            val hour = prefs.getInt("notification_hour", 8)
+            val minute = prefs.getInt("notification_minute", 0)
+            scheduleDailyReminder(this, hour, minute)
+            Log.d("MainActivity", "Уведомление запланировано на $hour:$minute")
+        }
+    }
+
+    /**
+     * Показывает диалог выбора времени с пояснением и сохраняет выбранное время.
+     */
+    private fun showTimePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+        val currentMinute = calendar.get(Calendar.MINUTE)
+
+        TimePickerDialog(this, { _, hourOfDay, minute ->
+            // Сохраняем выбранное время
+            val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE).edit()
+            prefs.putInt("notification_hour", hourOfDay)
+            prefs.putInt("notification_minute", minute)
+            prefs.apply()
+
+            scheduleDailyReminder(this, hourOfDay, minute)
+            Log.d("MainActivity", "Пользователь выбрал время: $hourOfDay:$minute")
+        }, currentHour, currentMinute, true).apply {
+            setTitle("В какое время напомнить о записи сна?\nВыберите время, когда вы обычно просыпаетесь, пока сон еще свеж в памяти.")
+            show()
         }
     }
 
@@ -54,7 +92,7 @@ class MainActivity : ComponentActivity() {
         ) { isGranted ->
             if (isGranted) {
                 Log.d("MainActivity", "Разрешение получено")
-                scheduleDailyReminder(this, REMINDER_HOUR, REMINDER_MINUTE)
+                handleNotificationTime()
             } else {
                 Log.d("MainActivity", "Разрешение отклонено")
             }

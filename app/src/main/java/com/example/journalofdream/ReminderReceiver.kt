@@ -4,10 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.example.journalofdream.util.REMINDER_HOUR
-import com.example.journalofdream.util.REMINDER_MINUTE
 import com.example.journalofdream.util.scheduleDailyReminder
 import com.example.journalofdream.util.showNotification
+import java.util.Calendar
 
 class ReminderReceiver : BroadcastReceiver() {
 
@@ -20,22 +19,21 @@ class ReminderReceiver : BroadcastReceiver() {
         val dreamRecorded = prefs.getBoolean(todayKey, false)
 
         if (!dreamRecorded) {
-            // Если сон не записан, показываем уведомление
             showNotification(context, "Пора записать сон", "Откройте приложение и запишите ваш сон!")
         }
 
-        // Планируем следующий будильник на фиксированное время (например, 8:00)
-        scheduleDailyReminder(context, REMINDER_HOUR, REMINDER_MINUTE)
+        // Считываем время уведомления из настроек, если оно задано, иначе используем 8:00
+        val hour = prefs.getInt("notification_hour", 8)
+        val minute = prefs.getInt("notification_minute", 0)
+        scheduleDailyReminder(context, hour, minute)
+        Log.d("ReminderReceiver", "Следующий будильник запланирован на $hour:$minute")
     }
 
-    /**
-     * Формирует ключ для сегодняшней даты.
-     */
     private fun getTodayKey(): String {
-        val now = java.util.Calendar.getInstance()
-        val year = now.get(java.util.Calendar.YEAR)
-        val month = now.get(java.util.Calendar.MONTH) + 1
-        val day = now.get(java.util.Calendar.DAY_OF_MONTH)
+        val now = Calendar.getInstance()
+        val year = now.get(Calendar.YEAR)
+        val month = now.get(Calendar.MONTH) + 1
+        val day = now.get(Calendar.DAY_OF_MONTH)
         return "dream_recorded_${year}_${month}_${day}"
     }
 }

@@ -7,21 +7,17 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.journalofdream.MainActivity
 import com.example.journalofdream.R
 import com.example.journalofdream.ReminderReceiver
 import java.util.Calendar
 
-// Константы для канала уведомлений и напоминания
 const val CHANNEL_ID = "dream_channel_id"
 const val NOTIFICATION_ID = 123
 const val ALARM_REQUEST_CODE = 456
 
-// Фиксированное время напоминания: 8:00 утра
-const val REMINDER_HOUR = 22
-const val REMINDER_MINUTE = 49
-
 /**
- * Создаёт канал уведомлений (для Android 8.0+).
+ * Создаёт канал уведомлений (Android 8+).
  */
 fun createNotificationChannel(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -37,34 +33,45 @@ fun createNotificationChannel(context: Context) {
 }
 
 /**
- * Показывает уведомление.
- * Если Android 13+, проверяет наличие разрешения POST_NOTIFICATIONS.
+ * Показывает уведомление с PendingIntent для открытия приложения.
  */
 fun showNotification(context: Context, title: String, message: String) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         val check = context.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
         if (check != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-            // Если нет разрешения, уведомление не показывается
             Log.d("NotificationHelper", "Нет разрешения POST_NOTIFICATIONS")
             return
         }
     }
 
+    // Получаем launchIntent для открытия приложения так, как если бы пользователь нажал на иконку
+    val launchIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+    val pendingIntent = if (launchIntent != null) {
+        PendingIntent.getActivity(
+            context,
+            0,
+            launchIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    } else {
+        null
+    }
+
     val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-        .setSmallIcon(R.drawable.ic_launcher_foreground) // Замените на свой значок, если нужно
+        .setSmallIcon(R.drawable.ic_launcher_foreground)
         .setContentTitle(title)
         .setContentText(message)
         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         .setAutoCancel(true)
+        .setContentIntent(pendingIntent) // При нажатии откроется приложение как при клике на иконку
 
     val notificationManager = NotificationManagerCompat.from(context)
     notificationManager.notify(NOTIFICATION_ID, builder.build())
 }
 
+
 /**
- * Планирует однократный будильник на указанное время (час и минута).
- * Если выбранное время уже прошло – планирует на следующий день.
- * При срабатывании будет вызван ReminderReceiver.
+ * Планирует однократный будильник на заданное время.
  */
 fun scheduleDailyReminder(context: Context, hour: Int, minute: Int) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -82,20 +89,18 @@ fun scheduleDailyReminder(context: Context, hour: Int, minute: Int) {
         set(Calendar.MINUTE, minute)
         set(Calendar.SECOND, 0)
         set(Calendar.MILLISECOND, 0)
-        // Если выбранное время уже прошло сегодня – переносим на следующий день
         if (before(now)) {
             add(Calendar.DAY_OF_MONTH, 1)
         }
     }
 
-    // Проверяем возможность установки точных будильников (для Android 12+)
     val canScheduleExact = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         alarmManager.canScheduleExactAlarms()
     } else {
         true
     }
 
-    Log.d("scheduleDailyReminder", "Планирование на время: ${calendar.time}, точный режим: $canScheduleExact")
+    Log.d("scheduleDailyReminder", "Планирование на: ${calendar.time}, точный режим: $canScheduleExact")
 
     if (canScheduleExact) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -112,7 +117,6 @@ fun scheduleDailyReminder(context: Context, hour: Int, minute: Int) {
             )
         }
     } else {
-        // Если точные будильники недоступны, используем set()
         alarmManager.set(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
