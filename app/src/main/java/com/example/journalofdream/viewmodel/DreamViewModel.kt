@@ -1,4 +1,3 @@
-// Файл: com/example/journalofdream/viewmodel/DreamViewModel.kt
 
 package com.example.journalofdream.viewmodel
 
@@ -32,33 +31,6 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
     // 2) Локации из локальной базы
     val allLocations: LiveData<List<Location>> = localDb.locationDao().getAllLocations()
 
-
-    // LiveData список категорий
-//    private val _categories = MutableLiveData<List<Category>>()
-//    val categories: LiveData<List<Category>> = _categories
-
-//    init {
-//        // Инициализируем категории
-//        _categories.value = listOf(
-//            Category(2, "Кошмары", false),
-//            Category(3, "Осознанные сны", false),
-//            Category(4, "Сюжетные сны", false),
-//            Category(5, "Личные сны", false),
-//            Category(6, "Без категории", false)
-//        )
-//    }
-//
-//    // Метод для добавления категории
-//    fun addCategory(category: Category) {
-//        val currentCategories = _categories.value ?: emptyList()
-//        _categories.value = currentCategories + category
-//    }
-//
-//    // Метод для удаления категории
-//    fun deleteCategory(categoryId: Int) {
-//        _categories.value = _categories.value?.filter { it.id != categoryId }
-//    }
-
     // Добавляем сон + связи
     fun addDream(dream: Dream, locationIds: List<Int>) {
         // 1. Локально в Room
@@ -84,7 +56,6 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
                 }
         }
     }
-
 
 
     // Метод для удаления сна и его связей с локациями
@@ -121,7 +92,8 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
             // Добавим заново:
             locationIds.forEach { locationId ->
                 localDb.dreamDao().insertDreamLocationCrossRef(
-                    DreamLocationCrossRef(updatedDream.id, locationId))
+                    DreamLocationCrossRef(updatedDream.id, locationId)
+                )
             }
         }
 
@@ -136,7 +108,7 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
                 .addOnFailureListener { e ->
                     Log.e("DreamViewModel", "Error updating dream in Firestore", e)
                 }
-            }
+        }
     }
 
     // Метод для получения сна с локациями по ID
@@ -149,7 +121,7 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
         val query = "%$searchText%"
         return localDb.dreamDao().searchDreams(query)
     }
-
+}
 
 
 //    // 1. Когда пользователь авторизовался — подгрузить данные из Firestore в Room
@@ -176,4 +148,3 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
 
 
 
-}
