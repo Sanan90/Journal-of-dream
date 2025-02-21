@@ -38,3 +38,6 @@ app/build/
 
 # Ignore Maven repo
 .m2/
+
+# Firebase config file
+app/google-services.json
