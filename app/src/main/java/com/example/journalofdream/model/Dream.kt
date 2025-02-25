@@ -9,6 +9,10 @@ import java.util.UUID
 @Entity(tableName = "dreams")
 data class Dream(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
+
+    // Главное отличие: владелец записи
+    val ownerUid: String = "guest",
+
     val title: String = "",
     val content: String = "",
     val date: String = "",

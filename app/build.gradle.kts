@@ -67,6 +67,8 @@ dependencies {
     // -------------------------------------------------------------------------
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
+
     implementation(libs.androidx.activity.compose)
 
     // ------------------- Compose BOM (из version catalogs) -------------------

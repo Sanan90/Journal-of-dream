@@ -11,9 +11,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.journalofdream.ui.JournalOfDreamApp
 import com.example.journalofdream.util.scheduleDailyReminder
 import com.example.journalofdream.util.createNotificationChannel
+import com.example.journalofdream.viewmodel.DreamViewModel
 import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
@@ -21,9 +23,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Создаём канал уведомлений
+        // 1) Создаём канал уведомлений (для Android 8+)
         createNotificationChannel(this)
 
+        // 2) Проверяем разрешение POST_NOTIFICATIONS (Android 13+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permissionCheck = ContextCompat.checkSelfPermission(
                 this,
@@ -35,22 +38,31 @@ class MainActivity : ComponentActivity() {
                 handleNotificationTime()
             }
         } else {
+            // < Android 13
             handleNotificationTime()
         }
 
+        // 3) Устанавливаем Compose-контент
         setContent {
+            // Получаем DreamViewModel, чтобы при запуске приложения,
+            // если пользователь уже авторизован (FirebaseAuth), запустить синх.
+            val dreamViewModel: DreamViewModel = viewModel()
+
+            // Если user уже logged in, стартуем sync (Firestore -> Room)
+            dreamViewModel.startSyncIfLoggedIn()
+
             JournalOfDreamApp()
         }
     }
 
     /**
-     * Если время для уведомлений не задано, показываем TimePickerDialog,
-     * иначе планируем уведомление согласно сохранённому времени.
+     * Если пользователь ещё не выбрал время уведомлений, показываем TimePickerDialog,
+     * иначе планируем уведомление (scheduleDailyReminder).
      */
     private fun handleNotificationTime() {
         val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         if (!prefs.contains("notification_hour") || !prefs.contains("notification_minute")) {
-            // Время не выбрано – предлагаем пользователю выбрать
+            // Время не выбрано - предлагаем выбрать
             showTimePickerDialog()
         } else {
             val hour = prefs.getInt("notification_hour", 8)
@@ -61,7 +73,8 @@ class MainActivity : ComponentActivity() {
     }
 
     /**
-     * Показывает диалог выбора времени с пояснением и сохраняет выбранное время.
+     * Показываем диалог выбора времени и сохраняем результат,
+     * затем планируем уведомление.
      */
     private fun showTimePickerDialog() {
         val calendar = Calendar.getInstance()
@@ -69,7 +82,6 @@ class MainActivity : ComponentActivity() {
         val currentMinute = calendar.get(Calendar.MINUTE)
 
         TimePickerDialog(this, { _, hourOfDay, minute ->
-            // Сохраняем выбранное время
             val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE).edit()
             prefs.putInt("notification_hour", hourOfDay)
             prefs.putInt("notification_minute", minute)
@@ -77,14 +89,16 @@ class MainActivity : ComponentActivity() {
 
             scheduleDailyReminder(this, hourOfDay, minute)
             Log.d("MainActivity", "Пользователь выбрал время: $hourOfDay:$minute")
+
         }, currentHour, currentMinute, true).apply {
-            setTitle("В какое время напомнить о записи сна?\nВыберите время, когда вы обычно просыпаетесь, пока сон еще свеж в памяти.")
+            setTitle("В какое время напомнить о записи сна?\n" +
+                    "Выберите время, когда вы обычно просыпаетесь, пока сон еще свеж в памяти.")
             show()
         }
     }
 
     /**
-     * Запрашивает разрешение POST_NOTIFICATIONS для Android 13+.
+     * Запрашиваем разрешение POST_NOTIFICATIONS на Android 13+.
      */
     private fun requestPostNotificationPermission() {
         val launcher = registerForActivityResult(

@@ -13,9 +13,6 @@ interface DreamDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(dream: Dream)
 
-    // Вставка связи между сном и локацией
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDreamLocationCrossRef(crossRef: DreamLocationCrossRef)
 
     @Update
     suspend fun update(dream: Dream)
@@ -23,9 +20,32 @@ interface DreamDao {
     @Delete
     suspend fun delete(dream: Dream)
 
+
     // Получение всех снов
     @Query("SELECT * FROM dreams")
     fun getAllDreams(): LiveData<List<Dream>>
+
+
+    // Удалить все (если вдруг понадобится)
+    @Query("DELETE FROM dreams")
+    suspend fun deleteAll()
+
+
+    // Получить по ID (разово)
+    @Query("SELECT * FROM dreams WHERE id = :dreamId LIMIT 1")
+    suspend fun getDreamByIdOnce(dreamId: String): Dream?
+
+
+    // Выборка по ownerUid (например, чтобы показать только гостевые или конкретного пользователя)
+    @Query("SELECT * FROM dreams WHERE ownerUid = :ownerUid")
+    fun getDreamsByOwner(ownerUid: String): LiveData<List<Dream>>
+
+
+    // Разово тоже можно
+    @Query("SELECT * FROM dreams WHERE ownerUid = :ownerUid")
+    suspend fun getDreamsByOwnerOnce(ownerUid: String): List<Dream>
+
+
 
     // Получение всех снов с их локациями
     @Transaction
@@ -41,7 +61,7 @@ interface DreamDao {
     @Query("DELETE FROM DreamLocationCrossRef WHERE dreamId = :dreamId")
     suspend fun deleteDreamLocationCrossRefs(dreamId: String)
 
-    // Метод для получения всех снов без LiveData
+    // Если нужно получить все сны разово (без LiveData):
     @Query("SELECT * FROM dreams")
     suspend fun getAllDreamsOnce(): List<Dream>
 
@@ -55,7 +75,16 @@ interface DreamDao {
     fun getDreamsByLocation(locationId: Int): LiveData<List<Dream>>
 
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDreamLocationCrossRef(crossRef: DreamLocationCrossRef)
+
+
     @Query("SELECT * FROM dreams WHERE title LIKE :query OR content LIKE :query")
     fun searchDreams(query: String): LiveData<List<Dream>>
+
+
+
+
+
 
 }

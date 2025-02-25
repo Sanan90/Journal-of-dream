@@ -4,15 +4,18 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.journalofdream.model.*
+import com.example.journalofdream.model.Dream
+import com.example.journalofdream.model.Location
+import com.example.journalofdream.model.DreamLocationCrossRef
+import com.example.journalofdream.model.Category
+import com.example.journalofdream.model.CategoryDao
 
 @Database(
     entities = [Dream::class, Location::class, DreamLocationCrossRef::class, Category::class],
-    version = 1,  // Ставим 1, раз нет старых версий у пользователей
+    version = 1,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
-
     abstract fun dreamDao(): DreamDao
     abstract fun locationDao(): LocationDao
     abstract fun categoryDao(): CategoryDao
@@ -27,9 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "dream_database"
-                )
-//                    .fallbackToDestructiveMigration() // Если вы не хотите определять миграции
-                    .build()
+                ).build()
                 INSTANCE = instance
                 instance
             }

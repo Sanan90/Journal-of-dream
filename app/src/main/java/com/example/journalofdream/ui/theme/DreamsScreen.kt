@@ -30,25 +30,24 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.journalofdream.viewmodel.CategoryViewModel
 import androidx.compose.material3.Scaffold
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewModel) {
-    // Получаем список всех снов и категорий из ViewModel
-    val allDreams by dreamViewModel.allDreams.observeAsState(listOf())
-    // 1. Получаем CategoryViewModel
-    val categoryViewModel: CategoryViewModel = viewModel()
 
-    // 2. Наблюдаем за списком категорий
+    // Вместо allDreams используем dreamViewModel.dreams
+    // т. к. мы в DreamViewModel сделали val dreams: LiveData<List<Dream>>
+    val allDreams by dreamViewModel.dreams.observeAsState(listOf())
+
+    // Получаем CategoryViewModel для списка категорий
+    val categoryViewModel: CategoryViewModel = viewModel()
     val categories by categoryViewModel.allCategories.observeAsState(listOf())
-    // Переменные состояния для выбранной категории, раскрытия меню и поискового запроса
+
+    // Переменные для выбора категории и поиска
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var expanded by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
 
     Scaffold(
-        // Верхняя панель с названием и кнопками
         topBar = {
             TopAppBar(
                 title = { Text("Список сновидений", color = Color.White) },
@@ -62,6 +61,7 @@ fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewMode
                     }
                 },
                 actions = {
+                    // Кнопка "Добавить сон"
                     IconButton(onClick = { navController.navigate("addDream") }) {
                         Icon(
                             imageVector = Icons.Default.Add,
@@ -78,7 +78,6 @@ fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewMode
         },
         content = { paddingValues ->
             Box(modifier = Modifier.fillMaxSize()) {
-                // Фоновое изображение
                 BackgroundScreen()
 
                 Column(
@@ -91,10 +90,7 @@ fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewMode
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
                         placeholder = {
-                            Text(
-                                "Поиск",
-                                color = Color.White
-                            )
+                            Text("Поиск", color = Color.White)
                         },
                         leadingIcon = {
                             Icon(
@@ -107,16 +103,13 @@ fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewMode
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 8.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            // Устанавливаем цвет текста внутри поля
                             focusedBorderColor = Color.White,
                             unfocusedBorderColor = Color.White,
                             cursorColor = Color.White,
                             focusedLabelColor = Color.White,
                             unfocusedLabelColor = Color.White,
-                            // Цвет иконки
                             focusedLeadingIconColor = Color.White,
                             unfocusedLeadingIconColor = Color.White,
-                            // Цвет текста внутри поля
                         ),
                         textStyle = TextStyle(color = Color.White),
                         singleLine = true
@@ -140,6 +133,7 @@ fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewMode
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
+                            // Пункт "Все сны"
                             DropdownMenuItem(
                                 text = { Text("Все сны") },
                                 onClick = {
@@ -147,6 +141,7 @@ fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewMode
                                     expanded = false
                                 }
                             )
+                            // Список категорий
                             categories.forEach { category ->
                                 DropdownMenuItem(
                                     text = { Text(category.name) },
@@ -166,9 +161,11 @@ fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewMode
                             .padding(horizontal = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // Фильтруем сны по выбранной категории и поисковому запросу
+                        // Фильтруем
                         val filteredDreams = allDreams.filter { dream ->
+                            // Если категория выбрана, dream.category == выбранной
                             (selectedCategory == null || dream.category == selectedCategory?.name) &&
+                                    // Поиск в title или content
                                     (dream.title.contains(searchQuery.text, ignoreCase = true) ||
                                             dream.content.contains(searchQuery.text, ignoreCase = true))
                         }
@@ -188,7 +185,9 @@ fun DreamListItem(dream: Dream, navController: NavHostController) {
     val previewText = dream.title
 
     Button(
-        onClick = { navController.navigate("editDream/${dream.id}") },
+        onClick = {
+            navController.navigate("editDream/${dream.id}")
+        },
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)

@@ -32,7 +32,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.material3.Scaffold
 
-
 fun getCurrentDate(): String {
     val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     return dateFormat.format(Date())
@@ -40,7 +39,10 @@ fun getCurrentDate(): String {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddDreamScreen(navController: NavHostController, dreamViewModel: DreamViewModel) {
+fun AddDreamScreen(
+    navController: NavHostController,
+    dreamViewModel: DreamViewModel = viewModel()
+) {
     // Состояния для полей ввода
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
@@ -51,12 +53,11 @@ fun AddDreamScreen(navController: NavHostController, dreamViewModel: DreamViewMo
     var isLocationDialogOpen by remember { mutableStateOf(false) }
     val selectedLocationIds = remember { mutableStateListOf<Int>() }
 
-    // 1. Получаем CategoryViewModel
+    // ViewModel категорий (если вы используете отдельный CategoryViewModel)
     val categoryViewModel: CategoryViewModel = viewModel()
-
-    // 2. Наблюдаем за списком категорий
     val categories by categoryViewModel.allCategories.observeAsState(listOf())
 
+    // Берём список локаций из DreamViewModel
     val allLocations by dreamViewModel.allLocations.observeAsState(listOf())
 
     Scaffold(
@@ -81,7 +82,7 @@ fun AddDreamScreen(navController: NavHostController, dreamViewModel: DreamViewMo
         },
         content = { paddingValues ->
             Box(modifier = Modifier.fillMaxSize()) {
-                // Фоновое изображение
+                // Фон
                 BackgroundScreen()
 
                 Column(
@@ -105,10 +106,7 @@ fun AddDreamScreen(navController: NavHostController, dreamViewModel: DreamViewMo
                             focusedLabelColor = Color.White,
                             unfocusedLabelColor = Color.White
                         ),
-                        textStyle = TextStyle(
-                            color = Color.White,
-                            fontSize = 18.sp
-                        )
+                        textStyle = TextStyle(color = Color.White, fontSize = 18.sp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -129,10 +127,7 @@ fun AddDreamScreen(navController: NavHostController, dreamViewModel: DreamViewMo
                             focusedLabelColor = Color.White,
                             unfocusedLabelColor = Color.White
                         ),
-                        textStyle = TextStyle(
-                            color = Color.White,
-                            fontSize = 18.sp
-                        ),
+                        textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
                         maxLines = Int.MAX_VALUE,
                         keyboardOptions = KeyboardOptions.Default.copy(
                             imeAction = ImeAction.Default
@@ -240,14 +235,16 @@ fun AddDreamScreen(navController: NavHostController, dreamViewModel: DreamViewMo
                     // Кнопка сохранения
                     Button(
                         onClick = {
+                            // Создаём объект Dream
                             val dream = Dream(
                                 title = title,
                                 content = content,
                                 date = getCurrentDate(),
                                 category = selectedCategory?.name ?: "Без категории"
                             )
-                            // Сохраняем сон вместе с выбранными локациями
-                            dreamViewModel.addDream(dream, selectedLocationIds)
+                            // Сохраняем сон + выбранные локации
+                            dreamViewModel.addDream(dream, selectedLocationIds.toList())
+
                             navController.popBackStack()
                         },
                         modifier = Modifier.align(Alignment.End),
