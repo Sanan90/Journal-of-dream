@@ -137,4 +137,6 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
             repository.startSync()
         }
     }
+
+
 }

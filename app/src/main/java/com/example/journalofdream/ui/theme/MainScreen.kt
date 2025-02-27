@@ -1,7 +1,6 @@
 // Файл: com/example/journalofdream/ui/theme/MainScreen.kt
 
 package com.example.journalofdream.ui.theme
-import com.example.journalofdream.ui.theme.ChooseActionDialog
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -20,24 +19,23 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.journalofdream.ui.common.BackgroundScreen
-import androidx.compose.material3.Scaffold
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     navController: NavHostController,
     onLogout: () -> Unit,
-    isGuest: Boolean,        // Гость или авторизованный пользователь
-    displayName: String?     // Имя пользователя или email
+    isGuest: Boolean,        // true, если режим гостя; false, если пользователь авторизован
+    displayName: String?     // Имя пользователя или email (для отображения в заголовке)
 ) {
     var isVisible by remember { mutableStateOf(false) }
-    var showDialog by remember { mutableStateOf(false) } // Для отображения диалога выбора
+    var showDialog by remember { mutableStateOf(false) } // флаг для отображения диалога выбора действия
 
+    // Анимация показа заголовка при первом отображении экрана
     LaunchedEffect(Unit) {
         isVisible = true
     }
@@ -46,54 +44,38 @@ fun MainScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    // Если гость - показываем кнопку «Авторизуйтесь»
-                    // Иначе - показываем «Сновидец: (displayName)»
+                    // Если гость – кнопка "Авторизуйтесь", чтобы перейти на экран входа.
+                    // Если пользователь авторизован – отображаем его имя или email.
                     if (isGuest) {
-                        TextButton(
-                            onClick = {
-                                // Действие при нажатии: можно сразу navController.navigate("auth")
-                                // Но вы писали, что пока не хотите «авторизовываться без выхода».
-                                // Можно просто ничего не делать, или перейти на экран auth:
-                                navController.navigate("auth")
-                            }
-                        ) {
+                        TextButton(onClick = { navController.navigate("auth") }) {
                             Text("Авторизуйтесь")
                         }
                     } else {
-                        // Отображаем имя пользователя
                         Text("Сновидец: ${displayName ?: "Неизвестно"}")
                     }
                 },
                 actions = {
-                    // Можно добавить иконку выхода, но только если пользователь НЕ гость
+                    // Иконка выхода из аккаунта (видна только для авторизованного пользователя).
                     if (!isGuest) {
                         IconButton(onClick = { onLogout() }) {
-                            Icon(
-                                imageVector = Icons.Default.ExitToApp,
-                                contentDescription = "Выйти"
-                            )
+                            Icon(imageVector = Icons.Default.ExitToApp, contentDescription = "Выйти")
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
-                )
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showDialog = true }, // Показать диалог при нажатии на кнопку
+                onClick = { showDialog = true },  // при нажатии показываем диалог выбора добавления
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Добавить запись"
-                )
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Добавить запись")
             }
         },
         content = { paddingValues ->
             Box(modifier = Modifier.fillMaxSize()) {
-                BackgroundScreen()
+                BackgroundScreen()  // фоновое изображение/градиент
 
                 Column(
                     modifier = Modifier
@@ -117,7 +99,7 @@ fun MainScreen(
                         )
                     }
 
-                    // Кнопка для перехода на экран сновидений
+                    // Кнопка перехода на экран списка снов
                     Button(
                         onClick = { navController.navigate("dreams") },
                         modifier = Modifier
@@ -142,17 +124,13 @@ fun MainScreen(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                "Записать сновидение",
-                                color = Color.White,
-                                fontSize = 24.sp
-                            )
+                            Text("Записать сновидение", color = Color.White, fontSize = 24.sp)
                         }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Кнопка для перехода на экран локаций
+                    // Кнопка перехода на экран списка локаций
                     Button(
                         onClick = { navController.navigate("locations") },
                         modifier = Modifier
@@ -177,20 +155,16 @@ fun MainScreen(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                "Локации",
-                                color = Color.White,
-                                fontSize = 24.sp
-                            )
+                            Text("Локации", color = Color.White, fontSize = 24.sp)
                         }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Кнопка для перехода на экран техник (пока не реализована)
+                    // Кнопка для третьего экрана (например, техники – пока не реализован)
                     Button(
                         onClick = {
-                            // Действие для третьей кнопки (техники)
+                            // Действие для третьей кнопки (при необходимости можно добавить функционал)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -214,15 +188,11 @@ fun MainScreen(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                "Техники",
-                                color = Color.White,
-                                fontSize = 24.sp
-                            )
+                            Text("Техники", color = Color.White, fontSize = 24.sp)
                         }
                     }
 
-                    // Диалог выбора действия
+                    // Диалог выбора действия (выбор добавить сон или локацию)
                     if (showDialog) {
                         ChooseActionDialog(
                             onDismiss = { showDialog = false },
