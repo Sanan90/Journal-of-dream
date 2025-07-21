@@ -11,14 +11,20 @@ import com.example.journalofdream.model.Category
 import com.example.journalofdream.model.CategoryDao
 
 @Database(
-    entities = [Dream::class, Location::class, DreamLocationCrossRef::class, Category::class],
-    version = 1,
+    entities = [
+        Dream::class,
+        Location::class,
+        DreamLocationCrossRef::class,
+        Category::class
+    ],
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
+
     abstract fun dreamDao(): DreamDao
     abstract fun locationDao(): LocationDao
-    abstract fun categoryDao(): CategoryDao
+    abstract fun categoryDao(): CategoryDao  // <- Вот метод для CategoryDao
 
     companion object {
         @Volatile
@@ -30,7 +36,10 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "dream_database"
-                ).build()
+                )
+                    // Без миграций, если вам удобно
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }

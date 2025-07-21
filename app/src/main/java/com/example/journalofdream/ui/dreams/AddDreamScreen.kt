@@ -24,13 +24,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.journalofdream.model.Category
 import com.example.journalofdream.model.Dream
-import com.example.journalofdream.model.Location
 import com.example.journalofdream.ui.common.BackgroundScreen
 import com.example.journalofdream.viewmodel.CategoryViewModel
 import com.example.journalofdream.viewmodel.DreamViewModel
+import com.example.journalofdream.viewmodel.LocationViewModel
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.compose.material3.Scaffold
 
 fun getCurrentDate(): String {
     val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
@@ -41,24 +40,25 @@ fun getCurrentDate(): String {
 @Composable
 fun AddDreamScreen(
     navController: NavHostController,
-    dreamViewModel: DreamViewModel = viewModel()
+    dreamViewModel: DreamViewModel = viewModel(),
+    locationViewModel: LocationViewModel = viewModel()
 ) {
-    // Состояния для полей ввода
+    // Поля ввода для нового сна
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var isCategoryMenuExpanded by remember { mutableStateOf(false) }
 
-    // Состояние для выбора локаций
+    // Состояния для выбора локаций
     var isLocationDialogOpen by remember { mutableStateOf(false) }
     val selectedLocationIds = remember { mutableStateListOf<Int>() }
 
-    // ViewModel категорий (если вы используете отдельный CategoryViewModel)
+    // ViewModel для категорий (если требуется)
     val categoryViewModel: CategoryViewModel = viewModel()
     val categories by categoryViewModel.allCategories.observeAsState(listOf())
 
-    // Берём список локаций из DreamViewModel
-    val allLocations by dreamViewModel.allLocations.observeAsState(listOf())
+    // Список всех локаций текущего пользователя (для отображения в диалоге)
+    val allLocations by locationViewModel.locations.observeAsState(emptyList())
 
     Scaffold(
         topBar = {
@@ -82,7 +82,7 @@ fun AddDreamScreen(
         },
         content = { paddingValues ->
             Box(modifier = Modifier.fillMaxSize()) {
-                // Фон
+                // Фоновое изображение/цвет
                 BackgroundScreen()
 
                 Column(
@@ -91,90 +91,76 @@ fun AddDreamScreen(
                         .padding(paddingValues)
                         .padding(16.dp)
                 ) {
-                    // Поле заголовка
-                    TextField(
+                    // Поле ввода заголовка сна
+                    OutlinedTextField(
                         value = title,
                         onValueChange = { title = it },
-                        label = { Text("Заголовок", color = Color.White) },
-                        placeholder = { Text("Введите заголовок", color = Color.White) },
+                        label = { Text("Название сна") },
+                        textStyle = TextStyle(fontSize = 18.sp),
+                        singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            cursorColor = Color.White,
-                            focusedIndicatorColor = Color.White,
-                            unfocusedIndicatorColor = Color.White,
-                            focusedLabelColor = Color.White,
-                            unfocusedLabelColor = Color.White
-                        ),
-                        textStyle = TextStyle(color = Color.White, fontSize = 18.sp)
+                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
 
-                    // Поле содержания
-                    TextField(
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Поле ввода содержания сна
+                    OutlinedTextField(
                         value = content,
                         onValueChange = { content = it },
-                        label = { Text("Содержание", color = Color.White) },
-                        placeholder = { Text("Введите содержание сна", color = Color.White) },
+                        label = { Text("Описание сна") },
+                        textStyle = TextStyle(fontSize = 16.sp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1f),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent,
-                            cursorColor = Color.White,
-                            focusedIndicatorColor = Color.White,
-                            unfocusedIndicatorColor = Color.White,
-                            focusedLabelColor = Color.White,
-                            unfocusedLabelColor = Color.White
-                        ),
-                        textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
-                        maxLines = Int.MAX_VALUE,
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Default
-                        ),
-                        keyboardActions = KeyboardActions.Default
+                            .height(120.dp),
+                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = { /* скрыть клавиатуру */ })
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
 
-                    // Кнопка выбора категории
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Выпадающий список категорий
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .wrapContentSize(Alignment.TopStart)
+                            .clickable { isCategoryMenuExpanded = true }
+                            .background(Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(8.dp))
+                            .padding(16.dp)
                     ) {
-                        Button(
-                            onClick = { isCategoryMenuExpanded = true },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(8.dp)),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
-                        ) {
-                            Text(
-                                text = selectedCategory?.name ?: "Выбрать категорию",
-                                color = Color.White,
-                                fontSize = 16.sp
-                            )
-                        }
-
+                        Text(
+                            text = selectedCategory?.name ?: "Без категории",
+                            color = Color.White,
+                            fontSize = 16.sp
+                        )
                         DropdownMenu(
                             expanded = isCategoryMenuExpanded,
                             onDismissRequest = { isCategoryMenuExpanded = false },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            categories.forEach { category ->
+                            // Пункт "Без категории"
+                            DropdownMenuItem(
+                                text = { Text("Без категории") },
+                                onClick = {
+                                    selectedCategory = null
+                                    isCategoryMenuExpanded = false
+                                }
+                            )
+                            // Список доступных категорий
+                            categories.forEach { cat ->
                                 DropdownMenuItem(
-                                    text = { Text(category.name) },
+                                    text = { Text(cat.name) },
                                     onClick = {
-                                        selectedCategory = category
+                                        selectedCategory = cat
                                         isCategoryMenuExpanded = false
                                     }
                                 )
                             }
                         }
                     }
+
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Кнопка выбора локаций
+                    // Кнопка для выбора локаций
                     Button(
                         onClick = { isLocationDialogOpen = true },
                         modifier = Modifier.fillMaxWidth(),
@@ -186,7 +172,7 @@ fun AddDreamScreen(
                         )
                     }
 
-                    // Диалог выбора локаций
+                    // Диалог со списком локаций для выбора
                     if (isLocationDialogOpen) {
                         AlertDialog(
                             onDismissRequest = { isLocationDialogOpen = false },
@@ -230,21 +216,22 @@ fun AddDreamScreen(
                             }
                         )
                     }
+
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Кнопка сохранения
+                    // Кнопка сохранения нового сна
                     Button(
                         onClick = {
-                            // Создаём объект Dream
+                            // Создаём объект Dream из введённых данных
                             val dream = Dream(
                                 title = title,
                                 content = content,
                                 date = getCurrentDate(),
                                 category = selectedCategory?.name ?: "Без категории"
                             )
-                            // Сохраняем сон + выбранные локации
+                            // Сохраняем сон вместе с выбранными локациями
                             dreamViewModel.addDream(dream, selectedLocationIds.toList())
-
+                            // Возврат к списку после сохранения
                             navController.popBackStack()
                         },
                         modifier = Modifier.align(Alignment.End),

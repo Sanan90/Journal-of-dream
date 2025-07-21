@@ -5,27 +5,22 @@ import androidx.lifecycle.*
 import com.example.journalofdream.database.AppDatabase
 import com.example.journalofdream.model.Category
 import kotlinx.coroutines.launch
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 
+/**
+ * ViewModel для работы со списком категорий (Category).
+ */
 class CategoryViewModel(application: Application) : AndroidViewModel(application) {
 
+    // Берём DAO из AppDatabase
     private val categoryDao = AppDatabase.getInstance(application).categoryDao()
 
-    // Это список категорий из базы (как LiveData).
-    // Используем, например, в UI (через observeAsState).
+    // LiveData со всеми категориями (через DAO)
     val allCategories: LiveData<List<Category>> = categoryDao.getAllCategories()
 
     init {
-        // При первом создании ViewModel проверяем, есть ли категории.
+        // При первом создании добавляем дефолтные категории, если база пустая
         viewModelScope.launch {
-            // Метод, который возвращает список категорий без LiveData:
-            // Нужно объявить его в CategoryDao (см. пример ниже).
             val existingCount = categoryDao.getAllCategoriesOnce().size
-
-            // Если таблица пустая - добавим стандартные.
             if (existingCount == 0) {
                 val defaultCategories = listOf(
                     Category(name = "Без категории", isCustom = false),
@@ -41,14 +36,14 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    // Метод для добавления новой категории (пользовательской, например).
+    // Добавить категорию (пользовательскую)
     fun addCategory(category: Category) {
         viewModelScope.launch {
             categoryDao.insertCategory(category)
         }
     }
 
-    // Метод для удаления категории
+    // Удалить категорию
     fun deleteCategory(category: Category) {
         viewModelScope.launch {
             categoryDao.deleteCategory(category)

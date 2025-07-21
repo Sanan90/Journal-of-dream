@@ -8,28 +8,33 @@ import com.example.journalofdream.model.LocationWithDreams
 @Dao
 interface LocationDao {
 
-    // Insert a new location and return its ID
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(location: Location): Long
 
-    // Update an existing location
     @Update
     suspend fun update(location: Location)
 
-    // Delete a location
     @Delete
     suspend fun delete(location: Location)
 
-    // Get all locations
-    @Query("SELECT * FROM locations")
-    fun getAllLocations(): LiveData<List<Location>>
+    // Список локаций для заданного владельца (LiveData для наблюдения)
+    @Query("SELECT * FROM locations WHERE ownerUid = :ownerUid")
+    fun getLocationsByOwner(ownerUid: String): LiveData<List<Location>>
 
-    // Get a location by its ID
-    @Query("SELECT * FROM locations WHERE id = :locationId")
-    fun getLocationById(locationId: Int): LiveData<Location>
+    // Получение локации по ID и владельцу (LiveData)
+    @Query("SELECT * FROM locations WHERE id = :locationId AND ownerUid = :ownerUid")
+    fun getLocationById(locationId: Int, ownerUid: String): LiveData<Location>
 
-    // Get a location with its associated dreams
+    // Локация с привязанными снами (отношение один-ко-многим, LiveData)
     @Transaction
-    @Query("SELECT * FROM locations WHERE id = :locationId")
-    fun getLocationWithDreams(locationId: Int): LiveData<LocationWithDreams>
+    @Query("SELECT * FROM locations WHERE id = :locationId AND ownerUid = :ownerUid")
+    fun getLocationWithDreams(locationId: Int, ownerUid: String): LiveData<LocationWithDreams>
+
+    // Разовое получение всех локаций пользователя (для миграции)
+    @Query("SELECT * FROM locations WHERE ownerUid = :ownerUid")
+    suspend fun getLocationsByOwnerOnce(ownerUid: String): List<Location>
+
+    // Разовое получение локации по ID и владельцу (для внутренних нужд, например, синхронизации)
+    @Query("SELECT * FROM locations WHERE id = :locId AND ownerUid = :ownerUid LIMIT 1")
+    suspend fun getLocationByIdOnce(locId: Int, ownerUid: String): Location?
 }

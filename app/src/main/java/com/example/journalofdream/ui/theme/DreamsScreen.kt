@@ -15,34 +15,36 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import com.example.journalofdream.ui.common.BackgroundScreen
-import com.example.journalofdream.model.Dream
-import com.example.journalofdream.viewmodel.DreamViewModel
-import com.example.journalofdream.model.Category
-import androidx.compose.ui.Alignment
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.TextStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.example.journalofdream.model.Category
+import com.example.journalofdream.model.Dream
+import com.example.journalofdream.ui.common.BackgroundScreen
 import com.example.journalofdream.viewmodel.CategoryViewModel
-import androidx.compose.material3.Scaffold
+import com.example.journalofdream.viewmodel.DreamViewModel
 
+/**
+ * Экран списка снов.
+ * Отображает все сны текущего пользователя (или гостя) с возможностью фильтрации.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewModel) {
+fun DreamsScreen(
+    navController: NavHostController,
+    dreamViewModel: DreamViewModel,
+    categoryViewModel: CategoryViewModel = viewModel()
+) {
+    // Получаем список всех снов (LiveData наблюдается как State)
+    val allDreams by dreamViewModel.dreams.observeAsState(emptyList())
 
-    // Вместо allDreams используем dreamViewModel.dreams
-    // т. к. мы в DreamViewModel сделали val dreams: LiveData<List<Dream>>
-    val allDreams by dreamViewModel.dreams.observeAsState(listOf())
+    // Список категорий (для фильтрации по категории)
+    val categories by categoryViewModel.allCategories.observeAsState(emptyList())
 
-    // Получаем CategoryViewModel для списка категорий
-    val categoryViewModel: CategoryViewModel = viewModel()
-    val categories by categoryViewModel.allCategories.observeAsState(listOf())
-
-    // Переменные для выбора категории и поиска
+    // Состояния для выбранной категории фильтра и строки поиска
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var expanded by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
@@ -61,138 +63,123 @@ fun DreamsScreen(navController: NavHostController, dreamViewModel: DreamViewMode
                     }
                 },
                 actions = {
-                    // Кнопка "Добавить сон"
+                    // Кнопка добавления нового сна
                     IconButton(onClick = { navController.navigate("addDream") }) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Добавить",
+                            contentDescription = "Добавить сон",
                             tint = Color.White
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
-                ),
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
                 modifier = Modifier.background(Color.Transparent)
             )
-        },
-        content = { paddingValues ->
-            Box(modifier = Modifier.fillMaxSize()) {
-                BackgroundScreen()
+        }
+    ) { paddingValues ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            BackgroundScreen()
 
-                Column(
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                // Поле поиска по тексту сна
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    placeholder = { Text("Поиск", color = Color.White) },
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Default.Search, contentDescription = "Поиск", tint = Color.White)
+                    },
+                    textStyle = TextStyle(color = Color.White),
+                    singleLine = true,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                ) {
-                    // Поле поиска
-                    OutlinedTextField(
-                        value = searchQuery,
-                        onValueChange = { searchQuery = it },
-                        placeholder = {
-                            Text("Поиск", color = Color.White)
-                        },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "Поиск",
-                                tint = Color.White
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = Color.White,
-                            cursorColor = Color.White,
-                            focusedLabelColor = Color.White,
-                            unfocusedLabelColor = Color.White,
-                            focusedLeadingIconColor = Color.White,
-                            unfocusedLeadingIconColor = Color.White,
-                        ),
-                        textStyle = TextStyle(color = Color.White),
-                        singleLine = true
-                    )
+                        .fillMaxWidth()
+                        .shadow(8.dp)
+                        .background(Color.White.copy(alpha = 0.2f))
+                        .padding(4.dp)
+                )
 
-                    // Поле выбора категории
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .clickable { expanded = true }
-                            .background(Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(8.dp))
-                            .padding(16.dp)
+                // Выбор категории (DropdownMenu для фильтрации)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .clickable { expanded = true }
+                        .background(Color.White.copy(alpha = 0.2f), shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = selectedCategory?.name ?: "Все сны",
+                        color = Color.White,
+                        fontSize = 18.sp
+                    )
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
                     ) {
-                        Text(
-                            text = selectedCategory?.name ?: "Все сны",
-                            color = Color.White,
-                            fontSize = 18.sp
+                        // Пункт для выбора всех категорий
+                        DropdownMenuItem(
+                            text = { Text("Все сны") },
+                            onClick = {
+                                selectedCategory = null
+                                expanded = false
+                            }
                         )
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            // Пункт "Все сны"
+                        // Список категорий для фильтрации
+                        categories.forEach { category ->
                             DropdownMenuItem(
-                                text = { Text("Все сны") },
+                                text = { Text(category.name) },
                                 onClick = {
-                                    selectedCategory = null
+                                    selectedCategory = category
                                     expanded = false
                                 }
                             )
-                            // Список категорий
-                            categories.forEach { category ->
-                                DropdownMenuItem(
-                                    text = { Text(category.name) },
-                                    onClick = {
-                                        selectedCategory = category
-                                        expanded = false
-                                    }
-                                )
-                            }
                         }
                     }
+                }
 
-                    // Список снов
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        // Фильтруем
-                        val filteredDreams = allDreams.filter { dream ->
-                            // Если категория выбрана, dream.category == выбранной
-                            (selectedCategory == null || dream.category == selectedCategory?.name) &&
-                                    // Поиск в title или content
-                                    (dream.title.contains(searchQuery.text, ignoreCase = true) ||
-                                            dream.content.contains(searchQuery.text, ignoreCase = true))
-                        }
+                // Формируем отфильтрованный список с учётом категории и строки поиска
+                val filteredDreams = allDreams.filter { dream ->
+                    (selectedCategory == null || dream.category == selectedCategory?.name) &&
+                            (dream.title.contains(searchQuery.text, ignoreCase = true) ||
+                                    dream.content.contains(searchQuery.text, ignoreCase = true))
+                }
 
-                        items(filteredDreams) { dream ->
-                            DreamListItem(dream, navController)
-                        }
+                // Список снов
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(filteredDreams) { dream ->
+                        DreamListItem(dream, navController)
                     }
                 }
             }
         }
-    )
+    }
 }
 
+/**
+ * Отдельный элемент списка сна.
+ * При нажатии переходит на экран редактирования выбранного сна.
+ */
 @Composable
 fun DreamListItem(dream: Dream, navController: NavHostController) {
-    val previewText = dream.title
-
     Button(
         onClick = {
-            navController.navigate("editDream/${dream.id}")
+            // Переходим на экран редактирования сна (передаём localId сна в маршрут)
+            navController.navigate("editDream/${dream.localId}")
         },
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)
-            .shadow(8.dp, shape = RoundedCornerShape(16.dp)),
-        shape = RoundedCornerShape(16.dp),
+            .shadow(8.dp, shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color.White)
     ) {
         Column(
@@ -202,7 +189,7 @@ fun DreamListItem(dream: Dream, navController: NavHostController) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = previewText,
+                text = dream.title,
                 color = Color.Black,
                 fontSize = 18.sp,
                 maxLines = 1

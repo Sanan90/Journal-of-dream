@@ -1,11 +1,8 @@
-// Файл: com/example/journalofdream/ui/JournalOfDreamApp.kt
-
 package com.example.journalofdream.ui
 
 import android.content.Context
 import androidx.compose.runtime.*
 import androidx.navigation.compose.rememberNavController
-import com.example.journalofdream.ui.theme.AppTheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.journalofdream.ui.dreams.*
@@ -20,32 +17,37 @@ import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.example.journalofdream.R
+import com.example.journalofdream.ui.theme.AppTheme
 import com.example.journalofdream.ui.theme.DreamsScreen
 import com.example.journalofdream.ui.theme.LocationListScreen
 import com.example.journalofdream.ui.theme.MainScreen
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 
+/**
+ * Главный composable приложения, где определяются NavHost и навигация между экранами.
+ * Определяет, показывать ли экран авторизации или основной контент, в зависимости от состояния (guest или авторизован).
+ */
 @Composable
 fun JournalOfDreamApp() {
     AppTheme {
         val context = LocalContext.current
         val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
-        // Читаем флаг гостевого режима (skipAuth) синхронно, чтобы избежать задержки.
+        // Флаг, указывающий, что пользователь решил пропустить авторизацию (guest mode)
         val skipAuth = remember { mutableStateOf(sharedPreferences.getBoolean("skipAuth", false)) }
 
-        // NavController для управления навигацией между экранами.
+        // NavController для навигации по экранам
         val navController = rememberNavController()
 
-        // ViewModels приложения
-        val dreamViewModel: DreamViewModel = viewModel()   // используется для управления записями снов
+        // Инициализируем ViewModel-ы (живут на уровне Activity)
+        val dreamViewModel: DreamViewModel = viewModel()
         val locationViewModel: LocationViewModel = viewModel()
 
-        // Firebase Auth для проверки текущего пользователя (если авторизован).
+        // FirebaseAuth – определяем текущего авторизованного пользователя, если есть
         val auth = FirebaseAuth.getInstance()
         val currentUser = remember { mutableStateOf<FirebaseUser?>(auth.currentUser) }
 
-        // Клиент GoogleSignIn (используется при выходе из Google-аккаунта)
+        // Клиент для выхода из Google (если вход был через Google аккаунт)
         val googleSignInClient: GoogleSignInClient = remember {
             GoogleSignIn.getClient(
                 context,
@@ -56,49 +58,37 @@ fun JournalOfDreamApp() {
             )
         }
 
-        // Признак гостевого режима определяем по флагу skipAuth.
+        // Определяем, гость ли текущий пользователь
         val isGuest = skipAuth.value
 
-        // Отображаемое имя пользователя (если вошёл) или email; для гостя будет null.
+        // Для отображения имени/почты текущего пользователя (в заголовке MainScreen)
         val userName = currentUser.value?.displayName ?: currentUser.value?.email
 
-        // Стартовый экран приложения:
-        // Если уже есть авторизованный пользователь *или* включён гостевой режим,
-        // то сразу показываем главный экран ("main"), иначе – экран авторизации ("auth").
-        val startDestination = if (auth.currentUser != null || skipAuth.value) "main" else "auth"
-
-        // Определяем навигационную структуру приложения.
+        // Определяем стартовый экран: если пользователь уже авторизован или выбрал guest-режим, идём на main, иначе на auth
         NavHost(
             navController = navController,
-            startDestination = startDestination
+            startDestination = if (currentUser.value != null || isGuest) "main" else "auth"
         ) {
-            // ЭКРАН АВТОРИЗАЦИИ
+            // Экран авторизации
             composable("auth") {
                 AuthScreen(
-                    dreamViewModel = dreamViewModel,   // Передаем существующий DreamViewModel, чтобы использовать общие данные
+                    dreamViewModel = dreamViewModel,
+                    locationViewModel = locationViewModel,
                     onAuthSuccess = {
-                        // Колбэк при успешной авторизации (e-mail/пароль или Google).
+                        // Колбэк при успешной авторизации
                         currentUser.value = auth.currentUser
                         skipAuth.value = false
                         sharedPreferences.edit().putBoolean("skipAuth", false).apply()
-
-                        // DreamViewModel.onUserLogin() уже был вызван в AuthScreen,
-                        // поэтому локальные записи гостя перенесены в аккаунт и синхронизированы с Firestore.
-                        // Теперь LiveData списка снов в DreamViewModel будет отображать сны нового пользователя.
-
-                        // Переходим на главный экран.
+                        // Переходим на экран main, убирая из backstack экран auth
                         navController.navigate("main") {
                             popUpTo("auth") { inclusive = true }
                         }
                     },
                     onSkipAuth = {
-                        // Колбэк при выборе "Войти как гость".
+                        // Переход в гостевой режим
                         skipAuth.value = true
                         sharedPreferences.edit().putBoolean("skipAuth", true).apply()
-
-                        // Остаемся в гостевом режиме (ownerUid="guest").
-                        // DreamViewModel продолжит работать с локальными данными гостя.
-                        // Переходим на главный экран.
+                        // Переходим на главный экран в режиме гостя
                         navController.navigate("main") {
                             popUpTo("auth") { inclusive = true }
                         }
@@ -106,27 +96,26 @@ fun JournalOfDreamApp() {
                 )
             }
 
-            // ГЛАВНЫЙ ЭКРАН
+            // Главный экран приложения
             composable("main") {
                 MainScreen(
                     navController = navController,
                     onLogout = {
-                        // Обработка выхода из аккаунта пользователя.
+                        // Обработка выхода из аккаунта
                         if (auth.currentUser != null) {
-                            // 1. Вызываем выход в DreamViewModel: останавливаем синхронизацию и переключаемся на guest.
+                            // 1. Останавливаем синхронизацию и переключаем данные на guest в DreamViewModel
                             dreamViewModel.onUserLogout()
+                            // 2. То же делаем для LocationViewModel (ИСПРАВЛЕНО: добавлено для немедленного обновления списка локаций)
+                            locationViewModel.onUserLogout()
+                            // 3. Выходим из аккаунта FirebaseAuth и Google (если было)
+                            googleSignInClient.signOut()
+                            auth.signOut()
+                            // 4. Сбрасываем сохранённое состояние авторизации
+                            currentUser.value = null
+                            skipAuth.value = false
+                            sharedPreferences.edit().putBoolean("skipAuth", false).apply()
                         }
-                        // 2. Также выходим из Google-аккаунта, если был вход через Google.
-                        googleSignInClient.signOut()
-
-                        // 3. Сбрасываем данные текущего пользователя в состоянии приложения.
-                        currentUser.value = null
-                        skipAuth.value = false
-                        sharedPreferences.edit().putBoolean("skipAuth", false).apply()
-
-                        // После onUserLogout() DreamViewModel.ownerUid стал "guest",
-                        // и LiveData снов переключится на локальные записи гостя.
-                        // Переходим на экран авторизации.
+                        // Переходим на экран авторизации, очищая backstack
                         navController.navigate("auth") {
                             popUpTo("main") { inclusive = true }
                         }
@@ -136,35 +125,71 @@ fun JournalOfDreamApp() {
                 )
             }
 
-            // ОСТАЛЬНЫЕ ЭКРАНЫ (список снов, добавление/редактирование сна; список локаций и т.д.)
+            // Экран списка снов
             composable("dreams") {
-                DreamsScreen(navController, dreamViewModel)
+                DreamsScreen(
+                    navController = navController,
+                    dreamViewModel = dreamViewModel
+                )
             }
+
+            // Экран добавления сна
             composable("addDream") {
-                AddDreamScreen(navController, dreamViewModel)
+                AddDreamScreen(
+                    navController = navController,
+                    dreamViewModel = dreamViewModel,
+                    locationViewModel = locationViewModel
+                )
             }
+
+            // Экран редактирования сна (с параметром id)
             composable("editDream/{id}") { backStackEntry ->
-                val dreamId = backStackEntry.arguments?.getString("id")
-                if (dreamId != null) {
-                    EditDreamScreen(navController, dreamId, dreamViewModel)
-                }
+                val dreamId = backStackEntry.arguments?.getString("id") ?: "0"
+                EditDreamScreen(
+                    navController = navController,
+                    dreamId = dreamId,
+                    dreamViewModel = dreamViewModel,
+                    locationViewModel = locationViewModel
+                )
             }
+
+            // Экран списка локаций
             composable("locations") {
-                LocationListScreen(navController, locationViewModel)
+                LocationListScreen(
+                    navController = navController,
+                    locationViewModel = locationViewModel
+                )
             }
+
+            // Экран добавления новой локации
             composable("addLocation") {
-                AddLocationScreen(navController, locationViewModel)
+                AddLocationScreen(
+                    navController = navController,
+                    locationViewModel = locationViewModel
+                )
             }
+
+            // Экран редактирования локации (передается параметр id)
             composable("editLocation/{id}") { backStackEntry ->
-                val locationId = backStackEntry.arguments?.getString("locationId")?.toIntOrNull()
+                val locationId = backStackEntry.arguments?.getString("id")?.toIntOrNull()
                 if (locationId != null) {
-                    EditLocationScreen(navController, locationId, locationViewModel)
+                    EditLocationScreen(
+                        navController = navController,
+                        locationId = locationId,
+                        locationViewModel = locationViewModel
+                    )
                 }
             }
+
+            // Экран просмотра локации (с отображением связанных снов)
             composable("viewLocation/{locationId}") { backStackEntry ->
                 val locationId = backStackEntry.arguments?.getString("locationId")?.toIntOrNull()
                 if (locationId != null) {
-                    ViewLocationScreen(navController, locationId, locationViewModel)
+                    ViewLocationScreen(
+                        navController = navController,
+                        locationId = locationId,
+                        locationViewModel = locationViewModel
+                    )
                 }
             }
         }

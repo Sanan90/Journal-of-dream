@@ -1,13 +1,12 @@
 package com.example.journalofdream.ui.locations
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,14 +15,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.journalofdream.ui.common.BackgroundScreen
 import com.example.journalofdream.model.Location
 import com.example.journalofdream.viewmodel.LocationViewModel
 
+/**
+ * Экран добавления новой локации.
+ */
 @Composable
-fun AddLocationScreen(navController: NavHostController, locationViewModel: LocationViewModel) {
+fun AddLocationScreen(
+    navController: NavHostController,
+    locationViewModel: LocationViewModel
+) {
     var locationName by remember { mutableStateOf(TextFieldValue("")) }
     var locationDescription by remember { mutableStateOf(TextFieldValue("")) }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -95,11 +99,9 @@ fun AddLocationScreen(navController: NavHostController, locationViewModel: Locat
 
             Button(
                 onClick = {
-                    val newLocation = Location(
-                        name = locationName.text,
-                        description = locationDescription.text
-                    )
-                    locationViewModel.addLocation(newLocation)
+                    val locName = locationName.text
+                    val locDesc = locationDescription.text
+                    locationViewModel.addLocation(locName, locDesc)
                     keyboardController?.hide()
                     navController.popBackStack()
                 },

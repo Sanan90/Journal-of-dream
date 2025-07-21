@@ -1,10 +1,10 @@
 package com.example.journalofdream.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.journalofdream.database.AppDatabase
-import com.example.journalofdream.model.*
+import com.example.journalofdream.model.Dream
+import com.example.journalofdream.model.DreamWithLocations
 import com.example.journalofdream.sync.DreamRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,126 +17,123 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
     private val remoteDb = FirebaseFirestore.getInstance()
     private val repository = DreamRepository(localDb, auth, remoteDb)
 
-    // Локации
-    val allLocations: LiveData<List<Location>> = localDb.locationDao().getAllLocations()
-
-    // Храним "guest" или userUid
-    private val _currentOwnerUid = MutableLiveData<String>()
-
-    // MediatorLiveData, которая будет «переключаться» при изменении _currentOwnerUid
+    // LiveData списка снов текущего пользователя (mediator, переключается при смене ownerUid)
     private val _dreams = MediatorLiveData<List<Dream>>()
-    val dreams: LiveData<List<Dream>> = _dreams
+    val dreams: LiveData<List<Dream>> get() = _dreams
+
+    private val _currentOwnerUid = MutableLiveData<String>()
+    private var dreamsSource: LiveData<List<Dream>>? = null
 
     init {
-        // Если user!=null, ownerUid=user.uid, иначе "guest"
+        // Устанавливаем начального владельца снов: если пользователь залогинен – его UID, иначе "guest"
         val user = auth.currentUser
         _currentOwnerUid.value = user?.uid ?: "guest"
 
-        // Подписываемся на _currentOwnerUid
+        // При изменении текущего владельца (guest->user или наоборот) переключаем источник данных _dreams
         _dreams.addSource(_currentOwnerUid) { newUid ->
-            // При каждом изменении newUid, нам нужно «переподключиться» к DAO
-            // Удаляем старые источники (Room LiveData) и добавляем новый
-            updateDreamsSource(newUid)
+            // убираем старый источник
+            dreamsSource?.let { _dreams.removeSource(it) }
+            // подписываемся на новый источник из DAO
+            val newSource = localDb.dreamDao().getDreamsByOwner(newUid)
+            dreamsSource = newSource
+            _dreams.addSource(newSource) { list -> _dreams.value = list }
+        }
+
+        // Если при запуске уже есть авторизованный пользователь, можно запустить синхронизацию:
+        if (user != null) {
+            repository.startSync()  // запускаем слушатель изменений Firestore для снов
         }
     }
-
-    private var dreamsSource: LiveData<List<Dream>>? = null
 
     /**
-     * Переподключаемся к DAO getDreamsByOwner(newUid),
-     * удаляем предыдущий Source (если был),
-     * добавляем новый.
+     * Добавить новый сон вместе с выбранными локациями.
      */
-    private fun updateDreamsSource(newUid: String) {
-        // 1) Если уже есть активный Source, убираем
-        dreamsSource?.let {
-            _dreams.removeSource(it)
-        }
-        // 2) Запрашиваем новое LiveData от DAO
-        val newSource = localDb.dreamDao().getDreamsByOwner(newUid)
-        dreamsSource = newSource
-        // 3) Добавляем как источник MediatorLiveData
-        _dreams.addSource(newSource) { list ->
-            _dreams.value = list
-        }
-    }
-
-    // -------------------- Методы --------------------------------
-
     fun addDream(dream: Dream, locationIds: List<Int>) {
-        val uid = _currentOwnerUid.value ?: "guest"
+        // Устанавливаем текущего владельца (UID пользователя или "guest") перед сохранением
+        val uid = auth.currentUser?.uid ?: "guest"
         val finalDream = dream.copy(ownerUid = uid)
-
         viewModelScope.launch {
-            localDb.dreamDao().insert(finalDream)
-            // связи
-            locationIds.forEach { locId ->
-                localDb.dreamDao().insertDreamLocationCrossRef(
-                    DreamLocationCrossRef(finalDream.id, locId)
-                )
-            }
-            // Firestore
-            repository.upsertDream(finalDream)
+            // ИСПРАВЛЕНО: вместо прямой вставки в DAO используем репозиторий,
+            // который сохранит сон и связи в базе, а также синхронизирует с Firestore.
+            repository.upsertDream(finalDream, locationIds)
         }
     }
 
+    /**
+     * Обновить существующий сон и его связанные локации.
+     */
     fun updateDream(updatedDream: Dream, locationIds: List<Int>) {
-        val uid = _currentOwnerUid.value ?: "guest"
+        val uid = auth.currentUser?.uid ?: "guest"
         val finalDream = updatedDream.copy(ownerUid = uid)
         viewModelScope.launch {
-            localDb.dreamDao().update(finalDream)
-            localDb.dreamDao().deleteDreamLocationCrossRefs(finalDream.id)
-            locationIds.forEach { locId ->
-                val crossRef = DreamLocationCrossRef(finalDream.id, locId)
-                localDb.dreamDao().insertDreamLocationCrossRef(crossRef)
-            }
-            repository.upsertDream(finalDream)
+            // ИСПРАВЛЕНО: обновление сна также выполняем через репозиторий (обновит локально и в Firestore).
+            repository.upsertDream(finalDream, locationIds)
         }
     }
 
+    /**
+     * Удалить сон (и все связанные с ним привязки локаций).
+     */
     fun deleteDream(dream: Dream) {
         viewModelScope.launch {
-            localDb.dreamDao().deleteDreamLocationCrossRefs(dream.id)
+            // ИСПРАВЛЕНО: перед удалением сна вручную удаляем все его связи из локальной базы (для надёжности, хотя CASCADE тоже удалит)
+            localDb.dreamDao().deleteDreamLocationCrossRefs(dream.localId)
             repository.deleteDream(dream)
         }
     }
 
-    fun getDreamWithLocationsById(dreamId: String): LiveData<DreamWithLocations> {
+    /**
+     * Получить LiveData сна по его ID вместе с привязанными локациями.
+     * Используется для отображения деталей сна и предварительного выбора локаций при редактировании.
+     */
+    fun getDreamWithLocationsById(dreamId: Int): LiveData<DreamWithLocations> {
         return localDb.dreamDao().getDreamWithLocationsById(dreamId)
     }
 
+    /**
+     * Поиск снов по строке (фильтрует по названию и содержанию среди снов текущего пользователя).
+     */
     fun searchDreams(searchText: String): LiveData<List<Dream>> {
         val query = "%$searchText%"
-        return localDb.dreamDao().searchDreams(query)
+        val ownerUid = _currentOwnerUid.value ?: "guest"
+        return localDb.dreamDao().searchDreams(query, ownerUid)
     }
 
-    // Синхронизация
+    /**
+     * Вызывается при успешном входе пользователя.
+     * Мигрирует гостевые записи снов в профиль и начинает синхронизацию.
+     */
     fun onUserLogin() {
         val user = auth.currentUser ?: return
-        val userUid = user.uid
+        val uid = user.uid
         viewModelScope.launch {
-            repository.migrateGuestRecordsToUser(userUid)
+            repository.migrateGuestRecordsToUser(uid)
         }
+        // Запускаем синхронизацию с Firestore для снов нового пользователя
         repository.startSync()
-
-        // Меняем _currentOwnerUid -> userUid
-        _currentOwnerUid.value = userUid
+        // Переключаем локальный список снов на записи данного пользователя
+        _currentOwnerUid.value = uid
     }
 
+    /**
+     * Вызывается при выходе из аккаунта.
+     * Останавливает синхронизацию с Firestore и переключает представление на гостевые данные.
+     */
     fun onUserLogout() {
-        val user = auth.currentUser
-        if (user != null) {
+        if (auth.currentUser != null) {
             repository.stopSync()
-            auth.signOut()
+            auth.signOut()  // выходим из FirebaseAuth (обнуляем текущего пользователя)
         }
+        // Переключаем LiveData на гостевой режим (сразу покажет гостевые сны, если они есть)
         _currentOwnerUid.value = "guest"
     }
 
+    /**
+     * (Дополнительно) Запустить синхронизацию, если пользователь уже авторизован.
+     */
     fun startSyncIfLoggedIn() {
         if (auth.currentUser != null) {
             repository.startSync()
         }
     }
-
-
 }

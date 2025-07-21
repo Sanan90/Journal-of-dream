@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -16,30 +16,37 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.journalofdream.model.Dream
+import com.example.journalofdream.model.Location
 import com.example.journalofdream.ui.common.BackgroundScreen
-import com.example.journalofdream.viewmodel.LocationViewModel
 import com.example.journalofdream.ui.theme.DreamListItem
+import com.example.journalofdream.viewmodel.LocationViewModel
 
+/**
+ * Экран для просмотра одной локации + связанных снов.
+ * Позволяет редактировать поля локации непосредственно здесь (isEditing),
+ * или удалять локацию.
+ */
 @Composable
 fun ViewLocationScreen(
     navController: NavHostController,
     locationId: Int,
     locationViewModel: LocationViewModel = viewModel()
 ) {
-    // Получаем локацию с привязанными снами
-    val locationWithDreams by locationViewModel.getLocationWithDreams(locationId).observeAsState()
+    val locationWithDreamsLD = locationViewModel.getLocationWithDreams(locationId)
+    val locationWithDreamsState = locationWithDreamsLD.observeAsState()
 
     var isEditing by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 
-    locationWithDreams?.let {
-        val location = it.location
-        val dreams = it.dreams
+    locationWithDreamsState.value?.let { locWithDreams ->
+        val location = locWithDreams.location
+        val dreams = locWithDreams.dreams
 
+        // Если сейчас не редактируем, инициализируем поля из location
         if (!isEditing) {
             name = location.name
             description = location.description
@@ -48,7 +55,7 @@ fun ViewLocationScreen(
         Box(modifier = Modifier.fillMaxSize()) {
             BackgroundScreen()
 
-            // Кнопка "Назад" в правом верхнем углу
+            // Кнопка \"Назад\" в правом верхнем углу
             Button(
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
@@ -80,7 +87,7 @@ fun ViewLocationScreen(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
 
-                // Кнопки "Редактировать" и "Удалить"
+                // Кнопки \"Редактировать\" и \"Удалить\"
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -88,7 +95,6 @@ fun ViewLocationScreen(
                     Button(onClick = { isEditing = true }) {
                         Text("Редактировать")
                     }
-
                     Button(
                         onClick = {
                             locationViewModel.deleteLocation(location)
@@ -99,6 +105,7 @@ fun ViewLocationScreen(
                     }
                 }
 
+                // Если включен режим редактирования
                 if (isEditing) {
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -107,10 +114,10 @@ fun ViewLocationScreen(
                         style = TextStyle(color = Color.White, fontSize = 18.sp),
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-
+                    var nameInput by remember { mutableStateOf(name) }
                     BasicTextField(
-                        value = name,
-                        onValueChange = { name = it },
+                        value = nameInput,
+                        onValueChange = { nameInput = it },
                         textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -125,10 +132,10 @@ fun ViewLocationScreen(
                         style = TextStyle(color = Color.White, fontSize = 18.sp),
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-
+                    var descInput by remember { mutableStateOf(description) }
                     BasicTextField(
-                        value = description,
-                        onValueChange = { description = it },
+                        value = descInput,
+                        onValueChange = { descInput = it },
                         textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -139,15 +146,18 @@ fun ViewLocationScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Кнопка "Сохранить изменения"
+                    // Кнопка \"Сохранить изменения\"
                     Button(
                         onClick = {
-                            val updatedLocation = location.copy(
-                                name = name,
-                                description = description
+                            val updatedLoc = location.copy(
+                                name = nameInput,
+                                description = descInput
                             )
-                            locationViewModel.updateLocation(updatedLocation)
-                            isEditing = false // Завершаем режим редактирования
+                            locationViewModel.updateLocation(updatedLoc)
+                            // Обновляем локальные переменные
+                            name = nameInput
+                            description = descInput
+                            isEditing = false
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
@@ -164,19 +174,18 @@ fun ViewLocationScreen(
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
-                // Отображаем список снов
+                // Лист снов
                 LazyColumn {
                     items(dreams) { dream ->
-                        // Используем готовый компонент для отображения сна
-                        DreamListItem(dream = dream, navController = navController)
+                        DreamListItem(dream, navController)
                     }
                 }
             }
         }
     } ?: run {
-        // Если данные еще не загрузились, отображаем индикатор загрузки
+        // Если locationWithDreamsState.value == null
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(color = Color.White)
         }
     }
 }

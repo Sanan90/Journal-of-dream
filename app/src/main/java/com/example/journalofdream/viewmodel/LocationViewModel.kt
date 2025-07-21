@@ -3,48 +3,119 @@ package com.example.journalofdream.viewmodel
 import android.app.Application
 import androidx.lifecycle.*
 import com.example.journalofdream.database.AppDatabase
-import com.example.journalofdream.model.*
+import com.example.journalofdream.model.Location
+import com.example.journalofdream.model.LocationWithDreams
+import com.example.journalofdream.sync.LocationRepository
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 class LocationViewModel(application: Application) : AndroidViewModel(application) {
+
     private val db = AppDatabase.getInstance(application)
+    private val auth = FirebaseAuth.getInstance()
+    private val remoteDb = FirebaseFirestore.getInstance()
+    private val locationRepository = LocationRepository(db, auth, remoteDb)
 
-    // LiveData list of all locations
-    val allLocations: LiveData<List<Location>> = db.locationDao().getAllLocations()
+    // LiveData списка локаций текущего пользователя
+    private val _locations = MediatorLiveData<List<Location>>()
+    val locations: LiveData<List<Location>> get() = _locations
 
-    // Method to add a new location
-    fun addLocation(location: Location) {
-        viewModelScope.launch {
-            db.locationDao().insert(location)
+    private val _currentOwnerUid = MutableLiveData<String>()
+    private var locationsSource: LiveData<List<Location>>? = null
+
+    init {
+        // Инициализируем текущего владельца (UID пользователя или "guest")
+        val user = auth.currentUser
+        _currentOwnerUid.value = user?.uid ?: "guest"
+
+        // При смене UID переключаем источник данных для списка локаций
+        _locations.addSource(_currentOwnerUid) { newUid ->
+            locationsSource?.let { _locations.removeSource(it) }
+            val newSource = db.locationDao().getLocationsByOwner(newUid)
+            locationsSource = newSource
+            _locations.addSource(newSource) { list ->
+                _locations.value = list
+            }
+        }
+
+        // Если при запуске уже есть авторизованный пользователь, начинаем синхронизацию локаций
+        if (user != null) {
+            locationRepository.startSync()
         }
     }
 
-    // Method to get a location by its ID
-    fun getLocationById(locationId: Int): LiveData<Location> {
-        return db.locationDao().getLocationById(locationId)
+    /**
+     * Вызывается при успешном входе пользователя.
+     * Переключает отображение на данные пользователя и мигрирует гостевые локации.
+     */
+    fun onUserLogin(user: FirebaseUser) {
+        _currentOwnerUid.value = user.uid
+        viewModelScope.launch {
+            locationRepository.migrateGuestLocationsToUser(user.uid)
+            locationRepository.startSync()
+        }
     }
 
-    // Method to delete a location
+    /**
+     * Вызывается при выходе из аккаунта.
+     * Останавливает синхронизацию и переключается на гостевые данные.
+     */
+    fun onUserLogout() {
+        locationRepository.stopSync()
+        _currentOwnerUid.value = "guest"
+    }
+
+    /**
+     * Добавить новую локацию (для текущего пользователя или гостя).
+     */
+    fun addLocation(name: String, description: String) {
+        val uid = _currentOwnerUid.value ?: "guest"
+        val newLocation = Location(
+            ownerUid = uid,
+            name = name,
+            description = description
+        )
+        viewModelScope.launch {
+            locationRepository.upsertLocation(newLocation)
+        }
+    }
+
+    /**
+     * Обновить существующую локацию.
+     */
+    fun updateLocation(location: Location) {
+        val uid = _currentOwnerUid.value ?: "guest"
+        val updated = location.copy(ownerUid = uid)
+        viewModelScope.launch {
+            locationRepository.upsertLocation(updated)
+        }
+    }
+
+    /**
+     * Удалить локацию.
+     * При удалении сработает каскадное удаление связей снов, связанных с этой локацией.
+     */
     fun deleteLocation(location: Location) {
         viewModelScope.launch {
-            db.locationDao().delete(location)
+            locationRepository.deleteLocation(location)
         }
     }
 
-    // Method to update a location
-    fun updateLocation(location: Location) {
-        viewModelScope.launch {
-            db.locationDao().update(location)
-        }
+    /**
+     * Получить LiveData конкретной локации по ID (с учётом текущего владельца).
+     */
+    fun getLocationById(locationId: Int): LiveData<Location> {
+        val uid = _currentOwnerUid.value ?: "guest"
+        return db.locationDao().getLocationById(locationId, uid)
     }
 
-    // Method to get dreams associated with a location
-    fun getDreamsByLocation(locationId: Int): LiveData<List<Dream>> {
-        return db.dreamDao().getDreamsByLocation(locationId)
-    }
-
-    // Method to get a location with its associated dreams
+    /**
+     * Получить LiveData объекта LocationWithDreams для просмотра связанного списка снов.
+     */
     fun getLocationWithDreams(locationId: Int): LiveData<LocationWithDreams> {
-        return db.locationDao().getLocationWithDreams(locationId)
+        val uid = _currentOwnerUid.value ?: "guest"
+        return db.locationDao().getLocationWithDreams(locationId, uid)
     }
 }

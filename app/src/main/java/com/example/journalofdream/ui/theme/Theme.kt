@@ -1,58 +1,31 @@
 package com.example.journalofdream.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 
-/**
- * Файл для настройки Material 3 (светлой/тёмной темы).
- */
-
-// 1) Определим Light-схему (светлую)
-private val LightColors = lightColorScheme(
-    // Эти цвета можете заменить на любые свои.
-    // Пример: для primary/secondary/background вы можете выбрать любые hex-значения
-    primary = Purple40,
-    onPrimary = White,
-    secondary = PurpleGrey40,
-    onSecondary = White,
-    background = Grey99,
-    onBackground = Grey10,
-    // etc...
+private val PremiumDarkColorScheme = darkColorScheme(
+    primary = Color(0xFFBB86FC),  // Neon-purple для акцентов
+    secondary = Color(0xFFFFD700),  // Gold для премиум-элементов
+    background = Color(0xFF121212),  // Тёмный фон
+    surface = Color(0xFF1E1E1E),  // Карточки чуть светлее
+    onPrimary = Color.Black,
+    onBackground = Color.White
 )
 
-// 2) Определим Dark-схему (тёмную)
-private val DarkColors = darkColorScheme(
-    primary = Purple80,
-    onPrimary = Grey20,
-    secondary = PurpleGrey80,
-    onSecondary = Grey20,
-    background = Grey10,
-    onBackground = Grey90,
-    // etc...
-)
-
-/**
- * Основная тема приложения.
- *
- * @param darkTheme Если true, насильно включаем тёмную тему.
- *                  По умолчанию берём системную настройку через [isSystemInDarkTheme].
- */
 @Composable
-fun AppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
-    // Выбираем, какие цвета использовать
-    val colorScheme = if (darkTheme) DarkColors else LightColors
-
+fun AppTheme(content: @Composable () -> Unit) {
+    val colorScheme = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+        dynamicDarkColorScheme(LocalContext.current)  // Динамические цвета от обоев
+    } else {
+        PremiumDarkColorScheme
+    }
     MaterialTheme(
         colorScheme = colorScheme,
-        // Если у вас есть собственные Fonts / Shapes / Typography - подключите их тоже
-        typography = Typography,
-        shapes = MyShapes,
+        typography = Typography2,  // Ссылка на Typography.kt
         content = content
     )
 }
