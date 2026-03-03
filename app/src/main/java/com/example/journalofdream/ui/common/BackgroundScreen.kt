@@ -9,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import com.example.journalofdream.ui.theme.DeepNavy
+import com.example.journalofdream.ui.theme.DeepPurple
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.journalofdream.R
@@ -22,7 +24,7 @@ fun BackgroundScreen() {
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(Color(0xFF000033), Color(0xFF330066))
+                    colors = listOf(DeepNavy, DeepPurple)
                 )
             ))
         // Если хочешь сохранить изображение как overlay, добавь его поверх градиента

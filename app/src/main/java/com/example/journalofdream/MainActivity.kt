@@ -1,7 +1,6 @@
 package com.example.journalofdream
 
 import android.Manifest
-import android.app.TimePickerDialog
 import android.content.Context.MODE_PRIVATE
 import android.content.pm.PackageManager
 import android.os.Build
@@ -23,15 +22,6 @@ import com.example.journalofdream.viewmodel.DreamViewModel
 import com.google.firebase.auth.FirebaseAuth
 import java.util.Calendar
 
-/**
- * Главная Activity приложения.
- * 1) Создаёт канал уведомлений (Android 8+).
- * 2) Запрашивает разрешение POST_NOTIFICATIONS (Android 13+), если нужно.
- * 3) Проверяет актуальность Firebase-сессии (reload).
- * 4) Если пользователь валиден – запускает JournalOfDreamApp,
- *    иначе показывает AuthScreen. (В зависимости от реализации)
- * 5) Показывает TimePickerDialog при первом запуске, чтобы пользователь настроил уведомление.
- */
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,11 +30,10 @@ class MainActivity : ComponentActivity() {
         // 1) Создаём канал уведомлений
         createNotificationChannel(this)
 
-        // 2) Запрашиваем разрешение на уведомления (Android 13+), если оно не выдано
+        // 2) Запрашиваем разрешение на уведомления (Android 13+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permissionCheck = ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
+                this, Manifest.permission.POST_NOTIFICATIONS
             )
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(
@@ -52,104 +41,76 @@ class MainActivity : ComponentActivity() {
                     arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                     0
                 )
-            } else {
-                Log.d("MainActivity", "Уведомления уже разрешены пользователем.")
             }
         }
 
+        // 3) ИСПРАВЛЕНО: планируем уведомление один раз здесь в onCreate,
+        // а не внутри Composable — так диалог не будет показываться повторно
+        // при каждой рекомпозиции
+        setupNotificationTime()
+
         setContent {
             AppTheme {
-
-                // Состояние, проверяющее валидность сессии
                 val isSessionValid = remember { mutableStateOf<Boolean?>(null) }
-
-                // Пример: создаём один DreamViewModel (если нужно)
                 val dreamViewModel: DreamViewModel = viewModel()
 
-                // 3) При первом запуске проверяем Firebase-сессию
+                // Проверяем Firebase-сессию
                 LaunchedEffect(Unit) {
                     val currentUser = FirebaseAuth.getInstance().currentUser
                     if (currentUser != null) {
-                        // reload() проверит, не просрочена ли
                         currentUser.reload().addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                // Сессия норм
                                 dreamViewModel.startSyncIfLoggedIn()
                                 isSessionValid.value = true
                                 Log.d("MainActivity", "Firebase-сессия валидна.")
                             } else {
-                                // Сессия недействительна
                                 FirebaseAuth.getInstance().signOut()
                                 isSessionValid.value = false
-                                Log.e("MainActivity", "Сессия недействительна, выходим.")
+                                Log.e("MainActivity", "Сессия недействительна.")
                             }
                         }
                     } else {
-                        // Никто не авторизован
                         isSessionValid.value = false
                         Log.d("MainActivity", "Нет авторизованного пользователя.")
                     }
                 }
 
-                // 4) В зависимости от флага isSessionValid – показываем AuthScreen или JournalOfDreamApp
                 when (isSessionValid.value) {
-                    true -> {
-                        // 5) Предлагаем выбрать время уведомления (или планируем уже выбранное):
-                        NotificationTimeManager(this@MainActivity)
-
-                        // Запуск основного приложения (NavHost с main, auth, etc.)
-                        JournalOfDreamApp()
-                    }
-                    false -> {
-                        // Предлагаем выбрать время уведомления и показываем AuthScreen
-                        NotificationTimeManager(this@MainActivity)
-                        AuthScreen(
-                            dreamViewModel = dreamViewModel,
-                            onAuthSuccess = {
-                                isSessionValid.value = true
-                            },
-                            onSkipAuth = {
-                                // гость
-                                isSessionValid.value = true
-                            }
-                        )
-                    }
-                    else -> {
-                        // Ещё нет ответа (reload в процессе) – Loading
-                        BackgroundScreen()
-                    }
+                    true -> JournalOfDreamApp()
+                    false -> AuthScreen(
+                        dreamViewModel = dreamViewModel,
+                        onAuthSuccess = { isSessionValid.value = true },
+                        onSkipAuth = { isSessionValid.value = true }
+                    )
+                    else -> BackgroundScreen()
                 }
             }
         }
     }
-}
 
-/**
- * Утилита: проверяем SharedPrefs, если нет notification_hour/minute –
- * показываем TimePickerDialog. Иначе планируем ежедневное уведомление.
- */
-@Composable
-fun NotificationTimeManager(activity: ComponentActivity) {
-    LaunchedEffect(Unit) {
-        val prefs = activity.getSharedPreferences("app_prefs", MODE_PRIVATE)
+    /**
+     * Вызывается один раз в onCreate.
+     * Если время уведомления ещё не выбрано — показывает TimePickerDialog.
+     * Если уже выбрано — просто перепланирует будильник.
+     */
+    private fun setupNotificationTime() {
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         val hasHour = prefs.contains("notification_hour")
         val hasMinute = prefs.contains("notification_minute")
 
         if (!hasHour || !hasMinute) {
-            // Показываем TimePicker
             val calendar = Calendar.getInstance()
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
             val minute = calendar.get(Calendar.MINUTE)
 
             android.app.TimePickerDialog(
-                activity,
+                this,
                 { _, chosenHour, chosenMinute ->
                     prefs.edit()
                         .putInt("notification_hour", chosenHour)
                         .putInt("notification_minute", chosenMinute)
                         .apply()
-
-                    scheduleDailyReminder(activity, chosenHour, chosenMinute)
+                    scheduleDailyReminder(this, chosenHour, chosenMinute)
                     Log.d("MainActivity", "Уведомление запланировано на $chosenHour:$chosenMinute")
                 },
                 hour,
@@ -162,7 +123,7 @@ fun NotificationTimeManager(activity: ComponentActivity) {
         } else {
             val hour = prefs.getInt("notification_hour", 8)
             val minute = prefs.getInt("notification_minute", 0)
-            scheduleDailyReminder(activity, hour, minute)
+            scheduleDailyReminder(this, hour, minute)
             Log.d("MainActivity", "Уведомление уже настроено на $hour:$minute")
         }
     }

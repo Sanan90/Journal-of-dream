@@ -21,6 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.journalofdream.ui.common.BackgroundScreen
+import com.example.journalofdream.ui.theme.DreamButtonEnd
+import com.example.journalofdream.ui.theme.DreamButtonStart
+import com.example.journalofdream.ui.theme.LocationButtonEnd
+import com.example.journalofdream.ui.theme.LocationButtonStart
+import com.example.journalofdream.ui.theme.TechButtonEnd
+import com.example.journalofdream.ui.theme.TechButtonStart
 
 /**
  * Главный экран приложения.
@@ -131,8 +137,8 @@ fun MainScreen(
                             .background(
                                 brush = Brush.horizontalGradient(
                                     colors = listOf(
-                                        Color(0xFF1A237E).copy(alpha = 0.5f),
-                                        Color(0xFF283593).copy(alpha = 0.5f)
+                                        DreamButtonStart.copy(alpha = 0.5f),
+                                        DreamButtonEnd.copy(alpha = 0.5f)
                                     )
                                 ),
                                 shape = RoundedCornerShape(16.dp)
@@ -162,8 +168,8 @@ fun MainScreen(
                             .background(
                                 brush = Brush.horizontalGradient(
                                     colors = listOf(
-                                        Color(0xFF4A148C).copy(alpha = 0.5f),
-                                        Color(0xFF6A1B9A).copy(alpha = 0.5f)
+                                        LocationButtonStart.copy(alpha = 0.5f),
+                                        LocationButtonEnd.copy(alpha = 0.5f)
                                     )
                                 ),
                                 shape = RoundedCornerShape(16.dp)
@@ -179,7 +185,7 @@ fun MainScreen(
                 // Дополнительная кнопка (например, "Техники")
                 Button(
                     onClick = {
-                        // пока нет экрана
+                        navController.navigate("techniques")
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -195,8 +201,8 @@ fun MainScreen(
                             .background(
                                 brush = Brush.horizontalGradient(
                                     colors = listOf(
-                                        Color(0xFF1B5E20).copy(alpha = 0.5f),
-                                        Color(0xFF2E7D32).copy(alpha = 0.5f)
+                                        TechButtonStart.copy(alpha = 0.5f),
+                                        TechButtonEnd.copy(alpha = 0.5f)
                                     )
                                 ),
                                 shape = RoundedCornerShape(16.dp)

@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
@@ -66,11 +67,16 @@ fun EditDreamScreen(
         var title by remember { mutableStateOf(dream.title) }
         var content by remember { mutableStateOf(dream.content) }
 
-        // Инициализация выбранной категории на основе данных сна
-        var selectedCategory by remember {
-            mutableStateOf(categories.find { it.name == dream.category })
-        }
+        // Инициализация выбранной категории
+        // ИСПРАВЛЕНО: используем LaunchedEffect, т.к. при первом remember categories ещё пустой список
+        var selectedCategory by remember { mutableStateOf<Category?>(null) }
         var categoryMenuExpanded by remember { mutableStateOf(false) }
+
+        LaunchedEffect(categories) {
+            if (selectedCategory == null && categories.isNotEmpty()) {
+                selectedCategory = categories.find { it.name == dream.category }
+            }
+        }
 
         // Состояния для управления выбором локаций
         var isLocationDialogOpen by remember { mutableStateOf(false) }
@@ -147,42 +153,97 @@ fun EditDreamScreen(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Выбор категории (выпадающее меню)
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { categoryMenuExpanded = true }
-                                .background(Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(8.dp))
-                                .padding(16.dp)
+                        // Выбор категории + кнопка добавить свою
+                        var showAddCategoryDialog by remember { mutableStateOf(false) }
+                        var newCategoryName by remember { mutableStateOf("") }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = selectedCategory?.name ?: "Все категории",
-                                color = Color.White,
-                                fontSize = 18.sp
-                            )
-                            DropdownMenu(
-                                expanded = categoryMenuExpanded,
-                                onDismissRequest = { categoryMenuExpanded = false }
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable { categoryMenuExpanded = true }
+                                    .background(Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(8.dp))
+                                    .padding(16.dp)
                             ) {
-                                // Пункт для сброса категории
-                                DropdownMenuItem(
-                                    text = { Text("Без категории") },
-                                    onClick = {
-                                        selectedCategory = null
-                                        categoryMenuExpanded = false
-                                    }
+                                Text(
+                                    text = selectedCategory?.name ?: "Без категории",
+                                    color = Color.White,
+                                    fontSize = 18.sp
                                 )
-                                // Список доступных категорий
-                                categories.forEach { category ->
+                                DropdownMenu(
+                                    expanded = categoryMenuExpanded,
+                                    onDismissRequest = { categoryMenuExpanded = false }
+                                ) {
                                     DropdownMenuItem(
-                                        text = { Text(category.name) },
+                                        text = { Text("Без категории") },
                                         onClick = {
-                                            selectedCategory = category
+                                            selectedCategory = null
                                             categoryMenuExpanded = false
                                         }
                                     )
+                                    categories.forEach { category ->
+                                        DropdownMenuItem(
+                                            text = { Text(category.name) },
+                                            onClick = {
+                                                selectedCategory = category
+                                                categoryMenuExpanded = false
+                                            }
+                                        )
+                                    }
                                 }
                             }
+
+                            IconButton(onClick = { showAddCategoryDialog = true }) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = "Добавить категорию",
+                                    tint = Color.White
+                                )
+                            }
+                        }
+
+                        if (showAddCategoryDialog) {
+                            AlertDialog(
+                                onDismissRequest = {
+                                    showAddCategoryDialog = false
+                                    newCategoryName = ""
+                                },
+                                title = { Text("Новая категория") },
+                                text = {
+                                    OutlinedTextField(
+                                        value = newCategoryName,
+                                        onValueChange = { newCategoryName = it },
+                                        label = { Text("Название категории") },
+                                        singleLine = true,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                },
+                                confirmButton = {
+                                    TextButton(
+                                        onClick = {
+                                            if (newCategoryName.isNotBlank()) {
+                                                val newCat = com.example.journalofdream.model.Category(
+                                                    name = newCategoryName.trim(),
+                                                    isCustom = true
+                                                )
+                                                categoryViewModel.addCategory(newCat)
+                                                selectedCategory = newCat
+                                                newCategoryName = ""
+                                                showAddCategoryDialog = false
+                                            }
+                                        }
+                                    ) { Text("Добавить") }
+                                },
+                                dismissButton = {
+                                    TextButton(onClick = {
+                                        showAddCategoryDialog = false
+                                        newCategoryName = ""
+                                    }) { Text("Отмена") }
+                                }
+                            )
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))

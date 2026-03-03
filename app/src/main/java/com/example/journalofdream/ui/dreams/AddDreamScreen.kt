@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -92,12 +93,17 @@ fun AddDreamScreen(
                         .padding(16.dp)
                 ) {
                     // Поле ввода заголовка сна
+                    var showError by remember { mutableStateOf(false) }
                     OutlinedTextField(
                         value = title,
-                        onValueChange = { title = it },
+                        onValueChange = {
+                            title = it
+                            if (it.isNotBlank()) showError = false
+                        },
                         label = { Text("Название сна") },
                         textStyle = TextStyle(fontSize = 18.sp),
                         singleLine = true,
+                        isError = showError,
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
                     )
@@ -119,43 +125,100 @@ fun AddDreamScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Выпадающий список категорий
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { isCategoryMenuExpanded = true }
-                            .background(Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(8.dp))
-                            .padding(16.dp)
+                    // Выпадающий список категорий + кнопка добавить свою
+                    var showAddCategoryDialog by remember { mutableStateOf(false) }
+                    var newCategoryName by remember { mutableStateOf("") }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = selectedCategory?.name ?: "Без категории",
-                            color = Color.White,
-                            fontSize = 16.sp
-                        )
-                        DropdownMenu(
-                            expanded = isCategoryMenuExpanded,
-                            onDismissRequest = { isCategoryMenuExpanded = false },
-                            modifier = Modifier.fillMaxWidth()
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { isCategoryMenuExpanded = true }
+                                .background(Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(8.dp))
+                                .padding(16.dp)
                         ) {
-                            // Пункт "Без категории"
-                            DropdownMenuItem(
-                                text = { Text("Без категории") },
-                                onClick = {
-                                    selectedCategory = null
-                                    isCategoryMenuExpanded = false
-                                }
+                            Text(
+                                text = selectedCategory?.name ?: "Без категории",
+                                color = Color.White,
+                                fontSize = 16.sp
                             )
-                            // Список доступных категорий
-                            categories.forEach { cat ->
+                            DropdownMenu(
+                                expanded = isCategoryMenuExpanded,
+                                onDismissRequest = { isCategoryMenuExpanded = false },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
                                 DropdownMenuItem(
-                                    text = { Text(cat.name) },
+                                    text = { Text("Без категории") },
                                     onClick = {
-                                        selectedCategory = cat
+                                        selectedCategory = null
                                         isCategoryMenuExpanded = false
                                     }
                                 )
+                                categories.forEach { cat ->
+                                    DropdownMenuItem(
+                                        text = { Text(cat.name) },
+                                        onClick = {
+                                            selectedCategory = cat
+                                            isCategoryMenuExpanded = false
+                                        }
+                                    )
+                                }
                             }
                         }
+
+                        // Кнопка добавить новую категорию
+                        IconButton(onClick = { showAddCategoryDialog = true }) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Добавить категорию",
+                                tint = Color.White
+                            )
+                        }
+                    }
+
+                    // Диалог добавления новой категории
+                    if (showAddCategoryDialog) {
+                        AlertDialog(
+                            onDismissRequest = {
+                                showAddCategoryDialog = false
+                                newCategoryName = ""
+                            },
+                            title = { Text("Новая категория") },
+                            text = {
+                                OutlinedTextField(
+                                    value = newCategoryName,
+                                    onValueChange = { newCategoryName = it },
+                                    label = { Text("Название категории") },
+                                    singleLine = true,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        if (newCategoryName.isNotBlank()) {
+                                            val newCat = com.example.journalofdream.model.Category(
+                                                name = newCategoryName.trim(),
+                                                isCustom = true
+                                            )
+                                            categoryViewModel.addCategory(newCat)
+                                            selectedCategory = newCat
+                                            newCategoryName = ""
+                                            showAddCategoryDialog = false
+                                        }
+                                    }
+                                ) { Text("Добавить") }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = {
+                                    showAddCategoryDialog = false
+                                    newCategoryName = ""
+                                }) { Text("Отмена") }
+                            }
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -219,13 +282,27 @@ fun AddDreamScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // Сообщение об ошибке валидации
+                    if (showError) {
+                        Text(
+                            text = "Введите название сна",
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                    }
+
                     // Кнопка сохранения нового сна
                     Button(
                         onClick = {
+                            if (title.isBlank()) {
+                                showError = true
+                                return@Button
+                            }
+                            showError = false
                             // Создаём объект Dream из введённых данных
                             val dream = Dream(
-                                title = title,
-                                content = content,
+                                title = title.trim(),
+                                content = content.trim(),
                                 date = getCurrentDate(),
                                 category = selectedCategory?.name ?: "Без категории"
                             )

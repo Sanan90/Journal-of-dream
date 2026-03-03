@@ -18,17 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.journalofdream.model.Dream
-import com.example.journalofdream.model.Location
 import com.example.journalofdream.ui.common.BackgroundScreen
-import com.example.journalofdream.ui.theme.DreamListItem
+import com.example.journalofdream.ui.dreams.DreamListItem
 import com.example.journalofdream.viewmodel.LocationViewModel
 
-/**
- * Экран для просмотра одной локации + связанных снов.
- * Позволяет редактировать поля локации непосредственно здесь (isEditing),
- * или удалять локацию.
- */
 @Composable
 fun ViewLocationScreen(
     navController: NavHostController,
@@ -39,23 +32,27 @@ fun ViewLocationScreen(
     val locationWithDreamsState = locationWithDreamsLD.observeAsState()
 
     var isEditing by remember { mutableStateOf(false) }
-    var name by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+
+    // ИСПРАВЛЕНО: все remember вынесены на верхний уровень composable,
+    // а не внутрь if(isEditing) — это предотвращает краш
+    var nameInput by remember { mutableStateOf("") }
+    var descInput by remember { mutableStateOf("") }
 
     locationWithDreamsState.value?.let { locWithDreams ->
         val location = locWithDreams.location
         val dreams = locWithDreams.dreams
 
-        // Если сейчас не редактируем, инициализируем поля из location
-        if (!isEditing) {
-            name = location.name
-            description = location.description
+        // Инициализируем поля когда данные пришли и не в режиме редактирования
+        LaunchedEffect(location) {
+            if (!isEditing) {
+                nameInput = location.name
+                descInput = location.description
+            }
         }
 
         Box(modifier = Modifier.fillMaxSize()) {
             BackgroundScreen()
 
-            // Кнопка \"Назад\" в правом верхнем углу
             Button(
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
@@ -74,47 +71,44 @@ fun ViewLocationScreen(
             ) {
                 Spacer(modifier = Modifier.height(56.dp))
 
-                // Отображение названия и описания локации
-                Text(
-                    text = name,
-                    style = TextStyle(color = Color.White, fontSize = 24.sp),
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+                if (!isEditing) {
+                    // Режим просмотра
+                    Text(
+                        text = location.name,
+                        style = TextStyle(color = Color.White, fontSize = 24.sp),
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Text(
+                        text = location.description,
+                        style = TextStyle(color = Color.White, fontSize = 18.sp),
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
 
-                Text(
-                    text = description,
-                    style = TextStyle(color = Color.White, fontSize = 18.sp),
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
-                // Кнопки \"Редактировать\" и \"Удалить\"
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                ) {
-                    Button(onClick = { isEditing = true }) {
-                        Text("Редактировать")
-                    }
-                    Button(
-                        onClick = {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Button(onClick = {
+                            nameInput = location.name
+                            descInput = location.description
+                            isEditing = true
+                        }) {
+                            Text("Редактировать")
+                        }
+                        Button(onClick = {
                             locationViewModel.deleteLocation(location)
                             navController.popBackStack()
+                        }) {
+                            Text("Удалить")
                         }
-                    ) {
-                        Text("Удалить")
                     }
-                }
-
-                // Если включен режим редактирования
-                if (isEditing) {
-                    Spacer(modifier = Modifier.height(16.dp))
-
+                } else {
+                    // Режим редактирования
                     Text(
                         text = "Название локации",
                         style = TextStyle(color = Color.White, fontSize = 18.sp),
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    var nameInput by remember { mutableStateOf(name) }
                     BasicTextField(
                         value = nameInput,
                         onValueChange = { nameInput = it },
@@ -132,7 +126,6 @@ fun ViewLocationScreen(
                         style = TextStyle(color = Color.White, fontSize = 18.sp),
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    var descInput by remember { mutableStateOf(description) }
                     BasicTextField(
                         value = descInput,
                         onValueChange = { descInput = it },
@@ -146,35 +139,34 @@ fun ViewLocationScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Кнопка \"Сохранить изменения\"
-                    Button(
-                        onClick = {
-                            val updatedLoc = location.copy(
-                                name = nameInput,
-                                description = descInput
-                            )
-                            locationViewModel.updateLocation(updatedLoc)
-                            // Обновляем локальные переменные
-                            name = nameInput
-                            description = descInput
-                            isEditing = false
-                        },
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
-                        Text("Сохранить изменения")
+                        Button(onClick = {
+                            val updatedLoc = location.copy(
+                                name = nameInput.trim(),
+                                description = descInput.trim()
+                            )
+                            locationViewModel.updateLocation(updatedLoc)
+                            isEditing = false
+                        }) {
+                            Text("Сохранить")
+                        }
+                        Button(onClick = { isEditing = false }) {
+                            Text("Отмена")
+                        }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Список снов, связанных с этой локацией
                 Text(
                     text = "Связанные сны:",
                     style = TextStyle(color = Color.White, fontSize = 18.sp),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
-                // Лист снов
                 LazyColumn {
                     items(dreams) { dream ->
                         DreamListItem(dream, navController)
@@ -183,7 +175,6 @@ fun ViewLocationScreen(
             }
         }
     } ?: run {
-        // Если locationWithDreamsState.value == null
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator(color = Color.White)
         }

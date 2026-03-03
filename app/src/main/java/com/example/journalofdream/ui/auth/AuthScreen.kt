@@ -1,11 +1,11 @@
 package com.example.journalofdream.ui.auth
 
 import android.app.Activity
+import android.util.Patterns
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,13 +22,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
-/**
- * Экран авторизации (Email/Пароль + Google).
- * После успешного входа вызываем:
- *   locationViewModel.onUserLogin(user)
- *   dreamViewModel.onUserLogin()
- * чтобы мигрировать данные гостя и начать синхронизацию локальных списков локаций/снов.
- */
 @Composable
 fun AuthScreen(
     dreamViewModel: DreamViewModel = viewModel(),
@@ -40,15 +33,33 @@ fun AuthScreen(
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
+    var emailError by remember { mutableStateOf<String?>(null) }
+    var passwordError by remember { mutableStateOf<String?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    var isLoading by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     val activity = context as? Activity
     val keyboardController = LocalSoftwareKeyboardController.current
-    val snackbarHostState = remember { SnackbarHostState() }
 
-    // Лаунчер для результата входа через Google
+    // Валидация полей
+    fun validateInputs(): Boolean {
+        var valid = true
+        if (email.isBlank() || !Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()) {
+            emailError = "Введите корректный email"
+            valid = false
+        } else {
+            emailError = null
+        }
+        if (password.length < 6) {
+            passwordError = "Пароль должен содержать минимум 6 символов"
+            valid = false
+        } else {
+            passwordError = null
+        }
+        return valid
+    }
+
     val googleSignInLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -56,30 +67,27 @@ fun AuthScreen(
         try {
             val account = task.getResult(Exception::class.java)
             val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+            isLoading = true
             auth.signInWithCredential(credential)
                 .addOnCompleteListener(activity!!) { authResult ->
+                    isLoading = false
                     if (authResult.isSuccessful) {
-                        // Успешный вход через Google -> FirebaseAuth
-                        val user = auth.currentUser
-                        if (user != null) {
-                            // После успешного входа вызываем переключение ViewModel на этого пользователя
+                        auth.currentUser?.let { user ->
                             locationViewModel.onUserLogin(user)
                             dreamViewModel.onUserLogin()
                         }
-                        // Переходим на основной экран
                         onAuthSuccess()
                     } else {
                         errorMessage = authResult.exception?.message
                     }
                 }
         } catch (e: Exception) {
+            isLoading = false
             errorMessage = e.message
         }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -87,55 +95,96 @@ fun AuthScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            // Поле ввода Email
+            Text(
+                text = "Добро пожаловать",
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 32.dp)
+            )
+
+            // Поле Email
             OutlinedTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = {
+                    email = it
+                    emailError = null
+                    errorMessage = null
+                },
                 label = { Text("Электронная почта") },
+                isError = emailError != null,
+                supportingText = emailError?.let { { Text(it) } },
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+
             Spacer(modifier = Modifier.height(8.dp))
-            // Поле ввода пароля
+
+            // Поле пароля
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = {
+                    password = it
+                    passwordError = null
+                    errorMessage = null
+                },
                 label = { Text("Пароль") },
                 visualTransformation = PasswordVisualTransformation(),
+                isError = passwordError != null,
+                supportingText = passwordError?.let { { Text(it) } },
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
+
             Spacer(modifier = Modifier.height(16.dp))
+
             // Кнопка "Войти"
             Button(
                 onClick = {
-                    auth.signInWithEmailAndPassword(email, password)
+                    if (!validateInputs()) return@Button
+                    keyboardController?.hide()
+                    isLoading = true
+                    auth.signInWithEmailAndPassword(email.trim(), password)
                         .addOnCompleteListener(activity!!) { authResult ->
+                            isLoading = false
                             if (authResult.isSuccessful) {
-                                // Успешный вход с email/password
-                                val user = auth.currentUser
-                                if (user != null) {
+                                auth.currentUser?.let { user ->
                                     locationViewModel.onUserLogin(user)
                                     dreamViewModel.onUserLogin()
                                 }
                                 onAuthSuccess()
                             } else {
-                                errorMessage = authResult.exception?.message
+                                errorMessage = "Неверный email или пароль"
                             }
                         }
                 },
+                enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Войти")
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(20.dp),
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text("Войти")
+                }
             }
+
             Spacer(modifier = Modifier.height(8.dp))
+
             // Кнопка "Регистрация"
-            Button(
+            OutlinedButton(
                 onClick = {
-                    auth.createUserWithEmailAndPassword(email, password)
+                    if (!validateInputs()) return@OutlinedButton
+                    keyboardController?.hide()
+                    isLoading = true
+                    auth.createUserWithEmailAndPassword(email.trim(), password)
                         .addOnCompleteListener(activity!!) { authResult ->
+                            isLoading = false
                             if (authResult.isSuccessful) {
-                                // Успешная регистрация автоматически выполняет вход
-                                val user = auth.currentUser
-                                if (user != null) {
+                                auth.currentUser?.let { user ->
                                     locationViewModel.onUserLogin(user)
                                     dreamViewModel.onUserLogin()
                                 }
@@ -145,15 +194,17 @@ fun AuthScreen(
                             }
                         }
                 },
+                enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Регистрация")
+                Text("Зарегистрироваться")
             }
+
             Spacer(modifier = Modifier.height(8.dp))
+
             // Кнопка входа через Google
-            Button(
+            OutlinedButton(
                 onClick = {
-                    // Запускаем Intent для Google Sign-In
                     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(context.getString(R.string.default_web_client_id))
                         .requestEmail()
@@ -161,19 +212,30 @@ fun AuthScreen(
                     val googleSignInClient = GoogleSignIn.getClient(context, gso)
                     googleSignInLauncher.launch(googleSignInClient.signInIntent)
                 },
+                enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Войти через Google")
             }
+
             Spacer(modifier = Modifier.height(16.dp))
-            // Кнопка пропустить авторизацию (гостевой режим)
-            TextButton(onClick = { onSkipAuth() }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Text("Продолжить без авторизации")
+
+            // Сообщение об ошибке от Firebase
+            errorMessage?.let { error ->
+                Text(
+                    text = error,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
-            // Отображение ошибки (если есть)
-            errorMessage?.let { error ->
-                Text(error, color = MaterialTheme.colorScheme.error)
+            // Гостевой режим
+            TextButton(
+                onClick = { onSkipAuth() },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text("Продолжить без авторизации")
             }
         }
     }

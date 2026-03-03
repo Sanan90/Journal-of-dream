@@ -3,40 +3,37 @@ package com.example.journalofdream
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import androidx.activity.ComponentActivity
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
-import androidx.core.animation.doOnEnd
+import androidx.activity.ComponentActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        // Получение ссылки на ImageView
         val logo: ImageView = findViewById(R.id.logo)
 
-        // Создание анимации
-        val fadeOut = ObjectAnimator.ofFloat(logo, "alpha", 1f, 0f).apply {
-            duration = 500 // Длительность анимации
-            interpolator = AccelerateDecelerateInterpolator()
-        }
+        lifecycleScope.launch {
+            // Ждём 1 секунду перед началом анимации
+            delay(1000)
 
-        // Запуск анимации с задержкой
-        Handler(Looper.getMainLooper()).postDelayed({
+            // Запускаем анимацию затухания
+            val fadeOut = ObjectAnimator.ofFloat(logo, "alpha", 1f, 0f).apply {
+                duration = 500
+                interpolator = AccelerateDecelerateInterpolator()
+            }
             fadeOut.start()
-        }, 1000)
 
-        // Переход на MainActivity после завершения анимации
-        fadeOut.doOnEnd {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            // Ждём пока анимация закончится
+            delay(500)
 
-            // Применение анимации перехода
+            // Переходим на MainActivity
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
-
             finish()
         }
     }

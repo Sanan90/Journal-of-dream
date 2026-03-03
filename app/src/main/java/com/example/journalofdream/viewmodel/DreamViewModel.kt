@@ -122,9 +122,9 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
     fun onUserLogout() {
         if (auth.currentUser != null) {
             repository.stopSync()
-            auth.signOut()  // выходим из FirebaseAuth (обнуляем текущего пользователя)
         }
         // Переключаем LiveData на гостевой режим (сразу покажет гостевые сны, если они есть)
+        // auth.signOut() вызывается в JournalOfDreamApp, здесь не нужен — иначе двойной выход
         _currentOwnerUid.value = "guest"
     }
 

@@ -8,10 +8,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val PremiumDarkColorScheme = darkColorScheme(
-    primary = Color(0xFFBB86FC),  // Neon-purple для акцентов
-    secondary = Color(0xFFFFD700),  // Gold для премиум-элементов
-    background = Color(0xFF121212),  // Тёмный фон
-    surface = Color(0xFF1E1E1E),  // Карточки чуть светлее
+    primary = NeonPurple,
+    secondary = Gold,
+    background = DarkSurface,
+    surface = CardSurface,
     onPrimary = Color.Black,
     onBackground = Color.White
 )
@@ -19,13 +19,13 @@ private val PremiumDarkColorScheme = darkColorScheme(
 @Composable
 fun AppTheme(content: @Composable () -> Unit) {
     val colorScheme = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-        dynamicDarkColorScheme(LocalContext.current)  // Динамические цвета от обоев
+        dynamicDarkColorScheme(LocalContext.current)
     } else {
         PremiumDarkColorScheme
     }
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography2,  // Ссылка на Typography.kt
+        typography = Typography2,
         content = content
     )
 }
