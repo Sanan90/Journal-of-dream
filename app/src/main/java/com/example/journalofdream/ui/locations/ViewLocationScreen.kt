@@ -145,7 +145,10 @@ fun ViewLocationScreen(
                             )
                         } else {
                             LazyColumn {
-                                items(dreams) { dream ->
+                                items(
+                                    items = dreams,
+                                    key = { it.localId }
+                                ) { dream ->
                                     DreamListItem(dream, navController)
                                 }
                             }

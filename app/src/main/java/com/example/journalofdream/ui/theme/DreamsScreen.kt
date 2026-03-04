@@ -193,8 +193,15 @@ fun DreamsScreen(
                             .padding(horizontal = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        items(searchResults) { dream ->
-                            DreamListItem(dream, navController)
+                        items(
+                            items = searchResults,
+                            key = { it.localId }
+                        ) { dream ->
+                            DreamListItem(
+                                dream = dream,
+                                navController = navController,
+                                onDelete = { dreamViewModel.deleteDream(it) }
+                            )
                         }
                     }
                 }

@@ -2,18 +2,20 @@ package com.example.journalofdream.ui.dreams
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.journalofdream.model.Dream
@@ -30,47 +32,118 @@ private fun formatDate(date: String): String {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DreamListItem(dream: Dream, navController: NavHostController) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { navController.navigate("editDream/${dream.localId}") }
-            .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)),  // Мягкая анимация расширения
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),  // Тень для глубины
-        shape = RoundedCornerShape(16.dp),  // Скруглённые углы
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)  // Тёмная поверхность
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = dream.title,
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.primary
+fun DreamListItem(
+    dream: Dream,
+    navController: NavHostController,
+    onDelete: ((Dream) -> Unit)? = null
+) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = { value ->
+            if (value == SwipeToDismissBoxValue.EndToStart) {
+                showDeleteDialog = true
+            }
+            false // не удаляем сразу — ждём подтверждения
+        }
+    )
+
+    // Диалог подтверждения удаления
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Удалить сон?") },
+            text = { Text("\"${dream.title}\" будет удалён. Это действие нельзя отменить.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    onDelete?.invoke(dream)
+                }) {
+                    Text("Удалить", color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Отмена")
+                }
+            }
+        )
+    }
+
+    SwipeToDismissBox(
+        state = dismissState,
+        enableDismissFromStartToEnd = false, // только свайп влево
+        enableDismissFromEndToStart = onDelete != null,
+        backgroundContent = {
+            // Красный фон с иконкой корзины
+            val scale by animateFloatAsState(
+                targetValue = if (dismissState.targetValue == SwipeToDismissBoxValue.EndToStart) 1.2f else 0.8f,
+                label = "scale"
             )
-            Text(
-                text = formatDate(dream.date),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            if (dream.content.isNotBlank()) {
-                Text(
-                    text = if (dream.content.length > 100)
-                        dream.content.take(100) + "..."
-                    else
-                        dream.content,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                    modifier = Modifier.padding(top = 4.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp)
+                    .background(
+                        color = Color.Red.copy(alpha = 0.85f),
+                        shape = RoundedCornerShape(16.dp)
+                    ),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Удалить",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .padding(end = 24.dp)
+                        .scale(scale)
+                        .size(28.dp)
                 )
             }
-            if (dream.category.isNotBlank() && dream.category != "Без категории") {
+        }
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .clickable { navController.navigate("editDream/${dream.localId}") }
+                .animateContentSize(animationSpec = spring(stiffness = Spring.StiffnessMediumLow)),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = dream.category,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
-                    modifier = Modifier.padding(top = 4.dp)
+                    text = dream.title,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
+                Text(
+                    text = formatDate(dream.date),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                if (dream.content.isNotBlank()) {
+                    Text(
+                        text = if (dream.content.length > 100)
+                            dream.content.take(100) + "..."
+                        else
+                            dream.content,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+                if (dream.category.isNotBlank() && dream.category != "Без категории") {
+                    Text(
+                        text = dream.category,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
             }
         }
     }
