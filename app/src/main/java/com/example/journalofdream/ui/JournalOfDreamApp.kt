@@ -22,6 +22,7 @@ import com.example.journalofdream.ui.theme.AppTheme
 import com.example.journalofdream.ui.theme.DreamsScreen
 import com.example.journalofdream.ui.theme.LocationListScreen
 import com.example.journalofdream.ui.theme.MainScreen
+import com.example.journalofdream.ui.theme.StatsScreen
 import com.example.journalofdream.ui.theme.TechniquesScreen
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 
@@ -188,6 +189,14 @@ fun JournalOfDreamApp() {
             // Экран техник осознанных сновидений
             composable("techniques") {
                 TechniquesScreen(navController = navController)
+            }
+
+            // Экран статистики
+            composable("stats") {
+                StatsScreen(
+                    navController = navController,
+                    dreamViewModel = dreamViewModel
+                )
             }
         }
     }

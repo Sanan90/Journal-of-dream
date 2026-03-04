@@ -227,6 +227,37 @@ fun MainScreen(
                     }
                 }
 
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Кнопка Статистика
+                Button(
+                    onClick = { navController.navigate("stats") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .shadow(50.dp, shape = RoundedCornerShape(24.dp)),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                brush = Brush.horizontalGradient(
+                                    colors = listOf(
+                                        Color(0xFF1A237E).copy(alpha = 0.5f),
+                                        Color(0xFF283593).copy(alpha = 0.5f)
+                                    )
+                                ),
+                                shape = RoundedCornerShape(16.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("📊  Статистика", color = Color.White, fontSize = 20.sp)
+                    }
+                }
+
                 // Диалог выбора "Добавить сон или локацию?"
                 if (showDialog) {
                     ChooseActionDialog(
