@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -34,8 +35,18 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 fun getCurrentDate(): String {
-    val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return dateFormat.format(Date())
+}
+
+fun formatDateForDisplay(date: String): String {
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        outputFormat.format(inputFormat.parse(date)!!)
+    } catch (e: Exception) {
+        date // если формат старый — показываем как есть
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +62,29 @@ fun AddDreamScreen(
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var isCategoryMenuExpanded by remember { mutableStateOf(false) }
     var showError by remember { mutableStateOf(false) }
+    var selectedDate by remember { mutableStateOf(getCurrentDate()) }
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    val context = androidx.compose.ui.platform.LocalContext.current
+
+    // DatePickerDialog
+    if (showDatePicker) {
+        val cal = java.util.Calendar.getInstance()
+        android.app.DatePickerDialog(
+            context,
+            { _, year, month, day ->
+                val formatted = String.format("%04d-%02d-%02d", year, month + 1, day)
+                selectedDate = formatted
+                showDatePicker = false
+            },
+            cal.get(java.util.Calendar.YEAR),
+            cal.get(java.util.Calendar.MONTH),
+            cal.get(java.util.Calendar.DAY_OF_MONTH)
+        ).also {
+            it.setOnCancelListener { showDatePicker = false }
+            it.show()
+        }
+    }
 
     // Состояния для выбора локаций
     var isLocationDialogOpen by remember { mutableStateOf(false) }
@@ -108,6 +142,27 @@ fun AddDreamScreen(
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
                     )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Выбор даты сна
+                    OutlinedButton(
+                        onClick = { showDatePicker = true },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.5f))
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange,
+                            contentDescription = "Выбрать дату",
+                            tint = Color.White,
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                        Text(
+                            text = "Дата сна: ${formatDateForDisplay(selectedDate)}",
+                            color = Color.White
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
@@ -269,7 +324,7 @@ fun AddDreamScreen(
                             val dream = Dream(
                                 title = title.trim(),
                                 content = content.trim(),
-                                date = getCurrentDate(),
+                                date = selectedDate,
                                 category = selectedCategory?.name ?: "Без категории"
                             )
                             // Сохраняем сон вместе с выбранными локациями

@@ -28,7 +28,7 @@ interface DreamDao {
     suspend fun deleteDreamLocationCrossRefs(dreamId: Int)
 
     // Получение всех снов для заданного владельца (обновляется в реальном времени)
-    @Query("SELECT * FROM dreams WHERE ownerUid = :ownerUid")
+    @Query("SELECT * FROM dreams WHERE ownerUid = :ownerUid ORDER BY date DESC")
     fun getDreamsByOwner(ownerUid: String): LiveData<List<Dream>>
 
     // Получение сна по ID вместе с локациями (LiveData для наблюдения)

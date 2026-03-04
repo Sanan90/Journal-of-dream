@@ -59,6 +59,9 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
             val result = repository.upsertDream(finalDream, locationIds)
             if (result.isFailure) {
                 _syncError.postValue("Сон сохранён локально, но не синхронизирован — нет подключения к сети")
+            } else {
+                // Отмечаем что сон записан сегодня — уведомление не будет показано
+                markDreamRecordedToday()
             }
         }
     }
@@ -86,6 +89,17 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
 
     fun clearSyncError() {
         _syncError.value = null
+    }
+
+    private fun markDreamRecordedToday() {
+        val now = java.util.Calendar.getInstance()
+        val year = now.get(java.util.Calendar.YEAR)
+        val month = now.get(java.util.Calendar.MONTH) + 1
+        val day = now.get(java.util.Calendar.DAY_OF_MONTH)
+        val key = "dream_recorded_${year}_${month}_${day}"
+        val prefs = getApplication<android.app.Application>()
+            .getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
+        prefs.edit().putBoolean(key, true).apply()
     }
 
     /**

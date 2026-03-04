@@ -17,6 +17,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.journalofdream.model.Dream
+import java.text.SimpleDateFormat
+import java.util.Locale
+
+private fun formatDate(date: String): String {
+    return try {
+        val input = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val output = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        output.format(input.parse(date)!!)
+    } catch (e: Exception) {
+        date
+    }
+}
 
 @Composable
 fun DreamListItem(dream: Dream, navController: NavHostController) {
@@ -33,15 +45,33 @@ fun DreamListItem(dream: Dream, navController: NavHostController) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = dream.title,
-                style = MaterialTheme.typography.headlineMedium,  // Элегантный шрифт
-                color = MaterialTheme.colorScheme.primary  // Purple акцент
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = dream.date,
+                text = formatDate(dream.date),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            // Если есть описание, добавь: Text(dream.content.take(100) + "...", style = MaterialTheme.typography.bodyMedium)
+            if (dream.content.isNotBlank()) {
+                Text(
+                    text = if (dream.content.length > 100)
+                        dream.content.take(100) + "..."
+                    else
+                        dream.content,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+            if (dream.category.isNotBlank() && dream.category != "Без категории") {
+                Text(
+                    text = dream.category,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
         }
     }
 }

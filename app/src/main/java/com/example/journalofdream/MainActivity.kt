@@ -8,18 +8,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.journalofdream.ui.JournalOfDreamApp
-import com.example.journalofdream.ui.auth.AuthScreen
-import com.example.journalofdream.ui.common.BackgroundScreen
 import com.example.journalofdream.ui.theme.AppTheme
 import com.example.journalofdream.util.scheduleDailyReminder
 import com.example.journalofdream.util.createNotificationChannel
-import com.example.journalofdream.viewmodel.DreamViewModel
-import com.google.firebase.auth.FirebaseAuth
 import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
@@ -44,52 +38,18 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        // 3) ИСПРАВЛЕНО: планируем уведомление один раз здесь в onCreate,
-        // а не внутри Composable — так диалог не будет показываться повторно
-        // при каждой рекомпозиции
+        // 3) Планируем уведомление
         setupNotificationTime()
 
+        // 4) Запускаем приложение — вся логика авторизации внутри JournalOfDreamApp
         setContent {
             AppTheme {
-                val isSessionValid = remember { mutableStateOf<Boolean?>(null) }
-                val dreamViewModel: DreamViewModel = viewModel()
-
-                // Проверяем Firebase-сессию
-                LaunchedEffect(Unit) {
-                    val currentUser = FirebaseAuth.getInstance().currentUser
-                    if (currentUser != null) {
-                        currentUser.reload().addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                dreamViewModel.startSyncIfLoggedIn()
-                                isSessionValid.value = true
-                                Log.d("MainActivity", "Firebase-сессия валидна.")
-                            } else {
-                                FirebaseAuth.getInstance().signOut()
-                                isSessionValid.value = false
-                                Log.e("MainActivity", "Сессия недействительна.")
-                            }
-                        }
-                    } else {
-                        isSessionValid.value = false
-                        Log.d("MainActivity", "Нет авторизованного пользователя.")
-                    }
-                }
-
-                when (isSessionValid.value) {
-                    true -> JournalOfDreamApp()
-                    false -> AuthScreen(
-                        dreamViewModel = dreamViewModel,
-                        onAuthSuccess = { isSessionValid.value = true },
-                        onSkipAuth = { isSessionValid.value = true }
-                    )
-                    else -> BackgroundScreen()
-                }
+                JournalOfDreamApp()
             }
         }
     }
 
     /**
-     * Вызывается один раз в onCreate.
      * Если время уведомления ещё не выбрано — показывает TimePickerDialog.
      * Если уже выбрано — просто перепланирует будильник.
      */

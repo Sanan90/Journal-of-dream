@@ -173,18 +173,6 @@ fun JournalOfDreamApp() {
                 )
             }
 
-            // Экран редактирования локации (передается параметр id)
-            composable("editLocation/{id}") { backStackEntry ->
-                val locationId = backStackEntry.arguments?.getString("id")?.toIntOrNull()
-                if (locationId != null) {
-                    EditLocationScreen(
-                        navController = navController,
-                        locationId = locationId,
-                        locationViewModel = locationViewModel
-                    )
-                }
-            }
-
             // Экран просмотра локации (с отображением связанных снов)
             composable("viewLocation/{locationId}") { backStackEntry ->
                 val locationId = backStackEntry.arguments?.getString("locationId")?.toIntOrNull()

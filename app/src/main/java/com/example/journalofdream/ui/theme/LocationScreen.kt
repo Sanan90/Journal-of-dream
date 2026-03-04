@@ -3,11 +3,10 @@ package com.example.journalofdream.ui.theme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -19,9 +18,9 @@ import androidx.navigation.NavHostController
 import com.example.journalofdream.model.Location
 import com.example.journalofdream.ui.common.BackgroundScreen
 import com.example.journalofdream.ui.common.CustomButton
-import com.example.journalofdream.ui.common.TopBar
 import com.example.journalofdream.viewmodel.LocationViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationListScreen(
     navController: NavHostController,
@@ -41,9 +40,27 @@ fun LocationListScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopBar(
-                navController = navController,
-                onSaveClick = { navController.navigate("addLocation") }
+            TopAppBar(
+                title = { Text("Локации", color = Color.White) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Назад",
+                            tint = Color.White
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { navController.navigate("addLocation") }) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Добавить локацию",
+                            tint = Color.White
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
             )
         },
         content = { paddingValues ->
