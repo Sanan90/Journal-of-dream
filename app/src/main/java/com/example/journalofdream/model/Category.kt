@@ -8,5 +8,7 @@ data class Category(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,
-    val isCustom: Boolean
+    val isCustom: Boolean,
+    // "default" — дефолтные категории (видны всем), uid — кастомные категории пользователя
+    val ownerUid: String = "default"
 )

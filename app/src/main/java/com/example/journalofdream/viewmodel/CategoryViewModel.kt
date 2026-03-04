@@ -4,42 +4,48 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.example.journalofdream.database.AppDatabase
 import com.example.journalofdream.model.Category
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel для работы со списком категорий (Category).
- */
 class CategoryViewModel(application: Application) : AndroidViewModel(application) {
 
-    // Берём DAO из AppDatabase
     private val categoryDao = AppDatabase.getInstance(application).categoryDao()
+    private val auth = FirebaseAuth.getInstance()
 
-    // LiveData со всеми категориями (через DAO)
-    val allCategories: LiveData<List<Category>> = categoryDao.getAllCategories()
+    // Текущий uid — пользователь или гость
+    private val _ownerUid = MutableLiveData<String>(auth.currentUser?.uid ?: "guest")
+
+    // Показываем дефолтные категории + кастомные текущего пользователя
+    val allCategories: LiveData<List<Category>> = _ownerUid.switchMap { uid ->
+        categoryDao.getCategoriesForUser(uid)
+    }
 
     init {
-        // При первом создании добавляем дефолтные категории, если база пустая
+        // При первом запуске вставляем дефолтные категории если их ещё нет
         viewModelScope.launch {
-            val existingCount = categoryDao.getAllCategoriesOnce().size
-            if (existingCount == 0) {
+            val existing = categoryDao.getDefaultCategoriesOnce()
+            if (existing.isEmpty()) {
                 val defaultCategories = listOf(
-                    Category(name = "Без категории", isCustom = false),
-                    Category(name = "Кошмары", isCustom = false),
-                    Category(name = "Осознанные сны", isCustom = false),
-                    Category(name = "Сюжетные сны", isCustom = false),
-                    Category(name = "Личные сны", isCustom = false)
+                    Category(name = "Кошмары",          isCustom = false, ownerUid = "default"),
+                    Category(name = "Осознанные сны",   isCustom = false, ownerUid = "default"),
+                    Category(name = "Сюжетные сны",     isCustom = false, ownerUid = "default"),
+                    Category(name = "Личные сны",       isCustom = false, ownerUid = "default")
                 )
-                defaultCategories.forEach { cat ->
-                    categoryDao.insertCategory(cat)
-                }
+                defaultCategories.forEach { categoryDao.insertCategory(it) }
             }
         }
     }
 
-    // Добавить категорию (пользовательскую)
+    // Вызывается при смене пользователя (логин/логаут)
+    fun setOwner(uid: String) {
+        _ownerUid.value = uid
+    }
+
+    // Добавить кастомную категорию для текущего пользователя
     fun addCategory(category: Category) {
+        val uid = _ownerUid.value ?: "guest"
         viewModelScope.launch {
-            categoryDao.insertCategory(category)
+            categoryDao.insertCategory(category.copy(ownerUid = uid, isCustom = true))
         }
     }
 

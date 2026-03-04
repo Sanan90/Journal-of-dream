@@ -28,6 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.journalofdream.model.Category
 import com.example.journalofdream.ui.common.BackgroundScreen
+import com.example.journalofdream.ui.dreams.CategoryManagerDialog
 import com.example.journalofdream.viewmodel.CategoryViewModel
 import com.example.journalofdream.viewmodel.DreamViewModel
 import com.example.journalofdream.viewmodel.LocationViewModel
@@ -71,6 +72,8 @@ fun EditDreamScreen(
         // ИСПРАВЛЕНО: используем LaunchedEffect, т.к. при первом remember categories ещё пустой список
         var selectedCategory by remember { mutableStateOf<Category?>(null) }
         var categoryMenuExpanded by remember { mutableStateOf(false) }
+        var showDeleteDialog by remember { mutableStateOf(false) }
+        var showTitleError by remember { mutableStateOf(false) }
 
         LaunchedEffect(categories) {
             if (selectedCategory == null && categories.isNotEmpty()) {
@@ -102,11 +105,7 @@ fun EditDreamScreen(
                         }
                     },
                     actions = {
-                        // Кнопка удаления сна (при нажатии удаляет и возвращается назад)
-                        IconButton(onClick = {
-                            dreamViewModel.deleteDream(dream)
-                            navController.popBackStack()
-                        }) {
+                        IconButton(onClick = { showDeleteDialog = true }) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
                                 contentDescription = "Удалить сон",
@@ -129,10 +128,17 @@ fun EditDreamScreen(
                         // Поля ввода с текущими значениями сна
                         OutlinedTextField(
                             value = title,
-                            onValueChange = { title = it },
+                            onValueChange = {
+                                title = it
+                                if (it.isNotBlank()) showTitleError = false
+                            },
                             label = { Text("Название сна") },
                             textStyle = TextStyle(fontSize = 18.sp),
                             singleLine = true,
+                            isError = showTitleError,
+                            supportingText = if (showTitleError) {
+                                { Text("Введите название сна") }
+                            } else null,
                             modifier = Modifier.fillMaxWidth(),
                             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
                         )
@@ -153,9 +159,8 @@ fun EditDreamScreen(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Выбор категории + кнопка добавить свою
-                        var showAddCategoryDialog by remember { mutableStateOf(false) }
-                        var newCategoryName by remember { mutableStateOf("") }
+                        // Выбор категории + управление категориями
+                        var showCategoryManager by remember { mutableStateOf(false) }
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -196,53 +201,20 @@ fun EditDreamScreen(
                                 }
                             }
 
-                            IconButton(onClick = { showAddCategoryDialog = true }) {
+                            IconButton(onClick = { showCategoryManager = true }) {
                                 Icon(
                                     imageVector = Icons.Default.Add,
-                                    contentDescription = "Добавить категорию",
+                                    contentDescription = "Управление категориями",
                                     tint = Color.White
                                 )
                             }
                         }
 
-                        if (showAddCategoryDialog) {
-                            AlertDialog(
-                                onDismissRequest = {
-                                    showAddCategoryDialog = false
-                                    newCategoryName = ""
-                                },
-                                title = { Text("Новая категория") },
-                                text = {
-                                    OutlinedTextField(
-                                        value = newCategoryName,
-                                        onValueChange = { newCategoryName = it },
-                                        label = { Text("Название категории") },
-                                        singleLine = true,
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
-                                },
-                                confirmButton = {
-                                    TextButton(
-                                        onClick = {
-                                            if (newCategoryName.isNotBlank()) {
-                                                val newCat = com.example.journalofdream.model.Category(
-                                                    name = newCategoryName.trim(),
-                                                    isCustom = true
-                                                )
-                                                categoryViewModel.addCategory(newCat)
-                                                selectedCategory = newCat
-                                                newCategoryName = ""
-                                                showAddCategoryDialog = false
-                                            }
-                                        }
-                                    ) { Text("Добавить") }
-                                },
-                                dismissButton = {
-                                    TextButton(onClick = {
-                                        showAddCategoryDialog = false
-                                        newCategoryName = ""
-                                    }) { Text("Отмена") }
-                                }
+                        if (showCategoryManager) {
+                            CategoryManagerDialog(
+                                categoryViewModel = categoryViewModel,
+                                onDismiss = { showCategoryManager = false },
+                                onCategorySelected = { selectedCategory = it }
                             )
                         }
 
@@ -310,10 +282,13 @@ fun EditDreamScreen(
                         // Кнопка сохранения изменений
                         Button(
                             onClick = {
-                                // Обновляем поля сна и сохраняем изменения через ViewModel
+                                if (title.isBlank()) {
+                                    showTitleError = true
+                                    return@Button
+                                }
                                 val updatedDream = dream.copy(
-                                    title = title,
-                                    content = content,
+                                    title = title.trim(),
+                                    content = content.trim(),
                                     category = selectedCategory?.name ?: "Без категории"
                                 )
                                 dreamViewModel.updateDream(updatedDream, selectedLocationIds.toList())
@@ -329,6 +304,29 @@ fun EditDreamScreen(
                 }
             }
         )
+
+        // Диалог подтверждения удаления сна
+        if (showDeleteDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeleteDialog = false },
+                title = { Text("Удалить сон?") },
+                text = { Text("\"${dream.title}\" будет удалён. Это действие нельзя отменить.") },
+                confirmButton = {
+                    TextButton(onClick = {
+                        showDeleteDialog = false
+                        dreamViewModel.deleteDream(dream)
+                        navController.popBackStack()
+                    }) {
+                        Text("Удалить", color = MaterialTheme.colorScheme.error)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDeleteDialog = false }) {
+                        Text("Отмена")
+                    }
+                }
+            )
+        }
     } ?: run {
         // Если сон не найден или ещё не загружен, можно вывести пустой экран или индикатор
         Box(modifier = Modifier.fillMaxSize()) {

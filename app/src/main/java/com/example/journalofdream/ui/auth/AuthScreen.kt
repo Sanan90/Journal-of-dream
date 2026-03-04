@@ -4,6 +4,7 @@ import android.app.Activity
 import android.util.Patterns
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -11,7 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.journalofdream.R
@@ -33,6 +39,7 @@ fun AuthScreen(
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
     var emailError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -88,6 +95,7 @@ fun AuthScreen(
     }
 
     Scaffold { paddingValues ->
+        Box(modifier = androidx.compose.ui.Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -129,7 +137,24 @@ fun AuthScreen(
                     errorMessage = null
                 },
                 label = { Text("Пароль") },
-                visualTransformation = PasswordVisualTransformation(),
+                visualTransformation = if (passwordVisible)
+                    VisualTransformation.None
+                else
+                    PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = if (passwordVisible)
+                                Icons.Default.VisibilityOff
+                            else
+                                Icons.Default.Visibility,
+                            contentDescription = if (passwordVisible)
+                                "Скрыть пароль"
+                            else
+                                "Показать пароль"
+                        )
+                    }
+                },
                 isError = passwordError != null,
                 supportingText = passwordError?.let { { Text(it) } },
                 singleLine = true,
@@ -238,5 +263,37 @@ fun AuthScreen(
                 Text("Продолжить без авторизации")
             }
         }
+
+        // Полноэкранный оверлей загрузки поверх всего экрана
+        if (isLoading) {
+            Box(
+                modifier = androidx.compose.ui.Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.4f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Card(
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                ) {
+                    Column(
+                        modifier = androidx.compose.ui.Modifier.padding(32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        CircularProgressIndicator()
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Выполняется вход...",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+            }
+        }
+        } // конец внешнего Box
     }
 }

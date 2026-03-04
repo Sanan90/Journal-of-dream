@@ -39,6 +39,16 @@ fun DreamsScreen(
 ) {
     val allDreams by dreamViewModel.dreams.observeAsState(emptyList())
     val categories by categoryViewModel.allCategories.observeAsState(emptyList())
+    val syncError by dreamViewModel.syncError.observeAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Показываем Snackbar при ошибке синхронизации
+    LaunchedEffect(syncError) {
+        syncError?.let {
+            snackbarHostState.showSnackbar(message = it, duration = SnackbarDuration.Long)
+            dreamViewModel.clearSyncError()
+        }
+    }
 
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var expanded by remember { mutableStateOf(false) }
@@ -65,6 +75,7 @@ fun DreamsScreen(
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text("Список сновидений", color = Color.White) },
@@ -98,6 +109,7 @@ fun DreamsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
+                    .imePadding()
             ) {
                 // Поле поиска
                 OutlinedTextField(

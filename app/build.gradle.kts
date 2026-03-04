@@ -65,6 +65,7 @@ dependencies {
 
 
 
+
     // --- AndroidX Core + Lifecycle ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -91,8 +92,8 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.runtime.livedata)
     kapt(libs.androidx.room.compiler)
-    
 
+    implementation("androidx.compose.material:material-icons-extended:1.6.0")
 
     // --- Testing ---
     testImplementation(libs.junit)

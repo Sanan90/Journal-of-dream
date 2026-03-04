@@ -17,7 +17,7 @@ import com.example.journalofdream.model.CategoryDao
         DreamLocationCrossRef::class,
         Category::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

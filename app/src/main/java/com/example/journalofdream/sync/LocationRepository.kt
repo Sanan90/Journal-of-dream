@@ -2,7 +2,6 @@ package com.example.journalofdream.sync
 
 import android.util.Log
 import com.example.journalofdream.database.AppDatabase
-import com.example.journalofdream.database.LocationDao
 import com.example.journalofdream.model.Location
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
@@ -13,10 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-/**
- * Репозиторий для синхронизации локаций между локальной БД и Firestore.
- * Firestore: коллекция "users/{uid}/locations".
- */
 class LocationRepository(
     private val db: AppDatabase,
     private val auth: FirebaseAuth,
@@ -25,22 +20,19 @@ class LocationRepository(
     private var listenerRegistration: ListenerRegistration? = null
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    /**
-     * Запустить слушатель Firestore на коллекцию "locations" текущего пользователя.
-     * Любые изменения (добавление/обновление/удаление) синхронно отражаются в локальной базе данных.
-     */
+    // Callback для передачи ошибок во ViewModel
+    var onSyncError: ((String) -> Unit)? = null
+
     fun startSync() {
         val user = auth.currentUser ?: return
         val userId = user.uid
-        val locationsRef = remoteDb.collection("users")
-            .document(userId)
-            .collection("locations")
+        val locationsRef = remoteDb.collection("users").document(userId).collection("locations")
 
-        // Удаляем предыдущего слушателя, если он уже был запущен
         listenerRegistration?.remove()
         listenerRegistration = locationsRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.e("LocationRepository", "Firestore listen error", e)
+                onSyncError?.invoke("Ошибка синхронизации локаций")
                 return@addSnapshotListener
             }
             if (snapshot != null) {
@@ -51,22 +43,15 @@ class LocationRepository(
                         when (dc.type) {
                             DocumentChange.Type.ADDED,
                             DocumentChange.Type.MODIFIED -> {
-                                // Преобразуем документ Firestore в объект Location
                                 val remoteLoc = dc.document.toObject(Location::class.java)
                                 if (remoteLoc != null && locId != null) {
-                                    // Устанавливаем корректный ownerUid текущего пользователя и локальный ID, затем сохраняем в Room
-                                    val localLocation = remoteLoc.copy(id = locId, ownerUid = userId)
-                                    db.locationDao().insert(localLocation)  // OnConflict=REPLACE
-                                    Log.d("LocationRepository", "Sync: локация [id=$locId] добавлена/обновлена локально.")
+                                    db.locationDao().insert(remoteLoc.copy(id = locId, ownerUid = userId))
                                 }
                             }
                             DocumentChange.Type.REMOVED -> {
                                 if (locId != null) {
-                                    // Находим локацию в локальной базе по ID и удаляем её
-                                    db.locationDao().getLocationByIdOnce(locId, userId)?.let { localLoc ->
-                                        // При удалении локации сработает CASCADE на связи (dream_location_cross_ref), и связанные сны потеряют эту связь.
-                                        db.locationDao().delete(localLoc)
-                                        Log.d("LocationRepository", "Sync: локация [id=$locId] удалена локально.")
+                                    db.locationDao().getLocationByIdOnce(locId, userId)?.let {
+                                        db.locationDao().delete(it)
                                     }
                                 }
                             }
@@ -75,81 +60,71 @@ class LocationRepository(
                 }
             }
         }
-        Log.d("LocationRepository", "startSync: listener attached for user=$userId")
     }
 
-    /**
-     * Остановить слушатель синхронизации локаций (например, при выходе из аккаунта).
-     */
     fun stopSync() {
         listenerRegistration?.remove()
         listenerRegistration = null
-        Log.d("LocationRepository", "stopSync: listener removed")
     }
 
-    /**
-     * Добавить или обновить локацию в локальной БД и (если авторизован) в Firestore.
-     */
-    suspend fun upsertLocation(location: Location) {
+    suspend fun upsertLocation(location: Location): Result<Unit> {
         val locationDao = db.locationDao()
-        // Сохраняем локацию в локальной базе данных
         val newRowId = locationDao.insert(location)
-        var finalLocation = location
-        if (location.id == 0) {
-            // Если это новая локация (id ещё не сгенерирован), обновляем id из возвращённого значения
-            finalLocation = location.copy(id = newRowId.toInt())
+        val finalLocation = if (location.id == 0) location.copy(id = newRowId.toInt()) else location
+
+        auth.currentUser?.let { user ->
+            try {
+                remoteDb.collection("users")
+                    .document(user.uid)
+                    .collection("locations")
+                    .document(finalLocation.id.toString())
+                    .set(finalLocation.copy(ownerUid = user.uid))
+                    .await()
+                Log.d("LocationRepository", "upsertLocation: локация [id=${finalLocation.id}] синхронизирована")
+            } catch (e: Exception) {
+                Log.e("LocationRepository", "upsertLocation: ошибка синхронизации", e)
+                return Result.failure(e)
+            }
         }
-        // Если пользователь авторизован, отправляем обновление в Firestore
-        val user = auth.currentUser
-        if (user != null) {
-            val userId = user.uid
-            remoteDb.collection("users")
-                .document(userId)
-                .collection("locations")
-                .document(finalLocation.id.toString())
-                .set(finalLocation.copy(ownerUid = userId))
-                .await()
-            Log.d("LocationRepository", "upsertLocation: локация [id=${finalLocation.id}] отправлена в Firestore")
-        }
+        return Result.success(Unit)
     }
 
-    /**
-     * Удаляем локацию из локальной базы (и из Firestore, если нужно).
-     * При локальном удалении сработает каскад: все связи с этой локацией в DreamLocationCrossRef будут удалены.
-     */
-    suspend fun deleteLocation(location: Location) {
+    suspend fun deleteLocation(location: Location): Result<Unit> {
         db.locationDao().delete(location)
-        val user = auth.currentUser
-        if (user != null) {
-            remoteDb.collection("users")
-                .document(user.uid)
-                .collection("locations")
-                .document(location.id.toString())
-                .delete()
-                .await()
-            Log.d("LocationRepository", "deleteLocation: локация [id=${location.id}] удалена из Firestore")
+        auth.currentUser?.let { user ->
+            try {
+                remoteDb.collection("users")
+                    .document(user.uid)
+                    .collection("locations")
+                    .document(location.id.toString())
+                    .delete()
+                    .await()
+                Log.d("LocationRepository", "deleteLocation: локация [id=${location.id}] удалена из Firestore")
+            } catch (e: Exception) {
+                Log.e("LocationRepository", "deleteLocation: ошибка удаления из Firestore", e)
+                return Result.failure(e)
+            }
         }
+        return Result.success(Unit)
     }
 
-    /**
-     * Миграция гостевых локаций текущего устройства в профиль пользователя при логине.
-     * Все локации с ownerUid = "guest" получают нового ownerUid (userUid) и отправляются в Firestore.
-     */
     suspend fun migrateGuestLocationsToUser(userUid: String) {
         val locationDao = db.locationDao()
         val guestLocations = locationDao.getLocationsByOwnerOnce("guest")
         for (guestLoc in guestLocations) {
             val updated = guestLoc.copy(ownerUid = userUid)
-            // ИСПРАВЛЕНО: используем обновление, а не REPLACE-вставку, чтобы не удалить запись и не потерять связи с снами
             locationDao.update(updated)
-            // Сохраняем локацию в Firestore под новым пользователем
-            remoteDb.collection("users")
-                .document(userUid)
-                .collection("locations")
-                .document(updated.id.toString())
-                .set(updated.copy(ownerUid = userUid))
-                .await()
+            try {
+                remoteDb.collection("users")
+                    .document(userUid)
+                    .collection("locations")
+                    .document(updated.id.toString())
+                    .set(updated.copy(ownerUid = userUid))
+                    .await()
+            } catch (e: Exception) {
+                Log.e("LocationRepository", "migrateGuestLocationsToUser: ошибка загрузки локации", e)
+            }
         }
-        Log.d("LocationRepository", "migrateGuestLocationsToUser: ${guestLocations.size} локаций перенесено в профиль пользователя.")
+        Log.d("LocationRepository", "migrateGuestLocationsToUser: ${guestLocations.size} локаций мигрировано")
     }
 }

@@ -9,6 +9,7 @@ import com.example.journalofdream.ui.dreams.*
 import com.example.journalofdream.ui.locations.*
 import com.example.journalofdream.viewmodel.DreamViewModel
 import com.example.journalofdream.viewmodel.LocationViewModel
+import com.example.journalofdream.viewmodel.CategoryViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.journalofdream.ui.auth.AuthScreen
 import com.google.firebase.auth.FirebaseAuth
@@ -43,6 +44,7 @@ fun JournalOfDreamApp() {
         // Инициализируем ViewModel-ы (живут на уровне Activity)
         val dreamViewModel: DreamViewModel = viewModel()
         val locationViewModel: LocationViewModel = viewModel()
+        val categoryViewModel: CategoryViewModel = viewModel()
 
         // FirebaseAuth – определяем текущего авторизованного пользователя, если есть
         val auth = FirebaseAuth.getInstance()
@@ -76,20 +78,19 @@ fun JournalOfDreamApp() {
                     dreamViewModel = dreamViewModel,
                     locationViewModel = locationViewModel,
                     onAuthSuccess = {
-                        // Колбэк при успешной авторизации
                         currentUser.value = auth.currentUser
                         skipAuth.value = false
                         sharedPreferences.edit().putBoolean("skipAuth", false).apply()
-                        // Переходим на экран main, убирая из backstack экран auth
+                        // Переключаем категории на текущего пользователя
+                        auth.currentUser?.uid?.let { categoryViewModel.setOwner(it) }
                         navController.navigate("main") {
                             popUpTo("auth") { inclusive = true }
                         }
                     },
                     onSkipAuth = {
-                        // Переход в гостевой режим
                         skipAuth.value = true
                         sharedPreferences.edit().putBoolean("skipAuth", true).apply()
-                        // Переходим на главный экран в режиме гостя
+                        categoryViewModel.setOwner("guest")
                         navController.navigate("main") {
                             popUpTo("auth") { inclusive = true }
                         }
@@ -115,6 +116,8 @@ fun JournalOfDreamApp() {
                             currentUser.value = null
                             skipAuth.value = false
                             sharedPreferences.edit().putBoolean("skipAuth", false).apply()
+                            // 5. Переключаем категории на гостевые
+                            categoryViewModel.setOwner("guest")
                         }
                         // Переходим на экран авторизации, очищая backstack
                         navController.navigate("auth") {

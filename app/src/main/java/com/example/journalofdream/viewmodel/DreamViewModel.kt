@@ -24,6 +24,9 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
     private val _currentOwnerUid = MutableLiveData<String>()
     private var dreamsSource: LiveData<List<Dream>>? = null
 
+    private val _syncError = MutableLiveData<String?>(null)
+    val syncError: LiveData<String?> get() = _syncError
+
     init {
         // Устанавливаем начального владельца снов: если пользователь залогинен – его UID, иначе "guest"
         val user = auth.currentUser
@@ -41,7 +44,8 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
 
         // Если при запуске уже есть авторизованный пользователь, можно запустить синхронизацию:
         if (user != null) {
-            repository.startSync()  // запускаем слушатель изменений Firestore для снов
+            repository.onSyncError = { message -> _syncError.postValue(message) }
+            repository.startSync()
         }
     }
 
@@ -49,37 +53,39 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
      * Добавить новый сон вместе с выбранными локациями.
      */
     fun addDream(dream: Dream, locationIds: List<Int>) {
-        // Устанавливаем текущего владельца (UID пользователя или "guest") перед сохранением
         val uid = auth.currentUser?.uid ?: "guest"
         val finalDream = dream.copy(ownerUid = uid)
         viewModelScope.launch {
-            // ИСПРАВЛЕНО: вместо прямой вставки в DAO используем репозиторий,
-            // который сохранит сон и связи в базе, а также синхронизирует с Firestore.
-            repository.upsertDream(finalDream, locationIds)
+            val result = repository.upsertDream(finalDream, locationIds)
+            if (result.isFailure) {
+                _syncError.postValue("Сон сохранён локально, но не синхронизирован — нет подключения к сети")
+            }
         }
     }
 
-    /**
-     * Обновить существующий сон и его связанные локации.
-     */
     fun updateDream(updatedDream: Dream, locationIds: List<Int>) {
         val uid = auth.currentUser?.uid ?: "guest"
         val finalDream = updatedDream.copy(ownerUid = uid)
         viewModelScope.launch {
-            // ИСПРАВЛЕНО: обновление сна также выполняем через репозиторий (обновит локально и в Firestore).
-            repository.upsertDream(finalDream, locationIds)
+            val result = repository.upsertDream(finalDream, locationIds)
+            if (result.isFailure) {
+                _syncError.postValue("Изменения сохранены локально, но не синхронизированы — нет подключения к сети")
+            }
         }
     }
 
-    /**
-     * Удалить сон (и все связанные с ним привязки локаций).
-     */
     fun deleteDream(dream: Dream) {
         viewModelScope.launch {
-            // ИСПРАВЛЕНО: перед удалением сна вручную удаляем все его связи из локальной базы (для надёжности, хотя CASCADE тоже удалит)
             localDb.dreamDao().deleteDreamLocationCrossRefs(dream.localId)
-            repository.deleteDream(dream)
+            val result = repository.deleteDream(dream)
+            if (result.isFailure) {
+                _syncError.postValue("Сон удалён локально, но не синхронизирован — нет подключения к сети")
+            }
         }
+    }
+
+    fun clearSyncError() {
+        _syncError.value = null
     }
 
     /**

@@ -26,6 +26,7 @@ import androidx.navigation.NavHostController
 import com.example.journalofdream.model.Category
 import com.example.journalofdream.model.Dream
 import com.example.journalofdream.ui.common.BackgroundScreen
+import com.example.journalofdream.ui.dreams.CategoryManagerDialog
 import com.example.journalofdream.viewmodel.CategoryViewModel
 import com.example.journalofdream.viewmodel.DreamViewModel
 import com.example.journalofdream.viewmodel.LocationViewModel
@@ -49,6 +50,7 @@ fun AddDreamScreen(
     var content by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var isCategoryMenuExpanded by remember { mutableStateOf(false) }
+    var showError by remember { mutableStateOf(false) }
 
     // Состояния для выбора локаций
     var isLocationDialogOpen by remember { mutableStateOf(false) }
@@ -93,7 +95,6 @@ fun AddDreamScreen(
                         .padding(16.dp)
                 ) {
                     // Поле ввода заголовка сна
-                    var showError by remember { mutableStateOf(false) }
                     OutlinedTextField(
                         value = title,
                         onValueChange = {
@@ -125,9 +126,8 @@ fun AddDreamScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Выпадающий список категорий + кнопка добавить свою
-                    var showAddCategoryDialog by remember { mutableStateOf(false) }
-                    var newCategoryName by remember { mutableStateOf("") }
+                    // Выбор категории + управление категориями
+                    var showCategoryManager by remember { mutableStateOf(false) }
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -169,55 +169,21 @@ fun AddDreamScreen(
                             }
                         }
 
-                        // Кнопка добавить новую категорию
-                        IconButton(onClick = { showAddCategoryDialog = true }) {
+                        // Кнопка управления категориями (добавить/удалить)
+                        IconButton(onClick = { showCategoryManager = true }) {
                             Icon(
                                 imageVector = Icons.Default.Add,
-                                contentDescription = "Добавить категорию",
+                                contentDescription = "Управление категориями",
                                 tint = Color.White
                             )
                         }
                     }
 
-                    // Диалог добавления новой категории
-                    if (showAddCategoryDialog) {
-                        AlertDialog(
-                            onDismissRequest = {
-                                showAddCategoryDialog = false
-                                newCategoryName = ""
-                            },
-                            title = { Text("Новая категория") },
-                            text = {
-                                OutlinedTextField(
-                                    value = newCategoryName,
-                                    onValueChange = { newCategoryName = it },
-                                    label = { Text("Название категории") },
-                                    singleLine = true,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            },
-                            confirmButton = {
-                                TextButton(
-                                    onClick = {
-                                        if (newCategoryName.isNotBlank()) {
-                                            val newCat = com.example.journalofdream.model.Category(
-                                                name = newCategoryName.trim(),
-                                                isCustom = true
-                                            )
-                                            categoryViewModel.addCategory(newCat)
-                                            selectedCategory = newCat
-                                            newCategoryName = ""
-                                            showAddCategoryDialog = false
-                                        }
-                                    }
-                                ) { Text("Добавить") }
-                            },
-                            dismissButton = {
-                                TextButton(onClick = {
-                                    showAddCategoryDialog = false
-                                    newCategoryName = ""
-                                }) { Text("Отмена") }
-                            }
+                    if (showCategoryManager) {
+                        CategoryManagerDialog(
+                            categoryViewModel = categoryViewModel,
+                            onDismiss = { showCategoryManager = false },
+                            onCategorySelected = { selectedCategory = it }
                         )
                     }
 

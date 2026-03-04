@@ -25,6 +25,9 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
     private val _currentOwnerUid = MutableLiveData<String>()
     private var locationsSource: LiveData<List<Location>>? = null
 
+    private val _syncError = MutableLiveData<String?>(null)
+    val syncError: LiveData<String?> get() = _syncError
+
     init {
         // Инициализируем текущего владельца (UID пользователя или "guest")
         val user = auth.currentUser
@@ -42,6 +45,7 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
 
         // Если при запуске уже есть авторизованный пользователь, начинаем синхронизацию локаций
         if (user != null) {
+            locationRepository.onSyncError = { message -> _syncError.postValue(message) }
             locationRepository.startSync()
         }
     }
@@ -72,35 +76,37 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
      */
     fun addLocation(name: String, description: String) {
         val uid = _currentOwnerUid.value ?: "guest"
-        val newLocation = Location(
-            ownerUid = uid,
-            name = name,
-            description = description
-        )
+        val newLocation = Location(ownerUid = uid, name = name, description = description)
         viewModelScope.launch {
-            locationRepository.upsertLocation(newLocation)
+            val result = locationRepository.upsertLocation(newLocation)
+            if (result.isFailure) {
+                _syncError.postValue("Локация сохранена локально, но не синхронизирована — нет подключения к сети")
+            }
         }
     }
 
-    /**
-     * Обновить существующую локацию.
-     */
     fun updateLocation(location: Location) {
         val uid = _currentOwnerUid.value ?: "guest"
         val updated = location.copy(ownerUid = uid)
         viewModelScope.launch {
-            locationRepository.upsertLocation(updated)
+            val result = locationRepository.upsertLocation(updated)
+            if (result.isFailure) {
+                _syncError.postValue("Изменения сохранены локально, но не синхронизированы — нет подключения к сети")
+            }
         }
     }
 
-    /**
-     * Удалить локацию.
-     * При удалении сработает каскадное удаление связей снов, связанных с этой локацией.
-     */
     fun deleteLocation(location: Location) {
         viewModelScope.launch {
-            locationRepository.deleteLocation(location)
+            val result = locationRepository.deleteLocation(location)
+            if (result.isFailure) {
+                _syncError.postValue("Локация удалена локально, но не синхронизирована — нет подключения к сети")
+            }
         }
+    }
+
+    fun clearSyncError() {
+        _syncError.value = null
     }
 
     /**

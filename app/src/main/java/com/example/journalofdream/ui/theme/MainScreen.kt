@@ -47,6 +47,7 @@ fun MainScreen(
 ) {
     var isVisible by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
     // Анимация заголовка при первом появлении
     LaunchedEffect(Unit) {
@@ -58,9 +59,22 @@ fun MainScreen(
             TopAppBar(
                 title = {
                     if (isGuest) {
-                        // Если гость — показываем кнопку "Авторизуйтесь"
-                        TextButton(onClick = { navController.navigate("auth") }) {
-                            Text("Авторизуйтесь")
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "Гостевой режим",
+                                color = Color.White.copy(alpha = 0.7f),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            TextButton(
+                                onClick = { navController.navigate("auth") },
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+                            ) {
+                                Text(
+                                    text = "Войти",
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
                         }
                     } else {
                         // Иначе пишем "Сновидец: ..."
@@ -70,7 +84,7 @@ fun MainScreen(
                 actions = {
                     // Иконка выхода (видна только если не гость)
                     if (!isGuest) {
-                        IconButton(onClick = onLogout) {
+                        IconButton(onClick = { showLogoutDialog = true }) {
                             Icon(
                                 imageVector = Icons.Default.ExitToApp,
                                 contentDescription = "Выйти"
@@ -224,6 +238,28 @@ fun MainScreen(
                         onLocationSelected = {
                             navController.navigate("addLocation")
                             showDialog = false
+                        }
+                    )
+                }
+
+                // Диалог подтверждения выхода из аккаунта
+                if (showLogoutDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showLogoutDialog = false },
+                        title = { Text("Выйти из аккаунта?") },
+                        text = { Text("Вы уверены что хотите выйти? Локальные данные останутся на устройстве.") },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                showLogoutDialog = false
+                                onLogout()
+                            }) {
+                                Text("Выйти", color = MaterialTheme.colorScheme.error)
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showLogoutDialog = false }) {
+                                Text("Отмена")
+                            }
                         }
                     )
                 }
