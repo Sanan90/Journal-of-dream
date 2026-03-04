@@ -39,6 +39,9 @@ fun DreamsScreen(
 ) {
     val allDreams by dreamViewModel.dreams.observeAsState(emptyList())
     val categories by categoryViewModel.allCategories.observeAsState(emptyList())
+    val categoryColorMap = remember(categories) {
+        categories.associate { it.name to it.color }
+    }
     val syncError by dreamViewModel.syncError.observeAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -200,7 +203,8 @@ fun DreamsScreen(
                             DreamListItem(
                                 dream = dream,
                                 navController = navController,
-                                onDelete = { dreamViewModel.deleteDream(it) }
+                                onDelete = { dreamViewModel.deleteDream(it) },
+                                categoryColor = categoryColorMap[dream.category]
                             )
                         }
                     }

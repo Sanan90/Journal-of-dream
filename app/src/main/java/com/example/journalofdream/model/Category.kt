@@ -9,6 +9,6 @@ data class Category(
     val id: Int = 0,
     val name: String,
     val isCustom: Boolean,
-    // "default" — дефолтные категории (видны всем), uid — кастомные категории пользователя
-    val ownerUid: String = "default"
+    val ownerUid: String = "default",
+    val color: String = "#9C27B0" // hex цвет, по умолчанию фиолетовый
 )

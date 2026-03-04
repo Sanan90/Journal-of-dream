@@ -14,11 +14,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.journalofdream.model.Dream
+import com.example.journalofdream.ui.dreams.hexToColor
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -37,9 +39,11 @@ private fun formatDate(date: String): String {
 fun DreamListItem(
     dream: Dream,
     navController: NavHostController,
-    onDelete: ((Dream) -> Unit)? = null
+    onDelete: ((Dream) -> Unit)? = null,
+    categoryColor: String? = null
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
+    val accentColor = categoryColor?.let { hexToColor(it) } ?: MaterialTheme.colorScheme.primary
 
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { value ->
@@ -114,35 +118,45 @@ fun DreamListItem(
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = dream.title,
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.primary
+            Row {
+                // Цветная полоса слева
+                Box(
+                    modifier = Modifier
+                        .width(6.dp)
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
+                        .background(accentColor)
                 )
-                Text(
-                    text = formatDate(dream.date),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                if (dream.content.isNotBlank()) {
+                Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = if (dream.content.length > 100)
-                            dream.content.take(100) + "..."
-                        else
-                            dream.content,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                        modifier = Modifier.padding(top = 4.dp)
+                        text = dream.title,
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = accentColor
                     )
-                }
-                if (dream.category.isNotBlank() && dream.category != "Без категории") {
                     Text(
-                        text = dream.category,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
-                        modifier = Modifier.padding(top = 4.dp)
+                        text = formatDate(dream.date),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
+                    if (dream.content.isNotBlank()) {
+                        Text(
+                            text = if (dream.content.length > 100)
+                                dream.content.take(100) + "..."
+                            else
+                                dream.content,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+                    if (dream.category.isNotBlank() && dream.category != "Без категории") {
+                        Text(
+                            text = dream.category,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = accentColor.copy(alpha = 0.7f),
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
                 }
             }
         }
