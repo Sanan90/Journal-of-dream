@@ -43,6 +43,39 @@ private val monthNames = listOf(
     "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
 )
 
+// Конвертирует любой формат даты в "yyyy-MM" для группировки
+fun dateToMonthKey(date: String): String {
+    return try {
+        if (date.matches(Regex("\\d{4}-\\d{2}-\\d{2}"))) {
+            // Уже в формате yyyy-MM-dd
+            date.substring(0, 7)
+        } else {
+            // Старый формат dd.MM.yyyy
+            val sdf = java.text.SimpleDateFormat("dd.MM.yyyy", java.util.Locale.getDefault())
+            val cal = java.util.Calendar.getInstance()
+            cal.time = sdf.parse(date)!!
+            String.format("%04d-%02d", cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH) + 1)
+        }
+    } catch (e: Exception) { "0000-00" }
+}
+
+// Конвертирует любой формат даты в "yyyy-MM-dd" для корректной сортировки
+fun dateToSortKey(date: String): String {
+    return try {
+        if (date.matches(Regex("\\d{4}-\\d{2}-\\d{2}"))) {
+            date
+        } else {
+            val sdf = java.text.SimpleDateFormat("dd.MM.yyyy", java.util.Locale.getDefault())
+            val cal = java.util.Calendar.getInstance()
+            cal.time = sdf.parse(date)!!
+            String.format("%04d-%02d-%02d",
+                cal.get(java.util.Calendar.YEAR),
+                cal.get(java.util.Calendar.MONTH) + 1,
+                cal.get(java.util.Calendar.DAY_OF_MONTH))
+        }
+    } catch (e: Exception) { "0000-00-00" }
+}
+
 fun formatMonthKey(key: String): String {
     return try {
         val parts = key.split("-")
@@ -78,6 +111,8 @@ fun DreamsScreen(
     var categoryExpanded by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
     var monthMode by remember { mutableStateOf(true) }
+    // Сортировка в режиме обычного списка: true = по дате, false = по категории
+    var sortByDate by remember { mutableStateOf(true) }
 
     // Выбранный месяц (если открыт) — null = показываем сетку
     var openedMonth by remember { mutableStateOf<String?>(null) }
@@ -107,19 +142,15 @@ fun DreamsScreen(
     }
 
     // Все месяцы — строятся из ВСЕХ снов (не фильтруются)
-    // чтобы квадратики не исчезали при выборе категории
     val allMonthKeys = remember(allDreams) {
         allDreams
-            .map { dream -> try { dream.date.substring(0, 7) } catch (e: Exception) { "0000-00" } }
+            .map { dream -> dateToMonthKey(dream.date) }
             .toSortedSet(compareByDescending { it })
     }
 
     // Количество снов в каждом месяце с учётом фильтра (категория + поиск)
     val dreamsByMonth = remember(searchResults) {
-        searchResults
-            .groupBy { dream ->
-                try { dream.date.substring(0, 7) } catch (e: Exception) { "0000-00" }
-            }
+        searchResults.groupBy { dream -> dateToMonthKey(dream.date) }
     }
 
     Scaffold(
@@ -150,6 +181,25 @@ fun DreamsScreen(
                         TextButton(onClick = { monthMode = !monthMode }) {
                             Text(
                                 text = if (monthMode) "Список" else "Месяцы",
+                                color = Color.White.copy(alpha = 0.8f),
+                                fontSize = 13.sp
+                            )
+                        }
+                        // Кнопка сортировки — только в режиме обычного списка
+                        if (!monthMode) {
+                            TextButton(onClick = { sortByDate = !sortByDate }) {
+                                Text(
+                                    text = if (sortByDate) "А-Я" else "Дата",
+                                    color = Color.White.copy(alpha = 0.8f),
+                                    fontSize = 13.sp
+                                )
+                            }
+                        }
+                    } else {
+                        // Кнопка сортировки внутри открытого месяца
+                        TextButton(onClick = { sortByDate = !sortByDate }) {
+                            Text(
+                                text = if (sortByDate) "А-Я" else "Дата",
                                 color = Color.White.copy(alpha = 0.8f),
                                 fontSize = 13.sp
                             )
@@ -272,6 +322,18 @@ fun DreamsScreen(
                                 Text("Нет снов за этот месяц", color = Color.White, fontSize = 16.sp)
                             }
                         } else {
+                            val sortedInMonth = remember(dreamsInMonth, sortByDate) {
+                                if (sortByDate) {
+                                    dreamsInMonth.sortedByDescending { dateToSortKey(it.date) }
+                                } else {
+                                    dreamsInMonth.sortedWith(
+                                        compareBy(
+                                            { it.category.ifBlank { "Без категории" } },
+                                            { dateToSortKey(it.date) }
+                                        )
+                                    )
+                                }
+                            }
                             LazyColumn(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -279,16 +341,40 @@ fun DreamsScreen(
                                 verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
                                 item { Spacer(modifier = Modifier.height(4.dp)) }
-                                items(
-                                    items = dreamsInMonth,
-                                    key = { it.localId }
-                                ) { dream ->
-                                    DreamListItem(
-                                        dream = dream,
-                                        navController = navController,
-                                        onDelete = { dreamViewModel.deleteDream(it) },
-                                        categoryColor = categoryColorMap[dream.category]
-                                    )
+                                if (!sortByDate) {
+                                    val grouped = sortedInMonth.groupBy {
+                                        it.category.ifBlank { "Без категории" }
+                                    }
+                                    grouped.forEach { (category, dreams) ->
+                                        item(key = "cat_month_$category") {
+                                            Text(
+                                                text = category,
+                                                color = Color.White,
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 16.sp,
+                                                modifier = Modifier.padding(
+                                                    top = 8.dp, start = 4.dp, bottom = 4.dp
+                                                )
+                                            )
+                                        }
+                                        items(items = dreams, key = { it.localId }) { dream ->
+                                            DreamListItem(
+                                                dream = dream,
+                                                navController = navController,
+                                                onDelete = { dreamViewModel.deleteDream(it) },
+                                                categoryColor = categoryColorMap[dream.category]
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    items(items = sortedInMonth, key = { it.localId }) { dream ->
+                                        DreamListItem(
+                                            dream = dream,
+                                            navController = navController,
+                                            onDelete = { dreamViewModel.deleteDream(it) },
+                                            categoryColor = categoryColorMap[dream.category]
+                                        )
+                                    }
                                 }
                                 item { Spacer(modifier = Modifier.height(16.dp)) }
                             }
@@ -342,23 +428,68 @@ fun DreamsScreen(
                                 }
                             }
                         } else {
-                            // Обычный список
+                            // Обычный список с сортировкой
+                            val sortedResults = remember(searchResults, sortByDate) {
+                                if (sortByDate) {
+                                    searchResults.sortedByDescending { dateToSortKey(it.date) }
+                                } else {
+                                    searchResults.sortedWith(
+                                        compareBy(
+                                            { it.category.ifBlank { "Без категории" } },
+                                            { dateToSortKey(it.date) }
+                                        )
+                                    )
+                                }
+                            }
                             LazyColumn(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(horizontal = 16.dp),
                                 verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                items(
-                                    items = searchResults,
-                                    key = { it.localId }
-                                ) { dream ->
-                                    DreamListItem(
-                                        dream = dream,
-                                        navController = navController,
-                                        onDelete = { dreamViewModel.deleteDream(it) },
-                                        categoryColor = categoryColorMap[dream.category]
-                                    )
+                                // Если сортировка по категории — показываем заголовки групп
+                                if (!sortByDate) {
+                                    val grouped = sortedResults.groupBy {
+                                        it.category.ifBlank { "Без категории" }
+                                    }
+                                    grouped.forEach { (category, dreams) ->
+                                        item(key = "cat_$category") {
+                                            Text(
+                                                text = category,
+                                                color = Color.White,
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 16.sp,
+                                                modifier = Modifier.padding(
+                                                    top = 12.dp,
+                                                    start = 4.dp,
+                                                    bottom = 4.dp
+                                                )
+                                            )
+                                        }
+                                        items(
+                                            items = dreams,
+                                            key = { it.localId }
+                                        ) { dream ->
+                                            DreamListItem(
+                                                dream = dream,
+                                                navController = navController,
+                                                onDelete = { dreamViewModel.deleteDream(it) },
+                                                categoryColor = categoryColorMap[dream.category]
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    items(
+                                        items = sortedResults,
+                                        key = { it.localId }
+                                    ) { dream ->
+                                        DreamListItem(
+                                            dream = dream,
+                                            navController = navController,
+                                            onDelete = { dreamViewModel.deleteDream(it) },
+                                            categoryColor = categoryColorMap[dream.category]
+                                        )
+                                    }
                                 }
                             }
                         }
