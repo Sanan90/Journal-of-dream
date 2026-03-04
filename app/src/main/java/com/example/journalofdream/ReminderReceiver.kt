@@ -13,27 +13,31 @@ class ReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("ReminderReceiver", "Будильник сработал!")
 
-        // Проверяем, записал ли пользователь сон
         val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
+        if (!notificationsEnabled) return
+
+        // Проверяем записал ли пользователь сон сегодня
         val todayKey = getTodayKey()
         val dreamRecorded = prefs.getBoolean(todayKey, false)
 
         if (!dreamRecorded) {
-            showNotification(context, "Пора записать сон", "Откройте приложение и запишите ваш сон!")
+            showNotification(
+                context,
+                title = "Пора записать сон 🌙",
+                message = "Запишите сон пока воспоминания свежие!"
+            )
         }
 
-        // Считываем время уведомления из настроек, если оно задано, иначе используем 8:00
+        // Планируем следующее напоминание
         val hour = prefs.getInt("notification_hour", 8)
         val minute = prefs.getInt("notification_minute", 0)
         scheduleDailyReminder(context, hour, minute)
-        Log.d("ReminderReceiver", "Следующий будильник запланирован на $hour:$minute")
+        Log.d("ReminderReceiver", "Следующий будильник на $hour:$minute")
     }
 
     private fun getTodayKey(): String {
         val now = Calendar.getInstance()
-        val year = now.get(Calendar.YEAR)
-        val month = now.get(Calendar.MONTH) + 1
-        val day = now.get(Calendar.DAY_OF_MONTH)
-        return "dream_recorded_${year}_${month}_${day}"
+        return "dream_recorded_${now.get(Calendar.YEAR)}_${now.get(Calendar.MONTH) + 1}_${now.get(Calendar.DAY_OF_MONTH)}"
     }
 }

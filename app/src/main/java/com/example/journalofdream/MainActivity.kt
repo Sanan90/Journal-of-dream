@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import com.example.journalofdream.ui.JournalOfDreamApp
 import com.example.journalofdream.ui.theme.AppTheme
 import com.example.journalofdream.util.scheduleDailyReminder
+import com.example.journalofdream.util.scheduleQuoteAlarms
 import com.example.journalofdream.util.createNotificationChannel
 import java.util.Calendar
 
@@ -85,6 +86,12 @@ class MainActivity : ComponentActivity() {
             val minute = prefs.getInt("notification_minute", 0)
             scheduleDailyReminder(this, hour, minute)
             Log.d("MainActivity", "Уведомление уже настроено на $hour:$minute")
+        }
+
+        // Планируем цитаты если включены
+        val quotesEnabled = prefs.getBoolean("motivational_quotes", true)
+        if (quotesEnabled) {
+            scheduleQuoteAlarms(this)
         }
     }
 }

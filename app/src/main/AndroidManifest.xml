@@ -35,6 +35,11 @@
             android:enabled="true"
             android:exported="false" />
 
+        <receiver
+            android:name=".QuoteReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
         <!-- Ресивер для перепланирования будильника после перезагрузки -->
         <receiver
             android:name=".BootReceiver"
