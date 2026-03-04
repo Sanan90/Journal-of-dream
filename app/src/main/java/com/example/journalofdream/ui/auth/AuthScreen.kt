@@ -44,6 +44,7 @@ fun AuthScreen(
     var passwordError by remember { mutableStateOf<String?>(null) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
+    var resetMessage by remember { mutableStateOf<String?>(null) }
 
     val context = LocalContext.current
     val activity = context as? Activity
@@ -161,7 +162,49 @@ fun AuthScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Кнопка "Забыл пароль"
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                TextButton(
+                    onClick = {
+                        if (email.isBlank() || !Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()) {
+                            emailError = "Введите корректный email для сброса пароля"
+                        } else {
+                            auth.sendPasswordResetEmail(email.trim())
+                                .addOnCompleteListener { task ->
+                                    resetMessage = if (task.isSuccessful) {
+                                        "Письмо для сброса пароля отправлено на ${email.trim()}"
+                                    } else {
+                                        "Ошибка: ${task.exception?.message}"
+                                    }
+                                }
+                        }
+                    }
+                ) {
+                    Text("Забыл пароль?", style = MaterialTheme.typography.bodySmall)
+                }
+            }
+
+            // Сообщение об отправке письма
+            resetMessage?.let { msg ->
+                Text(
+                    text = msg,
+                    color = if (msg.startsWith("Ошибка"))
+                        MaterialTheme.colorScheme.error
+                    else
+                        MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Кнопка "Войти"
             Button(
