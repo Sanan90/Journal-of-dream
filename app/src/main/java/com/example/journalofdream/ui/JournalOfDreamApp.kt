@@ -12,6 +12,10 @@ import com.example.journalofdream.viewmodel.LocationViewModel
 import com.example.journalofdream.viewmodel.CategoryViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.journalofdream.ui.auth.AuthScreen
+import com.example.journalofdream.ui.auth.PinMode
+import com.example.journalofdream.ui.auth.PinScreen
+import com.example.journalofdream.ui.auth.hasPin
+import com.example.journalofdream.ui.auth.isPinEnabled
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import androidx.compose.ui.platform.LocalContext
@@ -22,6 +26,7 @@ import com.example.journalofdream.ui.theme.AppTheme
 import com.example.journalofdream.ui.theme.DreamsScreen
 import com.example.journalofdream.ui.theme.LocationListScreen
 import com.example.journalofdream.ui.theme.MainScreen
+import com.example.journalofdream.ui.theme.AchievementsScreen
 import com.example.journalofdream.ui.theme.SettingsScreen
 import com.example.journalofdream.ui.theme.StatsScreen
 import com.example.journalofdream.ui.theme.TechniquesScreen
@@ -35,6 +40,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 fun JournalOfDreamApp() {
     AppTheme {
         val context = LocalContext.current
+
+        // PIN-защита при запуске
+        var pinUnlocked by remember { mutableStateOf(!isPinEnabled(context)) }
+
+        if (!pinUnlocked) {
+            PinScreen(
+                mode = PinMode.ENTER,
+                onSuccess = { pinUnlocked = true }
+            )
+            return@AppTheme
+        }
+
         val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
         // Флаг, указывающий, что пользователь решил пропустить авторизацию (guest mode)
@@ -190,6 +207,14 @@ fun JournalOfDreamApp() {
             // Экран техник осознанных сновидений
             composable("techniques") {
                 TechniquesScreen(navController = navController)
+            }
+
+            // Экран достижений
+            composable("achievements") {
+                AchievementsScreen(
+                    navController = navController,
+                    dreamViewModel = dreamViewModel
+                )
             }
 
             // Экран настроек

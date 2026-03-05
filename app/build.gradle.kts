@@ -55,6 +55,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.biometric:biometric:1.1.0")
     // --- Firebase ---
     implementation(platform(libs.firebase.bom.v3330))
     implementation(libs.google.firebase.analytics.ktx)
@@ -92,7 +93,7 @@ dependencies {
     implementation(libs.runtime.livedata)
     kapt(libs.androidx.room.compiler)
 
-    implementation("androidx.compose.material:material-icons-extended:1.6.0")
+    implementation("androidx.compose.material:material-icons-extended")
 
     // --- Testing ---
     testImplementation(libs.junit)

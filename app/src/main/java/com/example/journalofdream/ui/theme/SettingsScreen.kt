@@ -6,8 +6,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.DateRange
+import com.example.journalofdream.ui.auth.PinMode
+import com.example.journalofdream.ui.auth.PinScreen
+import com.example.journalofdream.ui.auth.hasPin
+import com.example.journalofdream.ui.auth.isPinEnabled
+import com.example.journalofdream.ui.auth.removePin
+import com.example.journalofdream.ui.auth.setPinEnabled
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,7 +41,13 @@ fun SettingsScreen(navController: NavHostController) {
     var notificationsEnabled by remember { mutableStateOf(prefs.getBoolean("notifications_enabled", true)) }
     var motivationalQuotes by remember { mutableStateOf(prefs.getBoolean("motivational_quotes", true)) }
 
-    Scaffold(
+    // PIN состояние — вынесено наверх чтобы показывать поверх всего экрана
+    var pinEnabled by remember { mutableStateOf(isPinEnabled(context)) }
+    var showSetPin by remember { mutableStateOf(false) }
+    var showChangePin by remember { mutableStateOf(false) }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Настройки", color = Color.White) },
@@ -118,10 +131,63 @@ fun SettingsScreen(navController: NavHostController) {
                         }
                     }
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Секция безопасности
+                SettingsSectionTitle("🔒 Безопасность")
+
+                // Включить/выключить PIN
+                SettingsToggleRow(
+                    icon = Icons.Default.Lock,
+                    title = "Защита PIN-кодом",
+                    subtitle = if (pinEnabled) "Приложение защищено PIN-кодом"
+                               else "Включить защиту приложения",
+                    checked = pinEnabled,
+                    onCheckedChange = { enabled ->
+                        if (enabled) {
+                            showSetPin = true
+                        } else {
+                            removePin(context)
+                            setPinEnabled(context, false)
+                            pinEnabled = false
+                        }
+                    }
+                )
+
+                // Сменить PIN — только если включён
+                if (pinEnabled) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    SettingsClickRow(
+                        icon = Icons.Default.Lock,
+                        title = "Сменить PIN-код",
+                        subtitle = "Установить новый PIN-код",
+                        onClick = { showChangePin = true }
+                    )
+                }
             }
         }
     }
-}
+
+    // PinScreen поверх всего экрана
+    if (showSetPin) {
+        PinScreen(
+            mode = PinMode.SET,
+            onSuccess = {
+                pinEnabled = true
+                showSetPin = false
+            },
+            onCancel = { showSetPin = false }
+        )
+    } else if (showChangePin) {
+        PinScreen(
+            mode = PinMode.SET,
+            onSuccess = { showChangePin = false },
+            onCancel = { showChangePin = false }
+        )
+    }
+} // закрываем Box
+} // закрываем SettingsScreen
 
 @Composable
 fun SettingsSectionTitle(title: String) {
