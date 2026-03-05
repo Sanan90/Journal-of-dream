@@ -18,6 +18,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
@@ -84,6 +85,30 @@ fun EditDreamScreen(
         // Состояния для управления выбором локаций
         var isLocationDialogOpen by remember { mutableStateOf(false) }
         val selectedLocationIds = remember { mutableStateListOf<Int>() }
+
+        // Время сна — берём из существующего или текущее
+        var selectedTime by remember { mutableStateOf(dream.time.ifBlank { getCurrentTime() }) }
+        var showTimePicker by remember { mutableStateOf(false) }
+
+        val context = androidx.compose.ui.platform.LocalContext.current
+
+        // TimePickerDialog
+        if (showTimePicker) {
+            val timeParts = selectedTime.split(":").map { it.toIntOrNull() ?: 0 }
+            android.app.TimePickerDialog(
+                context,
+                { _, hour, minute ->
+                    selectedTime = String.format("%02d:%02d", hour, minute)
+                    showTimePicker = false
+                },
+                timeParts.getOrElse(0) { 0 },
+                timeParts.getOrElse(1) { 0 },
+                true
+            ).also {
+                it.setOnCancelListener { showTimePicker = false }
+                it.show()
+            }
+        }
 
         // ИСПРАВЛЕНО: при загрузке сна заполняем список выбранных локаций (IDs) для корректного отображения
         LaunchedEffect(dreamWithLocs) {
@@ -279,6 +304,38 @@ fun EditDreamScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
+                        // Дата и время сна
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            // Дата — только отображение (менять дату в редактировании не даём)
+                            OutlinedButton(
+                                onClick = {},
+                                enabled = false,
+                                modifier = Modifier.weight(1f),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White.copy(alpha = 0.6f)),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.3f))
+                            ) {
+                                Text(
+                                    text = formatDateForDisplay(dream.date),
+                                    color = Color.White.copy(alpha = 0.6f),
+                                    fontSize = 13.sp
+                                )
+                            }
+                            // Время — можно менять
+                            OutlinedButton(
+                                onClick = { showTimePicker = true },
+                                modifier = Modifier.weight(0.7f),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.5f))
+                            ) {
+                                Text("🕐 $selectedTime", color = Color.White, fontSize = 13.sp)
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
                         // Кнопка сохранения изменений
                         Button(
                             onClick = {
@@ -289,6 +346,7 @@ fun EditDreamScreen(
                                 val updatedDream = dream.copy(
                                     title = title.trim(),
                                     content = content.trim(),
+                                    time = selectedTime,
                                     category = selectedCategory?.name ?: "Без категории"
                                 )
                                 dreamViewModel.updateDream(updatedDream, selectedLocationIds.toList())

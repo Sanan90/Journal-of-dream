@@ -4,11 +4,20 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.journalofdream.model.Dream
 import com.example.journalofdream.model.Location
 import com.example.journalofdream.model.DreamLocationCrossRef
 import com.example.journalofdream.model.Category
 import com.example.journalofdream.model.CategoryDao
+
+// Миграция 4 → 5: добавляем колонку time в таблицу dreams
+val MIGRATION_4_5 = object : Migration(4, 5) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE dreams ADD COLUMN time TEXT NOT NULL DEFAULT ''")
+    }
+}
 
 @Database(
     entities = [
@@ -17,7 +26,7 @@ import com.example.journalofdream.model.CategoryDao
         DreamLocationCrossRef::class,
         Category::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -37,8 +46,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "dream_database"
                 )
-                    // Без миграций, если вам удобно
-                    .fallbackToDestructiveMigration()
+                    .addMigrations(MIGRATION_4_5)
                     .build()
                 INSTANCE = instance
                 instance

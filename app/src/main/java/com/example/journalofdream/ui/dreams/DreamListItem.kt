@@ -114,7 +114,7 @@ fun DreamListItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .clickable { navController.navigate("editDream/${dream.localId}") },
+                .clickable { navController.navigate("viewDream/${dream.localId}") },
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -142,7 +142,10 @@ fun DreamListItem(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = formatDate(dream.date),
+                        text = if (dream.time.isNotBlank())
+                            "${formatDate(dream.date)}  🕐 ${dream.time}"
+                        else
+                            formatDate(dream.date),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                     )

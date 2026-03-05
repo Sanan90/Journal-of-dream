@@ -11,6 +11,7 @@
 
     <!-- Разрешение для перепланирования будильников после перезагрузки -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:label="@string/app_name"

@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import com.example.journalofdream.model.Category
 import com.example.journalofdream.model.Dream
 import com.example.journalofdream.ui.common.BackgroundScreen
+import com.example.journalofdream.util.rememberSpeechLauncher
 import com.example.journalofdream.ui.dreams.CategoryManagerDialog
 import com.example.journalofdream.viewmodel.CategoryViewModel
 import com.example.journalofdream.viewmodel.DreamViewModel
@@ -37,6 +38,11 @@ import java.util.*
 fun getCurrentDate(): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return dateFormat.format(Date())
+}
+
+fun getCurrentTime(): String {
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return timeFormat.format(Date())
 }
 
 fun formatDateForDisplay(date: String): String {
@@ -64,6 +70,8 @@ fun AddDreamScreen(
     var showError by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf(getCurrentDate()) }
     var showDatePicker by remember { mutableStateOf(false) }
+    var selectedTime by remember { mutableStateOf(getCurrentTime()) }
+    var showTimePicker by remember { mutableStateOf(false) }
 
     val context = androidx.compose.ui.platform.LocalContext.current
 
@@ -82,6 +90,24 @@ fun AddDreamScreen(
             cal.get(java.util.Calendar.DAY_OF_MONTH)
         ).also {
             it.setOnCancelListener { showDatePicker = false }
+            it.show()
+        }
+    }
+
+    // TimePickerDialog
+    if (showTimePicker) {
+        val cal = java.util.Calendar.getInstance()
+        android.app.TimePickerDialog(
+            context,
+            { _, hour, minute ->
+                selectedTime = String.format("%02d:%02d", hour, minute)
+                showTimePicker = false
+            },
+            cal.get(java.util.Calendar.HOUR_OF_DAY),
+            cal.get(java.util.Calendar.MINUTE),
+            true // 24-часовой формат
+        ).also {
+            it.setOnCancelListener { showTimePicker = false }
             it.show()
         }
     }
@@ -145,39 +171,78 @@ fun AddDreamScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Выбор даты сна
-                    OutlinedButton(
-                        onClick = { showDatePicker = true },
+                    // Выбор даты и времени сна в одну строку
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.5f))
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = "Выбрать дату",
-                            tint = Color.White,
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                        Text(
-                            text = "Дата сна: ${formatDateForDisplay(selectedDate)}",
-                            color = Color.White
-                        )
+                        // Дата
+                        OutlinedButton(
+                            onClick = { showDatePicker = true },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.5f))
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = "Выбрать дату",
+                                tint = Color.White,
+                                modifier = Modifier.padding(end = 4.dp)
+                            )
+                            Text(
+                                text = formatDateForDisplay(selectedDate),
+                                color = Color.White,
+                                fontSize = 13.sp
+                            )
+                        }
+                        // Время
+                        OutlinedButton(
+                            onClick = { showTimePicker = true },
+                            modifier = Modifier.weight(0.7f),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.5f))
+                        ) {
+                            Text("🕐 $selectedTime", color = Color.White, fontSize = 13.sp)
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Поле ввода содержания сна
-                    OutlinedTextField(
-                        value = content,
-                        onValueChange = { content = it },
-                        label = { Text("Описание сна") },
-                        textStyle = TextStyle(fontSize = 16.sp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(120.dp),
-                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(onDone = { /* скрыть клавиатуру */ })
-                    )
+                    // Поле ввода содержания сна + кнопка голосового ввода
+                    val speechLauncher = rememberSpeechLauncher { recognized ->
+                        content = if (content.isBlank()) recognized
+                                  else "$content $recognized"
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = content,
+                            onValueChange = { content = it },
+                            label = { Text("Описание сна") },
+                            textStyle = TextStyle(fontSize = 16.sp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(120.dp),
+                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                            keyboardActions = KeyboardActions(onDone = { })
+                        )
+                        // Кнопка микрофона
+                        IconButton(
+                            onClick = { speechLauncher() },
+                            modifier = Modifier
+                                .padding(top = 4.dp)
+                                .size(48.dp)
+                                .background(
+                                    Color(0xFF7E57C2).copy(alpha = 0.8f),
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+                        ) {
+                            Text("🎤", fontSize = 22.sp)
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
@@ -325,6 +390,7 @@ fun AddDreamScreen(
                                 title = title.trim(),
                                 content = content.trim(),
                                 date = selectedDate,
+                                time = selectedTime,
                                 category = selectedCategory?.name ?: "Без категории"
                             )
                             // Сохраняем сон вместе с выбранными локациями

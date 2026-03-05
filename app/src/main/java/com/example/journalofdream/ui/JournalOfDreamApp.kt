@@ -1,6 +1,8 @@
 package com.example.journalofdream.ui
 
 import android.content.Context
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
@@ -27,9 +29,11 @@ import com.example.journalofdream.ui.theme.DreamsScreen
 import com.example.journalofdream.ui.theme.LocationListScreen
 import com.example.journalofdream.ui.theme.MainScreen
 import com.example.journalofdream.ui.theme.AchievementsScreen
+import com.example.journalofdream.ui.theme.ChartScreen
 import com.example.journalofdream.ui.theme.SettingsScreen
 import com.example.journalofdream.ui.theme.StatsScreen
 import com.example.journalofdream.ui.theme.TechniquesScreen
+import com.example.journalofdream.ui.theme.ViewDreamScreen
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 
 /**
@@ -89,7 +93,31 @@ fun JournalOfDreamApp() {
         // Определяем стартовый экран: если пользователь уже авторизован или выбрал guest-режим, идём на main, иначе на auth
         NavHost(
             navController = navController,
-            startDestination = if (currentUser.value != null || isGuest) "main" else "auth"
+            startDestination = if (currentUser.value != null || isGuest) "main" else "auth",
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { it },
+                    animationSpec = tween(300)
+                ) + fadeIn(animationSpec = tween(300))
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -it / 3 },
+                    animationSpec = tween(300)
+                ) + fadeOut(animationSpec = tween(300))
+            },
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -it / 3 },
+                    animationSpec = tween(300)
+                ) + fadeIn(animationSpec = tween(300))
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { it },
+                    animationSpec = tween(300)
+                ) + fadeOut(animationSpec = tween(300))
+            }
         ) {
             // Экран авторизации
             composable("auth") {
@@ -165,6 +193,16 @@ fun JournalOfDreamApp() {
                 )
             }
 
+            // Экран просмотра сна
+            composable("viewDream/{id}") { backStackEntry ->
+                val id = backStackEntry.arguments?.getString("id") ?: return@composable
+                ViewDreamScreen(
+                    navController = navController,
+                    dreamId = id,
+                    dreamViewModel = dreamViewModel
+                )
+            }
+
             // Экран редактирования сна (с параметром id)
             composable("editDream/{id}") { backStackEntry ->
                 val dreamId = backStackEntry.arguments?.getString("id") ?: "0"
@@ -212,6 +250,14 @@ fun JournalOfDreamApp() {
             // Экран достижений
             composable("achievements") {
                 AchievementsScreen(
+                    navController = navController,
+                    dreamViewModel = dreamViewModel
+                )
+            }
+
+            // Экран графика активности
+            composable("chart") {
+                ChartScreen(
                     navController = navController,
                     dreamViewModel = dreamViewModel
                 )

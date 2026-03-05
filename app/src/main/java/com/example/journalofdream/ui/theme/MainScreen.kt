@@ -286,10 +286,10 @@ fun MainScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Кнопки Статистика и Достижения рядом
+                // Кнопки Статистика, График и Достижения
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     // Кнопка Статистика
                     Button(
@@ -317,8 +317,40 @@ fun MainScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text("📊", fontSize = 28.sp)
-                                Text("Статистика", color = Color.White, fontSize = 14.sp)
+                                Text("📊", fontSize = 22.sp)
+                                Text("Статистика", color = Color.White, fontSize = 12.sp)
+                            }
+                        }
+                    }
+
+                    // Кнопка График
+                    Button(
+                        onClick = { navController.navigate("chart") },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(75.dp)
+                            .shadow(50.dp, shape = RoundedCornerShape(24.dp)),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        colors = listOf(
+                                            Color(0xFF00695C).copy(alpha = 0.5f),
+                                            Color(0xFF00897B).copy(alpha = 0.5f)
+                                        )
+                                    ),
+                                    shape = RoundedCornerShape(16.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text("📈", fontSize = 22.sp)
+                                Text("График", color = Color.White, fontSize = 12.sp)
                             }
                         }
                     }
@@ -349,8 +381,8 @@ fun MainScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text("🏆", fontSize = 28.sp)
-                                Text("Достижения", color = Color.White, fontSize = 14.sp)
+                                Text("🏆", fontSize = 22.sp)
+                                Text("Достижения", color = Color.White, fontSize = 12.sp)
                             }
                         }
                     }

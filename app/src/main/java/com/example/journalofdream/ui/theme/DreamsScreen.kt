@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -112,10 +113,11 @@ fun DreamsScreen(
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
     var monthMode by remember { mutableStateOf(true) }
     // Сортировка в режиме обычного списка: true = по дате, false = по категории
-    var sortByDate by remember { mutableStateOf(true) }
+    var sortByDate by rememberSaveable { mutableStateOf(true) }
 
     // Выбранный месяц (если открыт) — null = показываем сетку
-    var openedMonth by remember { mutableStateOf<String?>(null) }
+    // rememberSaveable сохраняет значение при возврате с экрана просмотра сна
+    var openedMonth by rememberSaveable { mutableStateOf<String?>(null) }
 
     // Перехватываем кнопку назад на телефоне
     BackHandler(enabled = openedMonth != null) {
