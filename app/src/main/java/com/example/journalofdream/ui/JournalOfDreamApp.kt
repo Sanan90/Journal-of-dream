@@ -33,6 +33,7 @@ import com.example.journalofdream.ui.theme.ChartScreen
 import com.example.journalofdream.ui.theme.SettingsScreen
 import com.example.journalofdream.ui.theme.StatsScreen
 import com.example.journalofdream.ui.theme.TechniquesScreen
+import com.example.journalofdream.viewmodel.TechniqueViewModel
 import com.example.journalofdream.ui.theme.ViewDreamScreen
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 
@@ -68,6 +69,7 @@ fun JournalOfDreamApp() {
         val dreamViewModel: DreamViewModel = viewModel()
         val locationViewModel: LocationViewModel = viewModel()
         val categoryViewModel: CategoryViewModel = viewModel()
+        val techniqueViewModel: TechniqueViewModel = viewModel()
 
         // FirebaseAuth – определяем текущего авторизованного пользователя, если есть
         val auth = FirebaseAuth.getInstance()
