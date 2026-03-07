@@ -33,6 +33,7 @@ import com.example.journalofdream.ui.theme.ChartScreen
 import com.example.journalofdream.ui.theme.SettingsScreen
 import com.example.journalofdream.ui.theme.StatsScreen
 import com.example.journalofdream.ui.theme.TechniquesScreen
+import com.example.journalofdream.ui.theme.QuotesAdminScreen
 import com.example.journalofdream.viewmodel.TechniqueViewModel
 import com.example.journalofdream.ui.theme.ViewDreamScreen
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -70,6 +71,9 @@ fun JournalOfDreamApp() {
         val locationViewModel: LocationViewModel = viewModel()
         val categoryViewModel: CategoryViewModel = viewModel()
         val techniqueViewModel: TechniqueViewModel = viewModel()
+
+        // Режим админа — общий для Техник и Настроек
+        var isAdminMode by remember { mutableStateOf(false) }
 
         // FirebaseAuth – определяем текущего авторизованного пользователя, если есть
         val auth = FirebaseAuth.getInstance()
@@ -130,7 +134,6 @@ fun JournalOfDreamApp() {
                         currentUser.value = auth.currentUser
                         skipAuth.value = false
                         sharedPreferences.edit().putBoolean("skipAuth", false).apply()
-                        // Переключаем категории на текущего пользователя
                         auth.currentUser?.uid?.let { categoryViewModel.setOwner(it) }
                         navController.navigate("main") {
                             popUpTo("auth") { inclusive = true }
@@ -246,7 +249,11 @@ fun JournalOfDreamApp() {
 
             // Экран техник осознанных сновидений
             composable("techniques") {
-                TechniquesScreen(navController = navController)
+                TechniquesScreen(
+                    navController = navController,
+                    isAdminMode = isAdminMode,
+                    onAdminModeChanged = { isAdminMode = it }
+                )
             }
 
             // Экран достижений
@@ -267,7 +274,12 @@ fun JournalOfDreamApp() {
 
             // Экран настроек
             composable("settings") {
-                SettingsScreen(navController = navController)
+                SettingsScreen(navController = navController, isAdminMode = isAdminMode)
+            }
+
+            // Экран управления цитатами (только для админа)
+            composable("quotes_admin") {
+                QuotesAdminScreen(navController = navController)
             }
 
             // Экран статистики

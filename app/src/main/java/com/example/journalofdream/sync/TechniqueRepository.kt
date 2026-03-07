@@ -19,9 +19,22 @@ class TechniqueRepository {
                 Log.e("TechniqueRepo", "Ошибка загрузки техник", e)
                 return@addSnapshotListener
             }
-            val list = snapshot?.documents?.mapNotNull { doc ->
+            val docs = snapshot?.documents ?: return@addSnapshotListener
+            val list = docs.mapNotNull { doc ->
                 doc.toObject(Technique::class.java)?.copy(id = doc.id)
-            } ?: emptyList()
+            }
+            // Для каждой техники слушаем подколлекцию comments и обновляем счётчик
+            docs.forEach { doc ->
+                doc.reference.collection("comments")
+                    .addSnapshotListener { commentsSnap, _ ->
+                        val count = commentsSnap?.size() ?: 0
+                        // Обновляем commentsCount в Firestore только если не совпадает
+                        val current = doc.getLong("commentsCount")?.toInt() ?: 0
+                        if (current != count) {
+                            doc.reference.update("commentsCount", count)
+                        }
+                    }
+            }
             onUpdate(list)
         }
     }

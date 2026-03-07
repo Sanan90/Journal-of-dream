@@ -36,6 +36,15 @@ import com.example.journalofdream.ui.theme.DreamButtonEnd
 import com.example.journalofdream.ui.theme.DreamButtonStart
 import com.example.journalofdream.ui.theme.LocationButtonEnd
 import com.example.journalofdream.ui.theme.LocationButtonStart
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.FloatingActionButtonDefaults
 import com.example.journalofdream.viewmodel.DreamViewModel
 import com.example.journalofdream.ui.theme.TechButtonEnd
 import com.example.journalofdream.ui.theme.TechButtonStart
@@ -118,15 +127,61 @@ fun MainScreen(
             )
         },
         floatingActionButton = {
-            // Кнопка "Добавить" (сон или локацию)
-            FloatingActionButton(
-                onClick = { showDialog = true },
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Добавить запись"
+            // Светящаяся кнопка с анимацией пульсации
+            val infiniteTransition = rememberInfiniteTransition(label = "fab_pulse")
+            val pulseScale by infiniteTransition.animateFloat(
+                initialValue = 1f,
+                targetValue = 1.15f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(900, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "pulse_scale"
+            )
+            val glowAlpha by infiniteTransition.animateFloat(
+                initialValue = 0.3f,
+                targetValue = 0.7f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(900, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "glow_alpha"
+            )
+            Box(contentAlignment = Alignment.Center) {
+                // Ореол свечения
+                Box(
+                    modifier = Modifier
+                        .size(72.dp * pulseScale)
+                        .background(
+                            brush = androidx.compose.ui.graphics.Brush.radialGradient(
+                                colors = listOf(
+                                    Color(0xFF7E57C2).copy(alpha = glowAlpha),
+                                    Color.Transparent
+                                )
+                            ),
+                            shape = CircleShape
+                        )
                 )
+                FloatingActionButton(
+                    onClick = { showDialog = true },
+                    containerColor = Color.Transparent,
+                    elevation = FloatingActionButtonDefaults.elevation(0.dp),
+                    modifier = Modifier
+                        .size(56.dp)
+                        .background(
+                            brush = androidx.compose.ui.graphics.Brush.linearGradient(
+                                colors = listOf(Color(0xFF9C27B0), Color(0xFF3F51B5))
+                            ),
+                            shape = CircleShape
+                        )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Добавить запись",
+                        tint = Color.White,
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
             }
         }
     ) { paddingValues ->
@@ -216,7 +271,7 @@ fun MainScreen(
                             ),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Записать сновидение", color = Color.White, fontSize = 18.sp)
+                        Text("Дневник снов", color = Color.White, fontSize = 18.sp)
                     }
                 }
 

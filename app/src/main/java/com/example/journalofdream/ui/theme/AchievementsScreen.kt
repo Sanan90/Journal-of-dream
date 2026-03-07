@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.example.journalofdream.model.*
 import com.example.journalofdream.model.hexToColorSafe
@@ -39,6 +40,8 @@ fun AchievementsScreen(
     dreamViewModel: DreamViewModel
 ) {
     val dreams by dreamViewModel.dreams.observeAsState(emptyList())
+    val context = LocalContext.current
+    val prefs = remember { context.getSharedPreferences("achievements_prefs", android.content.Context.MODE_PRIVATE) }
 
     // Подсчёт стрика
     val streak = remember(dreams) { computeStreak(dreams) }
@@ -49,10 +52,23 @@ fun AchievementsScreen(
     val currentLevel = remember(dreams) { getLevelForCount(dreams.size) }
     val nextLevel = remember(currentLevel) { getNextLevel(currentLevel) }
 
-    val unlockedAchievements = remember(dreams, streak, usedCategories) {
+    // Считаем какие достижения разблокированы сейчас
+    val currentlyUnlocked = remember(dreams, streak, usedCategories) {
         allAchievements.filter { it.isUnlocked(dreams, streak, usedCategories) }.map { it.id }.toSet()
     }
 
+    // Загружаем ранее сохранённые достижения из SharedPreferences
+    val savedUnlocked = remember {
+        prefs.getStringSet("unlocked_achievements", emptySet()) ?: emptySet()
+    }
+
+    // Объединяем — достижения не исчезают после удаления снов
+    val unlockedAchievements = remember(currentlyUnlocked, savedUnlocked) {
+        (currentlyUnlocked + savedUnlocked).also { merged ->
+            // Сохраняем объединённый набор
+            prefs.edit().putStringSet("unlocked_achievements", merged).apply()
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(

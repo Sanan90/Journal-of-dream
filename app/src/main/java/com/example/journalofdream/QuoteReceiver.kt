@@ -11,25 +11,14 @@ import com.example.journalofdream.util.NOTIFICATION_ID_QUOTE
 import com.example.journalofdream.util.getRandomQuote
 import com.example.journalofdream.util.scheduleAlarmByRequestCode
 import com.example.journalofdream.util.showNotification
-import java.util.Calendar
+import com.google.firebase.firestore.FirebaseFirestore
 
 class QuoteReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val quotesEnabled = prefs.getBoolean("motivational_quotes", true)
+        if (!quotesEnabled) return
 
-        if (quotesEnabled) {
-            val quote = getRandomQuote()
-            showNotification(
-                context,
-                title = "🌙 Осознанные сновидения",
-                message = quote,
-                notificationId = NOTIFICATION_ID_QUOTE
-            )
-            Log.d("QuoteReceiver", "Цитата отправлена")
-        }
-
-        // Перепланируем на следующий день
         val requestCode = intent.getIntExtra("request_code", -1)
         val hour = when (requestCode) {
             ALARM_REQUEST_CODE_QUOTE_10 -> 10
@@ -37,6 +26,35 @@ class QuoteReceiver : BroadcastReceiver() {
             ALARM_REQUEST_CODE_QUOTE_22 -> 22
             else -> return
         }
+
+        // Пробуем загрузить цитату из Firestore
+        FirebaseFirestore.getInstance()
+            .collection("quotes")
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val quotes = snapshot.documents.mapNotNull { it.getString("text") }
+                val quote = if (quotes.isNotEmpty()) quotes.random() else getRandomQuote()
+                showNotification(
+                    context,
+                    title = "🌙 Осознанные сновидения",
+                    message = quote,
+                    notificationId = NOTIFICATION_ID_QUOTE
+                )
+                Log.d("QuoteReceiver", "Цитата отправлена: $quote")
+            }
+            .addOnFailureListener {
+                // Нет сети — используем встроенные цитаты
+                val quote = getRandomQuote()
+                showNotification(
+                    context,
+                    title = "🌙 Осознанные сновидения",
+                    message = quote,
+                    notificationId = NOTIFICATION_ID_QUOTE
+                )
+                Log.d("QuoteReceiver", "Fallback цитата: $quote")
+            }
+
+        // Перепланируем на следующий день
         scheduleAlarmByRequestCode(context, hour, 0, requestCode)
     }
 }

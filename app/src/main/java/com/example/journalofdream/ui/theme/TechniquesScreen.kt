@@ -39,7 +39,11 @@ enum class TechniqueSort { BY_LIKES, BY_NEW }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TechniquesScreen(navController: NavHostController) {
+fun TechniquesScreen(
+    navController: NavHostController,
+    isAdminMode: Boolean = false,
+    onAdminModeChanged: (Boolean) -> Unit = {}
+) {
     val viewModel: TechniqueViewModel = viewModel()
     val techniques by viewModel.techniques.observeAsState(emptyList())
     val isLoading by viewModel.isLoading.observeAsState(true)
@@ -51,16 +55,14 @@ fun TechniquesScreen(navController: NavHostController) {
 
     // Режим админа
     var tapCount by remember { mutableIntStateOf(0) }
-    var isAdminMode by rememberSaveable { mutableStateOf(false) }
-    var showAdminCodeDialog by remember { mutableStateOf(false) }
-
-    // Кэш кода с сервера (null = ещё не загружен)
     var adminCodeFromServer by remember { mutableStateOf<String?>(null) }
 
     // Диалоги
+    var showAdminCodeDialog by remember { mutableStateOf(false) }
     var showAddDialog by remember { mutableStateOf(false) }
     var editingTechnique by remember { mutableStateOf<Technique?>(null) }
     var deletingTechnique by remember { mutableStateOf<Technique?>(null) }
+    var selectedTechnique by remember { mutableStateOf<Technique?>(null) }
 
     // Отсортированный список
     val sortedTechniques = remember(techniques, sort) {
@@ -76,7 +78,6 @@ fun TechniquesScreen(navController: NavHostController) {
             onConfirm = { enteredCode, setError ->
                 val cached = adminCodeFromServer
                 if (cached == null) {
-                    // Ещё не загружен — грузим прямо сейчас
                     com.google.firebase.firestore.FirebaseFirestore.getInstance()
                         .collection("config")
                         .document("admin")
@@ -84,10 +85,9 @@ fun TechniquesScreen(navController: NavHostController) {
                         .addOnSuccessListener { doc ->
                             val serverCode = doc.getString("code") ?: ""
                             adminCodeFromServer = serverCode
-                            android.util.Log.d("AdminCode", "Сервер: '$serverCode', введено: '$enteredCode', совпадение: ${enteredCode == serverCode}")
                             if (enteredCode == serverCode) {
                                 showAdminCodeDialog = false
-                                isAdminMode = true
+                                onAdminModeChanged(true)
                                 tapCount = 0
                             } else {
                                 setError("Неверный код")
@@ -97,10 +97,9 @@ fun TechniquesScreen(navController: NavHostController) {
                             setError("Ошибка подключения")
                         }
                 } else {
-                    // Уже загружен — просто сравниваем
                     if (enteredCode == cached) {
                         showAdminCodeDialog = false
-                        isAdminMode = true
+                        onAdminModeChanged(true)
                         tapCount = 0
                     } else {
                         setError("Неверный код")
@@ -111,6 +110,20 @@ fun TechniquesScreen(navController: NavHostController) {
                 showAdminCodeDialog = false
                 tapCount = 0
             }
+        )
+    }
+
+    // BottomSheet с полным описанием и комментариями
+    selectedTechnique?.let { technique ->
+        // Актуальные данные техники из списка (лайки обновляются в реальном времени)
+        val actualTechnique = techniques.find { it.id == technique.id } ?: technique
+        TechniqueDetailSheet(
+            technique = actualTechnique,
+            userVote = userVotes[actualTechnique.id],
+            isAdminMode = isAdminMode,
+            onLike = { viewModel.vote(actualTechnique.id, true) },
+            onDislike = { viewModel.vote(actualTechnique.id, false) },
+            onDismiss = { selectedTechnique = null }
         )
     }
 
@@ -259,7 +272,8 @@ fun TechniquesScreen(navController: NavHostController) {
                             onLike = { viewModel.vote(technique.id, true) },
                             onDislike = { viewModel.vote(technique.id, false) },
                             onEdit = { editingTechnique = technique },
-                            onDelete = { deletingTechnique = technique }
+                            onDelete = { deletingTechnique = technique },
+                            onClick = { selectedTechnique = technique }
                         )
                     }
 
@@ -278,11 +292,13 @@ fun TechniqueCard(
     onLike: () -> Unit,
     onDislike: () -> Unit,
     onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
+        onClick = onClick,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
         ),
@@ -316,12 +332,14 @@ fun TechniqueCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Описание
+            // Описание — максимум 4 строки, остальное в BottomSheet
             Text(
                 text = technique.description,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                lineHeight = 20.sp
+                lineHeight = 20.sp,
+                maxLines = 4,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
 
             // Источник если есть
@@ -339,7 +357,7 @@ fun TechniqueCard(
             Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Лайки и дизлайки
+            // Лайки, дизлайки и счётчик комментариев
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -363,6 +381,13 @@ fun TechniqueCard(
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
+
+                // Счётчик комментариев — всегда виден
+                Text(
+                    text = "💬 ${technique.commentsCount}",
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                    fontSize = 13.sp
+                )
 
                 // Рейтинг
                 val rating = technique.likes - technique.dislikes

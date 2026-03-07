@@ -9,6 +9,10 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.example.journalofdream.ui.auth.PinMode
 import com.example.journalofdream.ui.auth.PinScreen
 import com.example.journalofdream.ui.auth.hasPin
@@ -32,7 +36,7 @@ import com.example.journalofdream.util.scheduleQuoteAlarms
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavHostController) {
+fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = false) {
     val context = LocalContext.current
     val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
@@ -45,6 +49,9 @@ fun SettingsScreen(navController: NavHostController) {
     var pinEnabled by remember { mutableStateOf(isPinEnabled(context)) }
     var showSetPin by remember { mutableStateOf(false) }
     var showChangePin by remember { mutableStateOf(false) }
+
+    // Цитаты из Firestore (только для AdminMode — переход на отдельный экран)
+    // Управление цитатами вынесено в QuotesAdminScreen
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -63,13 +70,15 @@ fun SettingsScreen(navController: NavHostController) {
         Box(modifier = Modifier.fillMaxSize()) {
             BackgroundScreen()
 
-            Column(
+            androidx.compose.foundation.lazy.LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 32.dp)
             ) {
+                item {
                 // Секция уведомлений
                 SettingsSectionTitle("🔔 Уведомления")
 
@@ -87,6 +96,8 @@ fun SettingsScreen(navController: NavHostController) {
                         }
                     }
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 // Время уведомления
                 SettingsClickRow(
@@ -110,10 +121,12 @@ fun SettingsScreen(navController: NavHostController) {
                             },
                             notificationHour,
                             notificationMinute,
-                            true // 24-часовой формат
+                            true
                         ).show()
                     }
                 )
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 // Мотивационные цитаты
                 SettingsToggleRow(
@@ -165,7 +178,20 @@ fun SettingsScreen(navController: NavHostController) {
                         onClick = { showChangePin = true }
                     )
                 }
-            }
+
+                // Раздел цитат — только в режиме админа
+                if (isAdminMode) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    SettingsSectionTitle("💬 Цитаты для уведомлений")
+                    SettingsClickRow(
+                        icon = Icons.Default.Add,
+                        title = "Управление цитатами",
+                        subtitle = "Добавить или удалить цитаты для уведомлений",
+                        onClick = { navController.navigate("quotes_admin") }
+                    )
+                }
+                } // закрываем item
+            } // закрываем LazyColumn
         }
     }
 
@@ -186,6 +212,8 @@ fun SettingsScreen(navController: NavHostController) {
             onCancel = { showChangePin = false }
         )
     }
+
+    // Диалоги цитат вынесены в QuotesAdminScreen
 } // закрываем Box
 } // закрываем SettingsScreen
 

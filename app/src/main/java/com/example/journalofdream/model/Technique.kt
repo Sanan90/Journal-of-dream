@@ -5,8 +5,9 @@ data class Technique(
     val id: String = "",
     val name: String = "",
     val description: String = "",
-    val source: String = "",       // опциональный источник (книга, сайт, форум)
+    val source: String = "",
     val likes: Int = 0,
     val dislikes: Int = 0,
-    val createdAt: Long = 0L       // для сортировки по новизне
+    val createdAt: Long = 0L,
+    val commentsCount: Int = 0
 )
