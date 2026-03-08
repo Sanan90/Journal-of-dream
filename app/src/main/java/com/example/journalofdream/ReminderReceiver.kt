@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.example.journalofdream.util.LocaleHelper
 import com.example.journalofdream.util.scheduleDailyReminder
 import com.example.journalofdream.util.showNotification
 import java.util.Calendar
@@ -22,10 +23,12 @@ class ReminderReceiver : BroadcastReceiver() {
         val dreamRecorded = prefs.getBoolean(todayKey, false)
 
         if (!dreamRecorded) {
+            // Применяем язык приложения к контексту
+            val localizedContext = LocaleHelper.applyLanguage(context)
             showNotification(
                 context,
-                title = "Пора записать сон 🌙",
-                message = "Запишите сон пока воспоминания свежие!"
+                title = localizedContext.getString(R.string.notif_reminder_title),
+                message = localizedContext.getString(R.string.notif_reminder_message)
             )
         }
 

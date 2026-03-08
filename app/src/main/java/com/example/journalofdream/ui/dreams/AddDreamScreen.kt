@@ -3,6 +3,8 @@ package com.example.journalofdream.ui.dreams
 import androidx.activity.compose.BackHandler
 import com.example.journalofdream.util.localizeCategory
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import com.example.journalofdream.R
 import androidx.compose.foundation.background
@@ -68,6 +70,8 @@ fun AddDreamScreen(
     locationViewModel: LocationViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     // Поля ввода для нового сна
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
@@ -185,6 +189,10 @@ fun AddDreamScreen(
                         .fillMaxSize()
                         .padding(paddingValues)
                         .padding(16.dp)
+                        .clickable(indication = null, interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }) {
+                            focusManager.clearFocus()
+                            keyboardController?.hide()
+                        }
                 ) {
                     // Поле ввода заголовка сна
                     OutlinedTextField(

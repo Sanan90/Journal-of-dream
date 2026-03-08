@@ -28,6 +28,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -115,6 +117,9 @@ fun DreamsScreen(
             dreamViewModel.clearSyncError()
         }
     }
+
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var categoryExpanded by remember { mutableStateOf(false) }
@@ -232,6 +237,11 @@ fun DreamsScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
                     .imePadding()
+                    // Клик на пустое место — убираем фокус и клавиатуру
+                    .clickable(indication = null, interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }) {
+                        focusManager.clearFocus()
+                        keyboardController?.hide()
+                    }
             ) {
                 // Поиск и фильтр — всегда видны
                 Column {
@@ -245,17 +255,23 @@ fun DreamsScreen(
                                 monthMode = false
                             }
                         },
-                        placeholder = { Text(stringResource(R.string.dreams_search), color = Color.White) },
+                        placeholder = { Text(stringResource(R.string.dreams_search), color = Color.White.copy(alpha = 0.7f)) },
                         leadingIcon = {
-                            Icon(Icons.Default.Search, contentDescription = stringResource(R.string.dreams_search), tint = Color.White)
+                            Icon(Icons.Default.Search, contentDescription = stringResource(R.string.dreams_search), tint = Color.White.copy(alpha = 0.7f))
                         },
                         textStyle = TextStyle(color = Color.White),
                         singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color.White.copy(alpha = 0.6f),
+                            unfocusedBorderColor = Color.Transparent,
+                            focusedContainerColor = Color.White.copy(alpha = 0.15f),
+                            unfocusedContainerColor = Color.White.copy(alpha = 0.1f),
+                            cursorColor = Color.White,
+                        ),
+                        shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .shadow(8.dp)
-                            .background(Color.White.copy(alpha = 0.2f))
-                            .padding(4.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                     Box(
                         modifier = Modifier

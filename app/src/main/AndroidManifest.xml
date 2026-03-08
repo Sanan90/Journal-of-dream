@@ -1,15 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.journalofdream">
 
-    <!-- Разрешение на точные будильники (Android 12+) -->
+    <!-- Сеть (нужна для Firebase/Firestore) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Точные будильники (Android 12+) -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- Для Android 13+ — альтернативное разрешение без ограничений -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
-    <!-- Разрешение на уведомления (Android 13+) -->
+    <!-- Уведомления (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Разрешение для перепланирования будильников после перезагрузки -->
+    <!-- Перепланирование будильников после перезагрузки -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
@@ -20,11 +26,6 @@
         android:theme="@style/Theme.JournalOfDream"
         android:allowBackup="false"
         android:fullBackupContent="false">
-
-        <!-- Crashlytics — включить сбор крашей -->
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="true" />
 
         <activity android:name=".SplashActivity" android:exported="true">
             <intent-filter>
@@ -37,18 +38,19 @@
             android:name=".MainActivity"
             android:exported="true" />
 
-        <!-- Ресивер для будильника -->
+        <!-- Ресивер для напоминания о записи сна -->
         <receiver
             android:name=".ReminderReceiver"
             android:enabled="true"
             android:exported="false" />
 
+        <!-- Ресивер для цитат -->
         <receiver
             android:name=".QuoteReceiver"
             android:enabled="true"
             android:exported="false" />
 
-        <!-- Ресивер для перепланирования будильника после перезагрузки -->
+        <!-- Ресивер для перепланирования после перезагрузки -->
         <receiver
             android:name=".BootReceiver"
             android:enabled="true"

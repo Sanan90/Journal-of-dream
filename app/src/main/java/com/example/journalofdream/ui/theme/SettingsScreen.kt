@@ -230,6 +230,18 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                     )
                 }
                 } // закрываем item
+
+                // Кнопка поддержки
+                item {
+                Spacer(modifier = Modifier.height(4.dp))
+                SettingsSectionTitle(stringResource(R.string.support_section))
+                SettingsClickRow(
+                    icon = Icons.Default.Add,
+                    title = stringResource(R.string.support_menu_title),
+                    subtitle = stringResource(R.string.support_menu_subtitle),
+                    onClick = { navController.navigate("support") }
+                )
+                } // закрываем item поддержки
             } // закрываем LazyColumn
         }
     }

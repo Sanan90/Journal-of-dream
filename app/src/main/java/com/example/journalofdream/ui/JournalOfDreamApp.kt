@@ -36,6 +36,8 @@ import com.example.journalofdream.ui.theme.StatsScreen
 import com.example.journalofdream.ui.theme.TechniquesScreen
 import com.example.journalofdream.ui.theme.QuotesAdminScreen
 import com.example.journalofdream.ui.theme.OnboardingScreen
+import com.example.journalofdream.ui.theme.SupportScreen
+import com.example.journalofdream.ui.theme.NotificationSetupScreen
 import com.example.journalofdream.viewmodel.TechniqueViewModel
 import com.example.journalofdream.ui.theme.ViewDreamScreen
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -85,6 +87,19 @@ fun JournalOfDreamApp() {
             return@AppTheme
         }
 
+        // Настройка уведомления — показываем один раз после онбординга
+        var notifSetupDone by remember {
+            mutableStateOf(sharedPreferences.contains("notification_hour"))
+        }
+        if (!notifSetupDone) {
+            NotificationSetupScreen(
+                onDone = {
+                    notifSetupDone = true
+                }
+            )
+            return@AppTheme
+        }
+
         // Флаг, указывающий, что пользователь решил пропустить авторизацию (guest mode)
         val skipAuth = remember { mutableStateOf(sharedPreferences.getBoolean("skipAuth", false)) }
 
@@ -118,8 +133,13 @@ fun JournalOfDreamApp() {
         // Определяем, гость ли текущий пользователь
         val isGuest = skipAuth.value
 
-        // Для отображения имени/почты текущего пользователя (в заголовке MainScreen)
-        val userName = currentUser.value?.displayName ?: currentUser.value?.email
+        // Для отображения имени пользователя (в заголовке MainScreen)
+        // displayName в приоритете — берём часть до @ если только email
+        val userName = currentUser.value?.let { user ->
+            val name = user.displayName
+            if (!name.isNullOrBlank()) name
+            else user.email?.substringBefore("@")
+        }
 
         // Определяем стартовый экран: если пользователь уже авторизован или выбрал guest-режим, идём на main, иначе на auth
         NavHost(
@@ -309,6 +329,9 @@ fun JournalOfDreamApp() {
             }
 
             // Экран статистики
+            composable("support") {
+                SupportScreen(navController = navController)
+            }
             composable("stats") {
                 StatsScreen(
                     navController = navController,
