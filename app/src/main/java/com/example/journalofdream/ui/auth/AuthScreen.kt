@@ -1,5 +1,6 @@
 package com.example.journalofdream.ui.auth
 
+import androidx.compose.ui.res.stringResource
 import android.app.Activity
 import android.util.Patterns
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -104,7 +105,7 @@ fun AuthScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Добро пожаловать",
+                text = stringResource(R.string.auth_welcome),
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -119,7 +120,7 @@ fun AuthScreen(
                     emailError = null
                     errorMessage = null
                 },
-                label = { Text("Электронная почта") },
+                label = { Text(stringResource(R.string.auth_email)) },
                 isError = emailError != null,
                 supportingText = emailError?.let { { Text(it) } },
                 singleLine = true,
@@ -136,7 +137,7 @@ fun AuthScreen(
                     passwordError = null
                     errorMessage = null
                 },
-                label = { Text("Пароль") },
+                label = { Text(stringResource(R.string.auth_password)) },
                 visualTransformation = if (passwordVisible)
                     VisualTransformation.None
                 else
@@ -147,7 +148,7 @@ fun AuthScreen(
                         contentPadding = PaddingValues(horizontal = 8.dp)
                     ) {
                         Text(
-                            text = if (passwordVisible) "Скрыть" else "Показать",
+                            text = if (passwordVisible) stringResource(R.string.auth_hide) else stringResource(R.string.auth_show),
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
@@ -181,7 +182,7 @@ fun AuthScreen(
                         }
                     }
                 ) {
-                    Text("Забыл пароль?", style = MaterialTheme.typography.bodySmall)
+                    Text(stringResource(R.string.auth_forgot_password), style = MaterialTheme.typography.bodySmall)
                 }
             }
 
@@ -232,7 +233,7 @@ fun AuthScreen(
                         strokeWidth = 2.dp
                     )
                 } else {
-                    Text("Войти")
+                    Text(stringResource(R.string.btn_login))
                 }
             }
 
@@ -261,7 +262,7 @@ fun AuthScreen(
                 enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Зарегистрироваться")
+                Text(stringResource(R.string.auth_register))
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -279,7 +280,7 @@ fun AuthScreen(
                 enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Войти через Google")
+                Text(stringResource(R.string.auth_google))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -299,7 +300,7 @@ fun AuthScreen(
                 onClick = { onSkipAuth() },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text("Продолжить без авторизации")
+                Text(stringResource(R.string.auth_guest))
             }
         }
 

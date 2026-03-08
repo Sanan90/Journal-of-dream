@@ -1,5 +1,9 @@
 package com.example.journalofdream.ui.theme
 
+import com.example.journalofdream.util.localizeCategory
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
@@ -39,10 +43,7 @@ import com.example.journalofdream.viewmodel.CategoryViewModel
 import com.example.journalofdream.viewmodel.DreamViewModel
 import kotlinx.coroutines.delay
 
-private val monthNames = listOf(
-    "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-    "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-)
+// monthNames объявляется внутри composable через getMonthNames()
 
 // Конвертирует любой формат даты в "yyyy-MM" для группировки
 fun dateToMonthKey(date: String): String {
@@ -77,7 +78,7 @@ fun dateToSortKey(date: String): String {
     } catch (e: Exception) { "0000-00-00" }
 }
 
-fun formatMonthKey(key: String): String {
+fun formatMonthKey(key: String, monthNames: List<String>): String {
     return try {
         val parts = key.split("-")
         val year = parts[0]
@@ -93,6 +94,13 @@ fun DreamsScreen(
     dreamViewModel: DreamViewModel,
     categoryViewModel: CategoryViewModel = viewModel()
 ) {
+    val context = LocalContext.current
+    val monthNames = listOf(
+        stringResource(R.string.month_jan), stringResource(R.string.month_feb), stringResource(R.string.month_mar),
+        stringResource(R.string.month_apr), stringResource(R.string.month_may), stringResource(R.string.month_jun),
+        stringResource(R.string.month_jul), stringResource(R.string.month_aug), stringResource(R.string.month_sep),
+        stringResource(R.string.month_oct), stringResource(R.string.month_nov), stringResource(R.string.month_dec)
+    )
     val allDreams by dreamViewModel.dreams.observeAsState(emptyList())
     val categories by categoryViewModel.allCategories.observeAsState(emptyList())
     val categoryColorMap = remember(categories) {
@@ -162,8 +170,8 @@ fun DreamsScreen(
                 title = {
                     // Если открыт месяц — показываем его название
                     Text(
-                        text = if (openedMonth != null) formatMonthKey(openedMonth!!)
-                               else "Список сновидений",
+                        text = if (openedMonth != null) formatMonthKey(openedMonth!!, monthNames)
+                               else stringResource(R.string.dreams_list),
                         color = Color.White
                     )
                 },
@@ -175,14 +183,14 @@ fun DreamsScreen(
                             navController.popBackStack()
                         }
                     }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад", tint = Color.White)
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.btn_back), tint = Color.White)
                     }
                 },
                 actions = {
                     if (openedMonth == null) {
                         TextButton(onClick = { monthMode = !monthMode }) {
                             Text(
-                                text = if (monthMode) "Список" else "Месяцы",
+                                text = if (monthMode) stringResource(R.string.dreams_list) else stringResource(R.string.dreams_months),
                                 color = Color.White.copy(alpha = 0.8f),
                                 fontSize = 13.sp
                             )
@@ -191,7 +199,7 @@ fun DreamsScreen(
                         if (!monthMode) {
                             TextButton(onClick = { sortByDate = !sortByDate }) {
                                 Text(
-                                    text = if (sortByDate) "А-Я" else "Дата",
+                                    text = if (sortByDate) stringResource(R.string.dreams_sort_az) else stringResource(R.string.dreams_sort_date),
                                     color = Color.White.copy(alpha = 0.8f),
                                     fontSize = 13.sp
                                 )
@@ -201,14 +209,14 @@ fun DreamsScreen(
                         // Кнопка сортировки внутри открытого месяца
                         TextButton(onClick = { sortByDate = !sortByDate }) {
                             Text(
-                                text = if (sortByDate) "А-Я" else "Дата",
+                                text = if (sortByDate) stringResource(R.string.dreams_sort_az) else stringResource(R.string.dreams_sort_date),
                                 color = Color.White.copy(alpha = 0.8f),
                                 fontSize = 13.sp
                             )
                         }
                     }
                     IconButton(onClick = { navController.navigate("addDream") }) {
-                        Icon(Icons.Default.Add, contentDescription = "Добавить сон", tint = Color.White)
+                        Icon(Icons.Default.Add, contentDescription = stringResource(R.string.btn_add_dream), tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
@@ -237,9 +245,9 @@ fun DreamsScreen(
                                 monthMode = false
                             }
                         },
-                        placeholder = { Text("Поиск", color = Color.White) },
+                        placeholder = { Text(stringResource(R.string.dreams_search), color = Color.White) },
                         leadingIcon = {
-                            Icon(Icons.Default.Search, contentDescription = "Поиск", tint = Color.White)
+                            Icon(Icons.Default.Search, contentDescription = stringResource(R.string.dreams_search), tint = Color.White)
                         },
                         textStyle = TextStyle(color = Color.White),
                         singleLine = true,
@@ -258,7 +266,7 @@ fun DreamsScreen(
                             .padding(16.dp)
                     ) {
                         Text(
-                            text = selectedCategory?.name ?: "Все сны",
+                            text = selectedCategory?.name?.let { localizeCategory(it, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal)) } ?: stringResource(R.string.dreams_all),
                             color = Color.White,
                             fontSize = 18.sp
                         )
@@ -267,12 +275,12 @@ fun DreamsScreen(
                             onDismissRequest = { categoryExpanded = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Все сны") },
+                                text = { Text(stringResource(R.string.dreams_all)) },
                                 onClick = { selectedCategory = null; categoryExpanded = false }
                             )
                             categories.forEach { category ->
                                 DropdownMenuItem(
-                                    text = { Text(category.name) },
+                                    text = { Text(localizeCategory(category.name, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal))) },
                                     onClick = { selectedCategory = category; categoryExpanded = false }
                                 )
                             }
@@ -321,7 +329,7 @@ fun DreamsScreen(
                         }
                         if (dreamsInMonth.isEmpty()) {
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                Text("Нет снов за этот месяц", color = Color.White, fontSize = 16.sp)
+                                Text(stringResource(R.string.dreams_empty_month), color = Color.White, fontSize = 16.sp)
                             }
                         } else {
                             val sortedInMonth = remember(dreamsInMonth, sortByDate) {
@@ -330,7 +338,7 @@ fun DreamsScreen(
                                 } else {
                                     dreamsInMonth.sortedWith(
                                         compareBy(
-                                            { it.category.ifBlank { "Без категории" } },
+                                            { it.category.ifBlank { context.getString(R.string.dreams_no_category) } },
                                             { dateToSortKey(it.date) }
                                         )
                                     )
@@ -345,7 +353,7 @@ fun DreamsScreen(
                                 item { Spacer(modifier = Modifier.height(4.dp)) }
                                 if (!sortByDate) {
                                     val grouped = sortedInMonth.groupBy {
-                                        it.category.ifBlank { "Без категории" }
+                                        it.category.ifBlank { context.getString(R.string.dreams_no_category) }
                                     }
                                     grouped.forEach { (category, dreams) ->
                                         item(key = "cat_month_$category") {
@@ -393,16 +401,16 @@ fun DreamsScreen(
                                     Spacer(modifier = Modifier.height(16.dp))
                                     Text(
                                         text = if (searchQuery.text.isNotEmpty() || selectedCategory != null)
-                                            "Ничего не найдено"
+                                            stringResource(R.string.dreams_not_found)
                                         else
-                                            "У вас пока нет снов",
+                                            stringResource(R.string.dreams_empty),
                                         color = Color.White,
                                         fontSize = 18.sp
                                     )
                                     if (searchQuery.text.isEmpty() && selectedCategory == null) {
                                         Spacer(modifier = Modifier.height(8.dp))
                                         Text(
-                                            text = "Нажмите + чтобы добавить первый сон",
+                                            text = stringResource(R.string.dreams_empty_hint),
                                             color = Color.White.copy(alpha = 0.6f),
                                             fontSize = 14.sp
                                         )
@@ -425,6 +433,7 @@ fun DreamsScreen(
                                     MonthCard(
                                         monthKey = monthKey,
                                         count = count,
+                                        monthNames = monthNames,
                                         onClick = { openedMonth = monthKey }
                                     )
                                 }
@@ -437,7 +446,7 @@ fun DreamsScreen(
                                 } else {
                                     searchResults.sortedWith(
                                         compareBy(
-                                            { it.category.ifBlank { "Без категории" } },
+                                            { it.category.ifBlank { context.getString(R.string.dreams_no_category) } },
                                             { dateToSortKey(it.date) }
                                         )
                                     )
@@ -452,7 +461,7 @@ fun DreamsScreen(
                                 // Если сортировка по категории — показываем заголовки групп
                                 if (!sortByDate) {
                                     val grouped = sortedResults.groupBy {
-                                        it.category.ifBlank { "Без категории" }
+                                        it.category.ifBlank { context.getString(R.string.dreams_no_category) }
                                     }
                                     grouped.forEach { (category, dreams) ->
                                         item(key = "cat_$category") {
@@ -506,8 +515,12 @@ fun DreamsScreen(
 fun MonthCard(
     monthKey: String,
     count: Int,
+    monthNames: List<String>,
     onClick: () -> Unit
 ) {
+    val pluralOne = stringResource(R.string.plural_dreams_one)
+    val pluralFew = stringResource(R.string.plural_dreams_few)
+    val pluralMany = stringResource(R.string.plural_dreams_many)
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -526,7 +539,7 @@ fun MonthCard(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = formatMonthKey(monthKey),
+                text = formatMonthKey(monthKey, monthNames),
                 color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
@@ -539,7 +552,7 @@ fun MonthCard(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = pluralDreams(count),
+                    text = pluralDreams(count, pluralOne, pluralFew, pluralMany),
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                     fontSize = 13.sp
                 )

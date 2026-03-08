@@ -1,5 +1,11 @@
 package com.example.journalofdream.ui.locations
 
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.AlertDialog
+import androidx.activity.compose.BackHandler
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -25,17 +31,42 @@ fun AddLocationScreen(
     var locationName by remember { mutableStateOf("") }
     var locationDescription by remember { mutableStateOf("") }
     var showError by remember { mutableStateOf(false) }
+    var showExitDialog by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
+
+    val hasUnsavedChanges = locationName.isNotBlank() || locationDescription.isNotBlank()
+
+    BackHandler(enabled = hasUnsavedChanges) {
+        showExitDialog = true
+    }
+
+    if (showExitDialog) {
+        AlertDialog(
+            onDismissRequest = { showExitDialog = false },
+            title = { Text(stringResource(R.string.discard_title)) },
+            text = { Text(stringResource(R.string.discard_location_message)) },
+            confirmButton = {
+                TextButton(onClick = { showExitDialog = false; navController.popBackStack() }) {
+                    Text(stringResource(R.string.discard_confirm), color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showExitDialog = false }) {
+                    Text(stringResource(R.string.discard_dismiss))
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Добавить локацию", color = Color.White) },
+                title = { Text(stringResource(R.string.location_add_title), color = Color.White) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { if (hasUnsavedChanges) showExitDialog = true else navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Назад",
+                            contentDescription = stringResource(R.string.btn_back),
                             tint = Color.White
                         )
                     }
@@ -64,7 +95,7 @@ fun AddLocationScreen(
                         locationName = it
                         if (it.isNotBlank()) showError = false
                     },
-                    label = { Text("Название локации", color = Color.White.copy(alpha = 0.7f)) },
+                    label = { Text(stringResource(R.string.location_field_name), color = Color.White.copy(alpha = 0.7f)) },
                     textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
                     isError = showError,
                     singleLine = true,
@@ -92,7 +123,7 @@ fun AddLocationScreen(
                 OutlinedTextField(
                     value = locationDescription,
                     onValueChange = { locationDescription = it },
-                    label = { Text("Описание локации", color = Color.White.copy(alpha = 0.7f)) },
+                    label = { Text(stringResource(R.string.location_field_desc), color = Color.White.copy(alpha = 0.7f)) },
                     textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -120,7 +151,7 @@ fun AddLocationScreen(
                         containerColor = Color.White.copy(alpha = 0.2f)
                     )
                 ) {
-                    Text("Сохранить", color = Color.White, fontSize = 16.sp)
+                    Text(stringResource(R.string.btn_save), color = Color.White, fontSize = 16.sp)
                 }
             }
         }

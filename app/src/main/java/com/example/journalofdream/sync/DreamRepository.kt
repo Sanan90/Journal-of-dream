@@ -54,14 +54,10 @@ class DreamRepository(
                                     db.dreamDao().insert(localDream)
                                     db.dreamDao().deleteDreamLocationCrossRefs(dreamId)
                                     for (locId in remoteDream.locationIds) {
+                                        // Привязываем только если локация реально существует.
+                                        // Если локация удалена — пропускаем, чтобы не создавать призрак без названия.
                                         val locationExists = db.locationDao().getLocationByIdOnce(locId, userId)
                                         if (locationExists != null) {
-                                            db.dreamDao().insertDreamLocationCrossRef(DreamLocationCrossRef(dreamId, locId))
-                                        } else {
-                                            val placeholderLocation = com.example.journalofdream.model.Location(
-                                                id = locId, ownerUid = userId, name = "", description = ""
-                                            )
-                                            db.locationDao().insert(placeholderLocation)
                                             db.dreamDao().insertDreamLocationCrossRef(DreamLocationCrossRef(dreamId, locId))
                                         }
                                     }

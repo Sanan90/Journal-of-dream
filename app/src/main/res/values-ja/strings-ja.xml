@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">夢日記</string>
+
+    <!-- 共通 -->
+    <string name="btn_save">保存</string>
+    <string name="btn_cancel">キャンセル</string>
+    <string name="btn_delete">削除</string>
+    <string name="btn_edit">編集</string>
+    <string name="btn_back">戻る</string>
+    <string name="btn_add">追加</string>
+
+    <!-- メイン画面 -->
+    <string name="main_title">夢日記</string>
+    <string name="main_dreams_count">%d件の夢を記録</string>
+    <string name="main_level">レベル %1$d · %2$s</string>
+    <string name="main_guest">ゲストモード</string>
+    <string name="main_dreamer">ドリーマー：%s</string>
+    <string name="nav_dreams">夢の一覧</string>
+    <string name="nav_diary">夢日記</string>
+    <string name="nav_stats">統計</string>
+    <string name="nav_chart">グラフ</string>
+    <string name="nav_achievements">実績</string>
+    <string name="nav_locations">場所</string>
+    <string name="nav_settings">設定</string>
+    <string name="nav_techniques">テクニック</string>
+    <string name="btn_login">ログイン</string>
+    <string name="dialog_logout_title">ログアウトしますか？</string>
+    <string name="dialog_logout_message">本当にログアウトしますか？ローカルデータはデバイスに残ります。</string>
+    <string name="btn_logout">ログアウト</string>
+    <string name="dialog_add_title">夢または場所を追加しますか？</string>
+    <string name="btn_add_dream">エントリを追加</string>
+
+    <!-- 夢の一覧 -->
+    <string name="dreams_title">夢の一覧</string>
+    <string name="dreams_list">リスト</string>
+    <string name="dreams_months">月別</string>
+    <string name="dreams_search">検索</string>
+    <string name="dreams_sort_az">あ-ん</string>
+    <string name="dreams_sort_date">日付</string>
+    <string name="dreams_empty">まだ夢がありません</string>
+    <string name="dreams_empty_hint">＋をタップして最初の夢を追加しましょう</string>
+    <string name="dreams_empty_month">今月の夢はありません</string>
+    <string name="dreams_not_found">見つかりませんでした</string>
+    <string name="dreams_add">夢を追加</string>
+    <string name="dreams_no_category">カテゴリなし</string>
+    <string name="dreams_all">すべての夢</string>
+
+    <!-- 月 -->
+    <string name="month_jan">1月</string>
+    <string name="month_feb">2月</string>
+    <string name="month_mar">3月</string>
+    <string name="month_apr">4月</string>
+    <string name="month_may">5月</string>
+    <string name="month_jun">6月</string>
+    <string name="month_jul">7月</string>
+    <string name="month_aug">8月</string>
+    <string name="month_sep">9月</string>
+    <string name="month_oct">10月</string>
+    <string name="month_nov">11月</string>
+    <string name="month_dec">12月</string>
+
+    <!-- 夢の追加/編集 -->
+    <string name="dream_add_title">夢を追加</string>
+    <string name="dream_edit_title">夢を編集</string>
+    <string name="dream_field_name">夢のタイトル</string>
+    <string name="dream_field_desc">夢の内容</string>
+    <string name="dream_error_name">タイトルを入力してください</string>
+    <string name="dream_pick_date">日付を選択</string>
+    <string name="dream_pick_locations">場所を選択</string>
+    <string name="dream_locations_hint">場所を選んでください</string>
+    <string name="dream_locations_selected">%d件の場所を選択中</string>
+    <string name="dream_manage_categories">カテゴリを管理</string>
+    <string name="dream_save_changes">変更を保存</string>
+    <string name="dialog_delete_dream_title">夢を削除しますか？</string>
+    <string name="dialog_delete_dream_message">「%s」が完全に削除されます。</string>
+
+    <!-- 場所 -->
+    <string name="locations_title">場所</string>
+    <string name="locations_total">合計：%d件</string>
+    <string name="locations_empty">まだ場所がありません</string>
+    <string name="locations_empty_hint">＋をタップして最初の場所を追加しましょう</string>
+    <string name="locations_add">場所を追加</string>
+    <string name="locations_sort_popular">人気順</string>
+    <string name="locations_sort_alpha">五十音順</string>
+    <string name="locations_sort_last">最近の夢順</string>
+    <string name="locations_last_dream">最近の夢：%s</string>
+    <string name="locations_no_dreams">まだ夢がありません</string>
+    <string name="dialog_delete_location_title">場所を削除しますか？</string>
+    <string name="dialog_delete_location_message">「%s」が削除されます。</string>
+    <string name="dialog_delete_location_dreams">%1$d件の%2$sは残りますが、場所との関連付けは解除されます。</string>
+    <string name="location_add_title">場所を追加</string>
+    <string name="location_field_name">場所の名前</string>
+    <string name="location_field_desc">場所の説明</string>
+    <string name="location_field_desc_optional">説明（任意）</string>
+    <string name="location_error_name">名前を入力してください</string>
+    <string name="location_edit_title">編集</string>
+    <string name="location_dreams_title">この場所の夢</string>
+    <string name="location_dreams_empty_title">まだ夢がありません</string>
+    <string name="location_dreams_empty_hint">夢を作成または編集するときに\nこの場所を関連付けてください</string>
+    <string name="location_stat_dreams">夢</string>
+    <string name="location_stat_first">最初の夢</string>
+    <string name="location_stat_last">最近の夢</string>
+
+    <!-- 統計 -->
+    <string name="stats_title">統計</string>
+    <string name="stats_total">夢の総数</string>
+    <string name="stats_streak">最長連続記録</string>
+    <string name="stats_by_category">カテゴリ別</string>
+    <string name="stats_empty">最初の夢を記録すると\n統計が表示されます</string>
+    <string name="stats_best_day">最高記録日 — %1$d件の%2$s</string>
+
+    <!-- グラフ -->
+    <string name="chart_title">アクティビティグラフ</string>
+    <string name="chart_7days">7日間</string>
+    <string name="chart_30days">30日間</string>
+    <string name="chart_90days">90日間</string>
+    <string name="chart_dreams_by_day">日別の夢</string>
+    <string name="chart_active_days">記録した日数</string>
+    <string name="chart_total">夢の総数</string>
+    <string name="chart_avg">1日の平均</string>
+    <string name="chart_by_weekday">曜日別</string>
+    <string name="chart_by_time">時間帯別</string>
+    <string name="chart_time_hint">最もよく夢を記録する時間帯</string>
+    <string name="chart_morning">朝</string>
+    <string name="chart_day">昼</string>
+    <string name="chart_evening">夕方</string>
+    <string name="chart_night">夜</string>
+    <string name="chart_mon">月</string>
+    <string name="chart_tue">火</string>
+    <string name="chart_wed">水</string>
+    <string name="chart_thu">木</string>
+    <string name="chart_fri">金</string>
+    <string name="chart_sat">土</string>
+    <string name="chart_sun">日</string>
+
+    <!-- 実績 -->
+    <string name="achievements_title">実績</string>
+    <string name="achievements_count">実績 %1$d/%2$d</string>
+    <string name="achievements_max_level">最高レベル到達！ 👑</string>
+    <string name="achievements_level">レベル %d</string>
+    <string name="achievements_next_level">%1$sまであと %2$d</string>
+    <string name="achievements_dreams_count">%d件の夢</string>
+
+    <!-- 設定 -->
+    <string name="settings_title">設定</string>
+    <string name="settings_notifications">🔔 通知</string>
+    <string name="settings_reminder">夢の記録リマインダー</string>
+    <string name="settings_reminder_desc">毎日夢を記録するようお知らせします</string>
+    <string name="settings_notif_time">通知時刻</string>
+    <string name="settings_quotes">💬 名言通知</string>
+    <string name="settings_quotes_desc">明晰夢に関する名言を10時・16時・22時にお届けします</string>
+    <string name="settings_manage_quotes">名言を管理</string>
+    <string name="settings_manage_quotes_desc">通知用の名言を追加・削除します</string>
+    <string name="settings_security">🔒 セキュリティ</string>
+    <string name="settings_pin">PINロック</string>
+    <string name="settings_pin_enable">アプリのロックを有効にする</string>
+    <string name="settings_pin_set">新しいPINを設定</string>
+    <string name="settings_pin_change">PINを変更</string>
+    <string name="settings_pin_active">アプリはPINで保護されています</string>
+
+    <string name="plural_dreams_one">夢</string>
+    <string name="plural_dreams_few">夢</string>
+    <string name="plural_dreams_many">夢</string>
+
+    <!-- Авторизация -->
+    <string name="auth_email">メールアドレス</string>
+    <string name="auth_password">パスワード</string>
+    <string name="auth_forgot_password">パスワードを忘れた方</string>
+    <string name="auth_register">新規登録</string>
+    <string name="auth_google">Googleでログイン</string>
+    <string name="auth_guest">アカウントなしで続ける</string>
+
+    <!-- Техники -->
+    <string name="tech_sort_new">新着順</string>
+    <string name="tech_enter_code">コードを入力</string>
+    <string name="tech_access_code">アクセスコード</string>
+    <string name="tech_source_optional">出典（任意）</string>
+    <string name="tech_source_hint">本、サイト、フォーラム...</string>
+
+    <!-- Цитаты/PIN/Онбординг -->
+    <string name="quotes_field_text">引用テキスト</string>
+    <string name="quotes_field_hint">モチベーションの引用を入力...</string>
+    <string name="quotes_delete_title">引用を削除しますか？</string>
+    <string name="quotes_hide_title">引用を非表示にしますか？</string>
+    <string name="quotes_hide_btn">非表示</string>
+    <string name="pin_enter">PINを入力</string>
+    <string name="onboarding_skip">スキップ</string>
+
+    <!-- Новые строки -->
+    <string name="tech_wrong_code">コードが違います</string>
+    <string name="tech_conn_error">接続エラー</string>
+    <string name="tech_empty">まだ技術がありません</string>
+    <string name="tech_edit_title">技術を編集</string>
+    <string name="tech_add_title">新しい技術</string>
+    <string name="tech_label">技術</string>
+    <string name="tech_comment_hint">この技術の体験を共有してください...</string>
+    <string name="tech_send">送信</string>
+    <string name="tech_login_to_comment">コメントするにはログインしてください</string>
+    <string name="tech_no_comments">まだコメントがありません。体験を共有しましょう！</string>
+    <string name="tech_you">あなた</string>
+    <string name="tech_like">いいね</string>
+    <string name="cat_title">カテゴリ</string>
+    <string name="cat_new">新しいカテゴリ</string>
+    <string name="cat_color">色:</string>
+    <string name="cat_all">すべてのカテゴリ:</string>
+    <string name="cat_delete_title">カテゴリを削除？</string>
+    <string name="cat_delete_message">削除されます。夢はカテゴリなしで残ります。</string>
+    <string name="btn_close">閉じる</string>
+    <string name="settings_language">アプリの言語</string>
+
+    <!-- i18n round 3 -->
+    <string name="dream_title">夢</string>
+    <string name="dream_no_title">タイトルなし</string>
+    <string name="dream_label_date">日付</string>
+    <string name="dream_label_time">時間</string>
+    <string name="dream_label_category">カテゴリ</string>
+    <string name="dream_no_desc">説明なし</string>
+    <string name="tech_comments">コメント (%d)</string>
+    <string name="stats_of_all">全夢の</string>
+    <string name="level_1">初心者</string>
+    <string name="level_2">夢想家</string>
+    <string name="level_3">探検家</string>
+    <string name="level_4">旅人</string>
+    <string name="level_5">ビジョナリー</string>
+    <string name="level_6">夢のマスター</string>
+    <string name="level_7">夢の建築家</string>
+    <string name="level_8">夢の守護者</string>
+    <string name="level_9">伝説</string>
+    <string name="ach_first_dream_title">最初の一歩</string>
+    <string name="ach_first_location_title">最初の場所</string>
+    <string name="ach_dreams_5_title">旅の始まり</string>
+    <string name="ach_dreams_10_title">十</string>
+    <string name="ach_dreams_20_title">二十</string>
+    <string name="ach_dreams_25_title">四分の一</string>
+    <string name="ach_dreams_50_title">五十</string>
+    <string name="ach_dreams_100_title">百</string>
+    <string name="ach_dreams_500_title">五百</string>
+    <string name="ach_dreams_1000_title">夢の伝説</string>
+    <string name="ach_locations_5_title">場所探検家</string>
+    <string name="ach_locations_10_title">地図製作者</string>
+    <string name="ach_locations_20_title">場所の守護者</string>
+    <string name="ach_locs_in_dream_2_title">ダブルポータル</string>
+    <string name="ach_locs_in_dream_3_title">トリプルポータル</string>
+    <string name="ach_locs_in_dream_5_title">夢のさすらい人</string>
+    <string name="ach_dreams_in_loc_5_title">お気に入りの場所</string>
+    <string name="ach_dreams_in_loc_10_title">ホームコーナー</string>
+    <string name="ach_dreams_in_loc_20_title">常設場所</string>
+    <string name="ach_streak_3_title">3日連続</string>
+    <string name="ach_streak_7_title">夢の週</string>
+    <string name="ach_streak_14_title">二週間</string>
+    <string name="ach_streak_28_title">月の月</string>
+    <string name="ach_streak_30_title">夢の月</string>
+    <string name="ach_streak_100_title">百日</string>
+    <string name="ach_categories_3_title">多様性</string>
+    <string name="ach_categories_5_title">コレクター</string>
+    <string name="ach_long_dream_title">詳細な夢</string>
+    <string name="ach_marathon_title">マラソン</string>
+    <string name="ach_night_owl_title">夜型人間</string>
+    <string name="ach_early_bird_title">早起き鳥</string>
+    <string name="ach_night_writer_title">夜の作家</string>
+    <string name="ach_all_weekdays_title">全曜日</string>
+    <string name="ach_nightmare_title">悪夢</string>
+    <string name="ach_comeback_title">カムバック</string>
+    <string name="ach_dreamer_week_title">アクティブな週</string>
+    <string name="ach_lucky_77_title">ラッキーな人</string>
+    <string name="ach_ghost_title">ゴースト</string>
+    <string name="ach_first_dream_desc">最初の夢を記録する</string>
+    <string name="ach_first_location_desc">最初の場所を作成する</string>
+    <string name="ach_dreams_5_desc">5つの夢を記録</string>
+    <string name="ach_dreams_10_desc">10の夢を記録</string>
+    <string name="ach_dreams_20_desc">20の夢を記録</string>
+    <string name="ach_dreams_25_desc">25の夢を記録</string>
+    <string name="ach_dreams_50_desc">50の夢を記録</string>
+    <string name="ach_dreams_100_desc">100の夢を記録</string>
+    <string name="ach_dreams_500_desc">500の夢を記録</string>
+    <string name="ach_dreams_1000_desc">1000の夢を記録</string>
+    <string name="ach_locations_5_desc">5つの場所を作成</string>
+    <string name="ach_locations_10_desc">10の場所を作成</string>
+    <string name="ach_locations_20_desc">20の場所を作成</string>
+    <string name="ach_locs_in_dream_2_desc">1つの夢に2つの場所</string>
+    <string name="ach_locs_in_dream_3_desc">1つの夢に3つの場所</string>
+    <string name="ach_locs_in_dream_5_desc">1つの夢に5つの場所</string>
+    <string name="ach_dreams_in_loc_5_desc">1つの場所で5つの夢</string>
+    <string name="ach_dreams_in_loc_10_desc">1つの場所で10の夢</string>
+    <string name="ach_dreams_in_loc_20_desc">1つの場所で20の夢</string>
+    <string name="ach_streak_3_desc">3日連続で夢を記録</string>
+    <string name="ach_streak_7_desc">7日連続で夢を記録</string>
+    <string name="ach_streak_14_desc">14日連続</string>
+    <string name="ach_streak_28_desc">28日連続</string>
+    <string name="ach_streak_30_desc">30日連続</string>
+    <string name="ach_streak_100_desc">100日連続</string>
+    <string name="ach_categories_3_desc">3つのカテゴリを使用</string>
+    <string name="ach_categories_5_desc">5つのカテゴリを使用</string>
+    <string name="ach_long_dream_desc">500文字以上の夢</string>
+    <string name="ach_marathon_desc">1日に3つの夢を記録</string>
+    <string name="ach_night_owl_desc">1日に5つの夢を記録</string>
+    <string name="ach_early_bird_desc">午前7時前に夢を記録</string>
+    <string name="ach_night_writer_desc">午後11時以降に夢を記録</string>
+    <string name="ach_all_weekdays_desc">週の全曜日に夢を記録</string>
+    <string name="ach_nightmare_desc">ナイトメアカテゴリで夢を記録</string>
+    <string name="ach_comeback_desc">7日以上の休憩後に復帰</string>
+    <string name="ach_dreamer_week_desc">直近7日のうち5日に夢を記録</string>
+    <string name="ach_lucky_77_desc">ちょうど77の夢を記録</string>
+    <string name="ach_ghost_desc">タイトルなしの夢を作成</string>
+    <string name="dream_label_locations">場所</string>
+    <string name="cat_nightmares">悪夢</string>
+    <string name="cat_lucid">明晰夢</string>
+    <string name="cat_plot">ストーリー夢</string>
+    <string name="cat_personal">個人的な夢</string>
+    <string name="discard_title">未保存の変更</string>
+    <string name="discard_dream_message">夢を保存していません。保存せずに終了しますか？</string>
+    <string name="discard_location_message">場所を保存していません。保存せずに終了しますか？</string>
+    <string name="discard_confirm">終了</string>
+    <string name="discard_dismiss">戻る</string>
+    <string name="pin_forgot_btn">PINを忘れた</string>
+    <string name="pin_forgot_title">PINを忘れましたか？</string>
+    <string name="pin_forgot_message">PINをリセットするには、サインアウトして再度サインインしてください。</string>
+    <string name="pin_forgot_guest_message">ゲストモードではPINを回復できません。ゲストモードを終了することのみ可能です。</string>
+    <string name="pin_forgot_reset">サインアウトしてPINをリセット</string>
+    <string name="pin_forgot_exit">ゲストモードを終了</string>
+    <string name="main_dreams_recorded">記録済み</string>
+    <string name="auth_welcome">ようこそ</string>
+    <string name="auth_show">表示</string>
+    <string name="auth_hide">非表示</string>
+    <string name="fab_choose_action">アクションを選択</string>
+    <string name="fab_record_dream">夢を記録</string>
+    <string name="fab_add_location">場所を追加</string>
+    <string name="onboarding_back">← 戻る</string>
+    <string name="onboarding_next">次へ →</string>
+    <string name="onboarding_start">始める ✨</string>
+    <string name="onboarding_1_title">明晰夢とは何ですか？</string>
+    <string name="onboarding_1_body">明晰夢とは、眠っていながらも夢を見ていることに気づいている状態です。その瞬間、あなたは起きていることをコントロールできます：飛んだり、周囲を変えたり、誰にでも会ったりできます。\n\nこれはフィクションではありません — 神経科学者が研究している実際の現象です。約55%の人が少なくとも一度は明晰夢を経験しています。練習すれば普通のスキルになります。</string>
+    <string name="onboarding_2_title">なぜ夢を記録するのですか？</string>
+    <string name="onboarding_2_body">脳は目覚めてから最初の10分以内に夢の90%を忘れます。夢日記はあなたの主なツールです。\n\n• 夢の記憶を鍛えます：書けば書くほどよく覚えます\n• 繰り返すイメージやテーマに気づくのに役立ちます\n• 夢を見ているという「サイン」を認識することを教えます — 気づきの鍵\n• やがて明晰夢につながるパターンが見えてくるようになります</string>
+    <string name="onboarding_3_title">場所 — あなたの夢の地図</string>
+    <string name="onboarding_3_body">多くの人が夢の中で同じ場所に何度も戻ります：古い家、見知らぬ街、森、学校。\n\n場所はあなたに役立ちます：\n• これらの場所を一か所にまとめる\n• どれくらいの頻度で訪れているかを確認する\n• 関連する夢に気づき、自分だけの「夢の地図」を作る\n\n夢の中で見慣れた場所を認識したとき — それは明晰さの強力なトリガーです。</string>
+    <string name="onboarding_4_title">始める準備はできましたか？</string>
+    <string name="onboarding_4_body">必要なのは — 目覚めてすぐに書くことだけ。断片でも、一言でも構いません。\n\n1週間定期的に記録すると、より多く覚えていることに気づくでしょう。1ヶ月後には — 最初の明晰な瞬間が訪れます。\n\n明晰夢への旅はまさに今始まります。🌙</string>
+</resources>

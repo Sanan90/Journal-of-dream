@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     id("kotlin-kapt") // Для работы с Room
-    
+    id("com.google.firebase.crashlytics")
 
 }
 
@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.play.services.auth.v2060)
     implementation(libs.firebase.auth)
 
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
 
 
     // --- AndroidX Core + Lifecycle ---

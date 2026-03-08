@@ -1,5 +1,8 @@
 package com.example.journalofdream.ui.theme
 
+import com.example.journalofdream.util.localizeCategory
+import com.example.journalofdream.R
+import androidx.compose.ui.res.stringResource
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -46,17 +49,17 @@ fun ViewDreamScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Сон", color = Color.White) },
+                title = { Text(stringResource(R.string.dream_title), color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад", tint = Color.White)
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.btn_back), tint = Color.White)
                     }
                 },
                 actions = {
                     IconButton(onClick = {
                         navController.navigate("editDream/$dreamId")
                     }) {
-                        Icon(Icons.Default.Edit, contentDescription = "Редактировать", tint = Color.White)
+                        Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.btn_edit), tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -86,7 +89,7 @@ fun ViewDreamScreen(
                     ) {
                         // Заголовок
                         Text(
-                            text = dream.title.ifBlank { "Без названия" },
+                            text = dream.title.ifBlank { stringResource(R.string.dream_no_title) },
                             color = Color.White,
                             fontSize = 26.sp,
                             fontWeight = FontWeight.Bold,
@@ -109,14 +112,14 @@ fun ViewDreamScreen(
                                 // Дата
                                 MetaItem(
                                     emoji = "📅",
-                                    label = "Дата",
+                                    label = stringResource(R.string.dream_label_date),
                                     value = formatDreamDate(dream.date)
                                 )
                                 // Время
                                 if (dream.time.isNotBlank()) {
                                     MetaItem(
                                         emoji = "🕐",
-                                        label = "Время",
+                                        label = stringResource(R.string.dream_label_time),
                                         value = dream.time
                                     )
                                 }
@@ -124,8 +127,8 @@ fun ViewDreamScreen(
                                 if (dream.category.isNotBlank()) {
                                     MetaItem(
                                         emoji = "🏷️",
-                                        label = "Категория",
-                                        value = dream.category
+                                        label = stringResource(R.string.dream_label_category),
+                                        value = localizeCategory(dream.category, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal))
                                     )
                                 }
                             }
@@ -141,7 +144,7 @@ fun ViewDreamScreen(
                             ) {
                                 Column(modifier = Modifier.padding(16.dp)) {
                                     Text(
-                                        text = "📍 Локации",
+                                        text = "📍 " + stringResource(R.string.dream_label_locations),
                                         color = Color.White.copy(alpha = 0.7f),
                                         fontSize = 13.sp,
                                         fontWeight = FontWeight.Medium
@@ -171,7 +174,7 @@ fun ViewDreamScreen(
                             Column(modifier = Modifier.padding(20.dp)) {
                                 if (dream.content.isBlank()) {
                                     Text(
-                                        text = "Описание не добавлено",
+                                        text = stringResource(R.string.dream_no_desc),
                                         color = Color.White.copy(alpha = 0.4f),
                                         fontSize = 16.sp,
                                         fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,

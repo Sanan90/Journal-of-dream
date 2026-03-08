@@ -1,5 +1,7 @@
 package com.example.journalofdream.ui.dreams
 
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -64,14 +66,14 @@ fun CategoryManagerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Категории") },
+        title = { Text(stringResource(R.string.cat_title)) },
         text = {
             Column {
                 // Поле добавления новой категории
                 OutlinedTextField(
                     value = newCategoryName,
                     onValueChange = { newCategoryName = it },
-                    label = { Text("Новая категория") },
+                    label = { Text(stringResource(R.string.cat_new)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -80,7 +82,7 @@ fun CategoryManagerDialog(
 
                 // Выбор цвета
                 Text(
-                    text = "Цвет:",
+                    text = stringResource(R.string.cat_color),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -131,7 +133,7 @@ fun CategoryManagerDialog(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
                 ) {
-                    Text("Добавить")
+                    Text(stringResource(R.string.btn_add))
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -139,7 +141,7 @@ fun CategoryManagerDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Все категории:",
+                    text = stringResource(R.string.cat_all),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -181,7 +183,7 @@ fun CategoryManagerDialog(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Delete,
-                                        contentDescription = "Удалить",
+                                        contentDescription = stringResource(R.string.btn_delete),
                                         tint = Color.Red.copy(alpha = 0.7f),
                                         modifier = Modifier.size(18.dp)
                                     )
@@ -195,25 +197,25 @@ fun CategoryManagerDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) { Text("Закрыть") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.btn_close)) }
         }
     )
 
     showDeleteConfirm?.let { cat ->
         AlertDialog(
             onDismissRequest = { showDeleteConfirm = null },
-            title = { Text("Удалить категорию?") },
+            title = { Text(stringResource(R.string.cat_delete_title)) },
             text = { Text("\"${cat.name}\" будет удалена. Сны с этой категорией останутся, но категория у них сбросится.") },
             confirmButton = {
                 TextButton(onClick = {
                     categoryViewModel.deleteCategory(cat)
                     showDeleteConfirm = null
                 }) {
-                    Text("Удалить", color = Color.Red)
+                    Text(stringResource(R.string.btn_delete), color = Color.Red)
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteConfirm = null }) { Text("Отмена") }
+                TextButton(onClick = { showDeleteConfirm = null }) { Text(stringResource(R.string.btn_cancel)) }
             }
         )
     }

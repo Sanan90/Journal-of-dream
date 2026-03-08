@@ -1,4 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Journal of Dream</string>
+    <string name="app_name">Dream Journal</string>
     <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+
+    <!-- Общие -->
+    <string name="btn_save">Сохранить</string>
+    <string name="btn_cancel">Отмена</string>
+    <string name="btn_delete">Удалить</string>
+    <string name="btn_edit">Редактировать</string>
+    <string name="btn_back">Назад</string>
+    <string name="btn_add">Добавить</string>
+
+    <!-- Главный экран -->
+    <string name="main_title">Дневник сновидений</string>
+    <string name="main_dreams_count">%d снов записано</string>
+    <string name="main_level">Ур. %1$d · %2$s</string>
+    <string name="main_guest">Гостевой режим</string>
+    <string name="main_dreamer">Сновидец: %s</string>
+    <string name="nav_dreams">Список снов</string>
+    <string name="nav_diary">Дневник снов</string>
+    <string name="nav_stats">Статистика</string>
+    <string name="nav_chart">График</string>
+    <string name="nav_achievements">Достижения</string>
+    <string name="nav_locations">Локации</string>
+    <string name="nav_settings">Настройки</string>
+    <string name="nav_techniques">Техники</string>
+    <string name="btn_login">Войти</string>
+    <string name="dialog_logout_title">Выйти из аккаунта?</string>
+    <string name="dialog_logout_message">Вы уверены что хотите выйти? Локальные данные останутся на устройстве.</string>
+    <string name="btn_logout">Выйти</string>
+    <string name="dialog_add_title">Добавить сон или локацию?</string>
+    <string name="btn_add_dream">Добавить запись</string>
+
+    <!-- Список снов -->
+    <string name="dreams_title">Список сновидений</string>
+    <string name="dreams_list">Список</string>
+    <string name="dreams_months">Месяцы</string>
+    <string name="dreams_search">Поиск</string>
+    <string name="dreams_sort_az">А-Я</string>
+    <string name="dreams_sort_date">Дата</string>
+    <string name="dreams_empty">У вас пока нет снов</string>
+    <string name="dreams_empty_hint">Нажмите + чтобы добавить первый сон</string>
+    <string name="dreams_empty_month">Нет снов за этот месяц</string>
+    <string name="dreams_not_found">Ничего не найдено</string>
+    <string name="dreams_add">Добавить сон</string>
+    <string name="dreams_no_category">Без категории</string>
+    <string name="dreams_all">Все сны</string>
+
+    <!-- Месяцы -->
+    <string name="month_jan">Январь</string>
+    <string name="month_feb">Февраль</string>
+    <string name="month_mar">Март</string>
+    <string name="month_apr">Апрель</string>
+    <string name="month_may">Май</string>
+    <string name="month_jun">Июнь</string>
+    <string name="month_jul">Июль</string>
+    <string name="month_aug">Август</string>
+    <string name="month_sep">Сентябрь</string>
+    <string name="month_oct">Октябрь</string>
+    <string name="month_nov">Ноябрь</string>
+    <string name="month_dec">Декабрь</string>
+
+    <!-- Добавить/Редактировать сон -->
+    <string name="dream_add_title">Добавить сон</string>
+    <string name="dream_edit_title">Редактирование сна</string>
+    <string name="dream_field_name">Название сна</string>
+    <string name="dream_field_desc">Описание сна</string>
+    <string name="dream_error_name">Введите название сна</string>
+    <string name="dream_pick_date">Выбрать дату</string>
+    <string name="dream_pick_locations">Выбрать локации</string>
+    <string name="dream_locations_hint">Выберите локации</string>
+    <string name="dream_locations_selected">Локаций выбрано: %d</string>
+    <string name="dream_manage_categories">Управление категориями</string>
+    <string name="dream_save_changes">Сохранить изменения</string>
+    <string name="dialog_delete_dream_title">Удалить сон?</string>
+    <string name="dialog_delete_dream_message">«%s» будет удалён. Это действие нельзя отменить.</string>
+
+    <!-- Локации -->
+    <string name="locations_title">Локации</string>
+    <string name="locations_total">Всего: %d</string>
+    <string name="locations_empty">У вас пока нет локаций</string>
+    <string name="locations_empty_hint">Нажмите + чтобы добавить первую</string>
+    <string name="locations_add">Добавить локацию</string>
+    <string name="locations_sort_popular">По популярности</string>
+    <string name="locations_sort_alpha">По алфавиту</string>
+    <string name="locations_sort_last">По последнему сну</string>
+    <string name="locations_last_dream">Последний сон: %s</string>
+    <string name="locations_no_dreams">Снов пока нет</string>
+    <string name="dialog_delete_location_title">Удалить локацию?</string>
+    <string name="dialog_delete_location_message">«%s» будет удалена.</string>
+    <string name="dialog_delete_location_dreams">%1$d %2$s останутся, но привязка к локации исчезнет.</string>
+    <string name="location_add_title">Добавить локацию</string>
+    <string name="location_field_name">Название локации</string>
+    <string name="location_field_desc">Описание локации</string>
+    <string name="location_field_desc_optional">Описание (необязательно)</string>
+    <string name="location_error_name">Введите название</string>
+    <string name="location_edit_title">Редактирование</string>
+    <string name="location_dreams_title">Сны в этой локации</string>
+    <string name="location_dreams_empty_title">Снов пока нет</string>
+    <string name="location_dreams_empty_hint">Привяжи сон к этой локации\nпри создании или редактировании</string>
+    <string name="location_stat_dreams">Снов</string>
+    <string name="location_stat_first">Первый сон</string>
+    <string name="location_stat_last">Последний сон</string>
+
+    <!-- Статистика -->
+    <string name="stats_title">Статистика</string>
+    <string name="stats_total">Всего снов</string>
+    <string name="stats_streak">Макс. streak</string>
+    <string name="stats_by_category">По категориям</string>
+    <string name="stats_empty">Статистика появится\nкогда вы запишете первый сон</string>
+    <string name="stats_best_day">Лучший день — %1$d %2$s</string>
+
+    <!-- График -->
+    <string name="chart_title">График активности</string>
+    <string name="chart_7days">7 дней</string>
+    <string name="chart_30days">30 дней</string>
+    <string name="chart_90days">90 дней</string>
+    <string name="chart_dreams_by_day">Сны по дням</string>
+    <string name="chart_active_days">Активных дней</string>
+    <string name="chart_total">Всего снов</string>
+    <string name="chart_avg">Среднее/день</string>
+    <string name="chart_by_weekday">По дням недели</string>
+    <string name="chart_by_time">По времени суток</string>
+    <string name="chart_time_hint">Когда чаще всего записываешь сны</string>
+    <string name="chart_morning">Утро</string>
+    <string name="chart_day">День</string>
+    <string name="chart_evening">Вечер</string>
+    <string name="chart_night">Ночь</string>
+    <string name="chart_mon">Пн</string>
+    <string name="chart_tue">Вт</string>
+    <string name="chart_wed">Ср</string>
+    <string name="chart_thu">Чт</string>
+    <string name="chart_fri">Пт</string>
+    <string name="chart_sat">Сб</string>
+    <string name="chart_sun">Вс</string>
+
+    <!-- Достижения -->
+    <string name="achievements_title">Достижения</string>
+    <string name="achievements_count">Достижения %1$d/%2$d</string>
+    <string name="achievements_max_level">Максимальный уровень! 👑</string>
+    <string name="achievements_level">Уровень %d</string>
+    <string name="achievements_next_level">до %1$s: %2$d</string>
+    <string name="achievements_dreams_count">%d снов</string>
+
+    <!-- Настройки -->
+    <string name="settings_title">Настройки</string>
+    <string name="settings_notifications">🔔 Уведомления</string>
+    <string name="settings_reminder">Напоминания о записи сна</string>
+    <string name="settings_reminder_desc">Ежедневное напоминание записать сон</string>
+    <string name="settings_notif_time">Время уведомления</string>
+    <string name="settings_quotes">💬 Цитаты для уведомлений</string>
+    <string name="settings_quotes_desc">Цитаты об осознанных снах в 10:00, 16:00 и 22:00</string>
+    <string name="settings_manage_quotes">Управление цитатами</string>
+    <string name="settings_manage_quotes_desc">Добавить или удалить цитаты для уведомлений</string>
+    <string name="settings_security">🔒 Безопасность</string>
+    <string name="settings_pin">Защита PIN-кодом</string>
+    <string name="settings_pin_enable">Включить защиту приложения</string>
+    <string name="settings_pin_set">Установить новый PIN-код</string>
+    <string name="settings_pin_change">Сменить PIN-код</string>
+    <string name="settings_pin_active">Приложение защищено PIN-кодом</string>
+
+    <!-- Склонения -->
+    <string name="plural_dreams_one">сон</string>
+    <string name="plural_dreams_few">сна</string>
+    <string name="plural_dreams_many">снов</string>
+
+    <!-- Авторизация -->
+    <string name="auth_email">Электронная почта</string>
+    <string name="auth_password">Пароль</string>
+    <string name="auth_forgot_password">Забыл пароль?</string>
+    <string name="auth_register">Зарегистрироваться</string>
+    <string name="auth_google">Войти через Google</string>
+    <string name="auth_guest">Продолжить без авторизации</string>
+
+    <!-- Техники -->
+    <string name="tech_sort_new">Новые</string>
+    <string name="tech_enter_code">Введите код</string>
+    <string name="tech_access_code">Код доступа</string>
+    <string name="tech_source_optional">Источник (необязательно)</string>
+    <string name="tech_source_hint">Книга, сайт, форум...</string>
+
+    <!-- Цитаты/PIN/Онбординг -->
+    <string name="quotes_field_text">Quote text</string>
+    <string name="quotes_field_hint">Enter a motivational quote...</string>
+    <string name="quotes_delete_title">Delete quote?</string>
+    <string name="quotes_hide_title">Hide quote?</string>
+    <string name="quotes_hide_btn">Hide</string>
+    <string name="pin_enter">Enter PIN</string>
+    <string name="onboarding_skip">Skip</string>
+
+    <!-- Новые строки -->
+    <string name="tech_wrong_code">Wrong code</string>
+    <string name="tech_conn_error">Connection error</string>
+    <string name="tech_empty">No techniques added yet</string>
+    <string name="tech_edit_title">Edit technique</string>
+    <string name="tech_add_title">New technique</string>
+    <string name="tech_label">Technique</string>
+    <string name="tech_comment_hint">Your experience with this technique...</string>
+    <string name="tech_send">Send</string>
+    <string name="tech_login_to_comment">Sign in to leave a comment</string>
+    <string name="tech_no_comments">No comments yet. Share your experience!</string>
+    <string name="tech_you">You</string>
+    <string name="tech_like">Like</string>
+    <string name="cat_title">Categories</string>
+    <string name="cat_new">New category</string>
+    <string name="cat_color">Color:</string>
+    <string name="cat_all">All categories:</string>
+    <string name="cat_delete_title">Delete category?</string>
+    <string name="cat_delete_message">will be deleted. Dreams with this category will remain but lose the category.</string>
+    <string name="btn_close">Close</string>
+    <string name="settings_language">App language</string>
+
+    <!-- i18n round 3 default -->
+    <string name="dream_title">Dream</string>
+    <string name="dream_no_title">Untitled</string>
+    <string name="dream_label_date">Date</string>
+    <string name="dream_label_time">Time</string>
+    <string name="dream_label_category">Category</string>
+    <string name="dream_no_desc">No description added</string>
+    <string name="tech_comments">Comments (%d)</string>
+    <string name="stats_of_all">of all dreams</string>
+    <string name="level_1">Beginner</string>
+    <string name="level_2">Dreamer</string>
+    <string name="level_3">Explorer</string>
+    <string name="level_4">Traveler</string>
+    <string name="level_5">Visionary</string>
+    <string name="level_6">Dream Master</string>
+    <string name="level_7">Dream Architect</string>
+    <string name="level_8">Dream Keeper</string>
+    <string name="level_9">Legend</string>
+    <string name="ach_first_dream_title">First Step</string>
+    <string name="ach_first_location_title">First Location</string>
+    <string name="ach_dreams_5_title">Beginning</string>
+    <string name="ach_dreams_10_title">Decade</string>
+    <string name="ach_dreams_20_title">Score</string>
+    <string name="ach_dreams_25_title">Quarter</string>
+    <string name="ach_dreams_50_title">Fifty</string>
+    <string name="ach_dreams_100_title">Century</string>
+    <string name="ach_dreams_500_title">Five Hundred</string>
+    <string name="ach_dreams_1000_title">Dream Legend</string>
+    <string name="ach_locations_5_title">Place Explorer</string>
+    <string name="ach_locations_10_title">Cartographer</string>
+    <string name="ach_locations_20_title">Place Keeper</string>
+    <string name="ach_locs_in_dream_2_title">Double Portal</string>
+    <string name="ach_locs_in_dream_3_title">Triple Portal</string>
+    <string name="ach_locs_in_dream_5_title">Dream Wanderer</string>
+    <string name="ach_dreams_in_loc_5_title">Favorite Place</string>
+    <string name="ach_dreams_in_loc_10_title">Home Corner</string>
+    <string name="ach_dreams_in_loc_20_title">Permanent Location</string>
+    <string name="ach_streak_3_title">3 Days Streak</string>
+    <string name="ach_streak_7_title">Dream Week</string>
+    <string name="ach_streak_14_title">Two Weeks</string>
+    <string name="ach_streak_28_title">Lunar Month</string>
+    <string name="ach_streak_30_title">Dream Month</string>
+    <string name="ach_streak_100_title">Hundred Days</string>
+    <string name="ach_categories_3_title">Variety</string>
+    <string name="ach_categories_5_title">Collector</string>
+    <string name="ach_long_dream_title">Detailed Dream</string>
+    <string name="ach_marathon_title">Marathon</string>
+    <string name="ach_night_owl_title">Night Owl</string>
+    <string name="ach_early_bird_title">Early Bird</string>
+    <string name="ach_night_writer_title">Night Writer</string>
+    <string name="ach_all_weekdays_title">All Weekdays</string>
+    <string name="ach_nightmare_title">Nightmare</string>
+    <string name="ach_comeback_title">Comeback</string>
+    <string name="ach_dreamer_week_title">Active Week</string>
+    <string name="ach_lucky_77_title">Lucky One</string>
+    <string name="ach_ghost_title">Ghost</string>
+    <string name="ach_first_dream_desc">Record your first dream</string>
+    <string name="ach_first_location_desc">Create your first location</string>
+    <string name="ach_dreams_5_desc">Record 5 dreams</string>
+    <string name="ach_dreams_10_desc">Record 10 dreams</string>
+    <string name="ach_dreams_20_desc">Record 20 dreams</string>
+    <string name="ach_dreams_25_desc">Record 25 dreams</string>
+    <string name="ach_dreams_50_desc">Record 50 dreams</string>
+    <string name="ach_dreams_100_desc">Record 100 dreams</string>
+    <string name="ach_dreams_500_desc">Record 500 dreams</string>
+    <string name="ach_dreams_1000_desc">Record 1000 dreams</string>
+    <string name="ach_locations_5_desc">Create 5 locations</string>
+    <string name="ach_locations_10_desc">Create 10 locations</string>
+    <string name="ach_locations_20_desc">Create 20 locations</string>
+    <string name="ach_locs_in_dream_2_desc">Link 2 locations to one dream</string>
+    <string name="ach_locs_in_dream_3_desc">Link 3 locations to one dream</string>
+    <string name="ach_locs_in_dream_5_desc">Link 5 locations to one dream</string>
+    <string name="ach_dreams_in_loc_5_desc">Record 5 dreams in one location</string>
+    <string name="ach_dreams_in_loc_10_desc">Record 10 dreams in one location</string>
+    <string name="ach_dreams_in_loc_20_desc">Record 20 dreams in one location</string>
+    <string name="ach_streak_3_desc">Record dreams 3 days in a row</string>
+    <string name="ach_streak_7_desc">Record dreams 7 days in a row</string>
+    <string name="ach_streak_14_desc">Record dreams 14 days in a row</string>
+    <string name="ach_streak_28_desc">Record dreams 28 days in a row</string>
+    <string name="ach_streak_30_desc">Record dreams 30 days in a row</string>
+    <string name="ach_streak_100_desc">Record dreams 100 days in a row</string>
+    <string name="ach_categories_3_desc">Use 3 different categories</string>
+    <string name="ach_categories_5_desc">Use 5 different categories</string>
+    <string name="ach_long_dream_desc">Write a dream longer than 500 chars</string>
+    <string name="ach_marathon_desc">Record 3 dreams in one day</string>
+    <string name="ach_night_owl_desc">Record 5 dreams in one day</string>
+    <string name="ach_early_bird_desc">Record a dream before 7 AM</string>
+    <string name="ach_night_writer_desc">Record a dream after 11 PM</string>
+    <string name="ach_all_weekdays_desc">Record a dream on each day of the week</string>
+    <string name="ach_nightmare_desc">Record a dream in the Nightmare category</string>
+    <string name="ach_comeback_desc">Return after a break of 7+ days</string>
+    <string name="ach_dreamer_week_desc">Record dreams on 5 of the last 7 days</string>
+    <string name="ach_lucky_77_desc">Record exactly 77 dreams</string>
+    <string name="ach_ghost_desc">Create a dream without a title</string>
+    <string name="dream_label_locations">Locations</string>
+    <string name="cat_nightmares">Nightmares</string>
+    <string name="cat_lucid">Lucid Dreams</string>
+    <string name="cat_plot">Story Dreams</string>
+    <string name="cat_personal">Personal Dreams</string>
+    <string name="discard_title">Unsaved changes</string>
+    <string name="discard_dream_message">You haven\'t saved the dream. Exit without saving?</string>
+    <string name="discard_location_message">You haven\'t saved the location. Exit without saving?</string>
+    <string name="discard_confirm">Exit</string>
+    <string name="discard_dismiss">Stay</string>
+    <string name="pin_forgot_btn">Forgot PIN</string>
+    <string name="pin_forgot_title">Forgot PIN?</string>
+    <string name="pin_forgot_message">To reset your PIN, you need to sign out and sign back in. The PIN will be removed automatically.</string>
+    <string name="pin_forgot_guest_message">In guest mode the PIN cannot be recovered. You can only exit guest mode — data will remain on the device.</string>
+    <string name="pin_forgot_reset">Sign out and reset PIN</string>
+    <string name="pin_forgot_exit">Exit guest mode</string>
+    <string name="main_dreams_recorded">recorded</string>
+    <string name="auth_welcome">Welcome</string>
+    <string name="auth_show">Show</string>
+    <string name="auth_hide">Hide</string>
+    <string name="fab_choose_action">Choose action</string>
+    <string name="fab_record_dream">Record a dream</string>
+    <string name="fab_add_location">Add location</string>
+    <string name="onboarding_back">← Back</string>
+    <string name="onboarding_next">Next →</string>
+    <string name="onboarding_start">Start ✨</string>
+    <string name="onboarding_1_title">What are lucid dreams?</string>
+    <string name="onboarding_1_body">A lucid dream is a state where you are asleep but aware that you are dreaming. In that moment you can control what happens: fly, change your surroundings, meet anyone you like.\n\nThis is not fiction — it is a real phenomenon studied by neuroscientists. About 55% of people have experienced a lucid dream at least once. With practice it becomes an ordinary skill.</string>
+    <string name="onboarding_2_title">Why record your dreams?</string>
+    <string name="onboarding_2_body">The brain forgets 90% of a dream within the first 10 minutes after waking. A dream journal is your main tool.\n\n• Trains dream memory: the more you write, the more you remember\n• Helps you notice recurring images and themes\n• Teaches you to recognise the \"signs\" that you are dreaming — the key to lucidity\n• Over time you will start seeing patterns that lead to lucid dreams</string>
+    <string name="onboarding_3_title">Locations — your dream map</string>
+    <string name="onboarding_3_body">Many people return again and again to the same places in their dreams: an old house, an unfamiliar city, a forest, a school.\n\nLocations help you:\n• Collect these places in one spot\n• See how often you visit them\n• Notice connected dreams and build your own \"dream map\"\n\nWhen you recognise a familiar place in a dream — it is a powerful trigger for lucidity.</string>
+    <string name="onboarding_4_title">Ready to start?</string>
+    <string name="onboarding_4_body">All you need is to wake up and write immediately. Even fragments, even one word.\n\nAfter a week of regular entries you will notice that you remember more. After a month — the first lucid moments.\n\nYour journey to lucid dreaming starts right now. 🌙</string>
 </resources>

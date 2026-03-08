@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">꿈 일기</string>
+
+    <!-- 공통 -->
+    <string name="btn_save">저장</string>
+    <string name="btn_cancel">취소</string>
+    <string name="btn_delete">삭제</string>
+    <string name="btn_edit">편집</string>
+    <string name="btn_back">뒤로</string>
+    <string name="btn_add">추가</string>
+
+    <!-- 메인 화면 -->
+    <string name="main_title">꿈 일기</string>
+    <string name="main_dreams_count">꿈 %d개 기록됨</string>
+    <string name="main_level">레벨 %1$d · %2$s</string>
+    <string name="main_guest">게스트 모드</string>
+    <string name="main_dreamer">몽상가: %s</string>
+    <string name="nav_dreams">꿈 목록</string>
+    <string name="nav_diary">꿈 일기</string>
+    <string name="nav_stats">통계</string>
+    <string name="nav_chart">차트</string>
+    <string name="nav_achievements">업적</string>
+    <string name="nav_locations">장소</string>
+    <string name="nav_settings">설정</string>
+    <string name="nav_techniques">기법</string>
+    <string name="btn_login">로그인</string>
+    <string name="dialog_logout_title">로그아웃?</string>
+    <string name="dialog_logout_message">정말 로그아웃하시겠어요? 로컬 데이터는 기기에 남아있습니다.</string>
+    <string name="btn_logout">로그아웃</string>
+    <string name="dialog_add_title">꿈 또는 장소를 추가할까요?</string>
+    <string name="btn_add_dream">항목 추가</string>
+
+    <!-- 꿈 목록 -->
+    <string name="dreams_title">꿈 목록</string>
+    <string name="dreams_list">목록</string>
+    <string name="dreams_months">월별</string>
+    <string name="dreams_search">검색</string>
+    <string name="dreams_sort_az">가-힣</string>
+    <string name="dreams_sort_date">날짜</string>
+    <string name="dreams_empty">아직 꿈이 없어요</string>
+    <string name="dreams_empty_hint">+를 눌러 첫 번째 꿈을 추가해보세요</string>
+    <string name="dreams_empty_month">이번 달 꿈이 없어요</string>
+    <string name="dreams_not_found">결과 없음</string>
+    <string name="dreams_add">꿈 추가</string>
+    <string name="dreams_no_category">카테고리 없음</string>
+    <string name="dreams_all">모든 꿈</string>
+
+    <!-- 월 -->
+    <string name="month_jan">1월</string>
+    <string name="month_feb">2월</string>
+    <string name="month_mar">3월</string>
+    <string name="month_apr">4월</string>
+    <string name="month_may">5월</string>
+    <string name="month_jun">6월</string>
+    <string name="month_jul">7월</string>
+    <string name="month_aug">8월</string>
+    <string name="month_sep">9월</string>
+    <string name="month_oct">10월</string>
+    <string name="month_nov">11월</string>
+    <string name="month_dec">12월</string>
+
+    <!-- 꿈 추가/편집 -->
+    <string name="dream_add_title">꿈 추가</string>
+    <string name="dream_edit_title">꿈 편집</string>
+    <string name="dream_field_name">꿈 제목</string>
+    <string name="dream_field_desc">꿈 내용</string>
+    <string name="dream_error_name">꿈 제목을 입력해주세요</string>
+    <string name="dream_pick_date">날짜 선택</string>
+    <string name="dream_pick_locations">장소 선택</string>
+    <string name="dream_locations_hint">장소를 선택하세요</string>
+    <string name="dream_locations_selected">%d개 장소 선택됨</string>
+    <string name="dream_manage_categories">카테고리 관리</string>
+    <string name="dream_save_changes">변경사항 저장</string>
+    <string name="dialog_delete_dream_title">꿈을 삭제할까요?</string>
+    <string name="dialog_delete_dream_message">«%s»이(가) 영구 삭제됩니다.</string>
+
+    <!-- 장소 -->
+    <string name="locations_title">장소</string>
+    <string name="locations_total">총 %d개</string>
+    <string name="locations_empty">아직 장소가 없어요</string>
+    <string name="locations_empty_hint">+를 눌러 첫 번째 장소를 추가해보세요</string>
+    <string name="locations_add">장소 추가</string>
+    <string name="locations_sort_popular">인기순</string>
+    <string name="locations_sort_alpha">가나다순</string>
+    <string name="locations_sort_last">최근 꿈순</string>
+    <string name="locations_last_dream">최근 꿈: %s</string>
+    <string name="locations_no_dreams">아직 꿈이 없어요</string>
+    <string name="dialog_delete_location_title">장소를 삭제할까요?</string>
+    <string name="dialog_delete_location_message">«%s»이(가) 삭제됩니다.</string>
+    <string name="dialog_delete_location_dreams">%1$d개의 %2$s은 남지만 장소 연결이 해제됩니다.</string>
+    <string name="location_add_title">장소 추가</string>
+    <string name="location_field_name">장소 이름</string>
+    <string name="location_field_desc">장소 설명</string>
+    <string name="location_field_desc_optional">설명 (선택사항)</string>
+    <string name="location_error_name">이름을 입력해주세요</string>
+    <string name="location_edit_title">편집</string>
+    <string name="location_dreams_title">이 장소의 꿈들</string>
+    <string name="location_dreams_empty_title">아직 꿈이 없어요</string>
+    <string name="location_dreams_empty_hint">꿈을 만들거나 편집할 때\n이 장소와 연결해보세요</string>
+    <string name="location_stat_dreams">꿈</string>
+    <string name="location_stat_first">첫 번째 꿈</string>
+    <string name="location_stat_last">최근 꿈</string>
+
+    <!-- 통계 -->
+    <string name="stats_title">통계</string>
+    <string name="stats_total">총 꿈 수</string>
+    <string name="stats_streak">최대 연속</string>
+    <string name="stats_by_category">카테고리별</string>
+    <string name="stats_empty">첫 번째 꿈을 기록하면\n통계가 여기에 표시됩니다</string>
+    <string name="stats_best_day">최고의 날 — %1$d개의 %2$s</string>
+
+    <!-- 차트 -->
+    <string name="chart_title">활동 차트</string>
+    <string name="chart_7days">7일</string>
+    <string name="chart_30days">30일</string>
+    <string name="chart_90days">90일</string>
+    <string name="chart_dreams_by_day">일별 꿈</string>
+    <string name="chart_active_days">활동 일수</string>
+    <string name="chart_total">총 꿈 수</string>
+    <string name="chart_avg">일평균</string>
+    <string name="chart_by_weekday">요일별</string>
+    <string name="chart_by_time">시간대별</string>
+    <string name="chart_time_hint">꿈을 가장 많이 기록하는 시간대</string>
+    <string name="chart_morning">아침</string>
+    <string name="chart_day">낮</string>
+    <string name="chart_evening">저녁</string>
+    <string name="chart_night">밤</string>
+    <string name="chart_mon">월</string>
+    <string name="chart_tue">화</string>
+    <string name="chart_wed">수</string>
+    <string name="chart_thu">목</string>
+    <string name="chart_fri">금</string>
+    <string name="chart_sat">토</string>
+    <string name="chart_sun">일</string>
+
+    <!-- 업적 -->
+    <string name="achievements_title">업적</string>
+    <string name="achievements_count">업적 %1$d/%2$d</string>
+    <string name="achievements_max_level">최고 레벨! 👑</string>
+    <string name="achievements_level">레벨 %d</string>
+    <string name="achievements_next_level">%1$s까지: %2$d</string>
+    <string name="achievements_dreams_count">꿈 %d개</string>
+
+    <!-- 설정 -->
+    <string name="settings_title">설정</string>
+    <string name="settings_notifications">🔔 알림</string>
+    <string name="settings_reminder">꿈 기록 알림</string>
+    <string name="settings_reminder_desc">매일 꿈을 기록하도록 알려드려요</string>
+    <string name="settings_notif_time">알림 시간</string>
+    <string name="settings_quotes">💬 명언 알림</string>
+    <string name="settings_quotes_desc">오전 10시, 오후 4시, 오후 10시에 자각몽 명언을 보내드려요</string>
+    <string name="settings_manage_quotes">명언 관리</string>
+    <string name="settings_manage_quotes_desc">알림용 명언을 추가하거나 삭제해요</string>
+    <string name="settings_security">🔒 보안</string>
+    <string name="settings_pin">PIN 잠금</string>
+    <string name="settings_pin_enable">앱 잠금 활성화</string>
+    <string name="settings_pin_set">새 PIN 설정</string>
+    <string name="settings_pin_change">PIN 변경</string>
+    <string name="settings_pin_active">앱이 PIN으로 보호되고 있어요</string>
+
+    <string name="plural_dreams_one">꿈</string>
+    <string name="plural_dreams_few">꿈</string>
+    <string name="plural_dreams_many">꿈</string>
+
+    <!-- Авторизация -->
+    <string name="auth_email">이메일</string>
+    <string name="auth_password">비밀번호</string>
+    <string name="auth_forgot_password">비밀번호 찾기</string>
+    <string name="auth_register">회원가입</string>
+    <string name="auth_google">Google로 로그인</string>
+    <string name="auth_guest">계정 없이 계속</string>
+
+    <!-- Техники -->
+    <string name="tech_sort_new">최신순</string>
+    <string name="tech_enter_code">코드 입력</string>
+    <string name="tech_access_code">접근 코드</string>
+    <string name="tech_source_optional">출처 (선택)</string>
+    <string name="tech_source_hint">책, 웹사이트, 포럼...</string>
+
+    <!-- Цитаты/PIN/Онбординг -->
+    <string name="quotes_field_text">인용문 텍스트</string>
+    <string name="quotes_field_hint">동기 부여 인용문 입력...</string>
+    <string name="quotes_delete_title">인용문 삭제?</string>
+    <string name="quotes_hide_title">인용문 숨기기?</string>
+    <string name="quotes_hide_btn">숨기기</string>
+    <string name="pin_enter">PIN 입력</string>
+    <string name="onboarding_skip">건너뛰기</string>
+
+    <!-- Новые строки -->
+    <string name="tech_wrong_code">잘못된 코드</string>
+    <string name="tech_conn_error">연결 오류</string>
+    <string name="tech_empty">아직 기술이 없습니다</string>
+    <string name="tech_edit_title">기술 편집</string>
+    <string name="tech_add_title">새 기술</string>
+    <string name="tech_label">기술</string>
+    <string name="tech_comment_hint">이 기술에 대한 경험을 공유해주세요...</string>
+    <string name="tech_send">전송</string>
+    <string name="tech_login_to_comment">댓글을 달려면 로그인하세요</string>
+    <string name="tech_no_comments">아직 댓글이 없습니다. 경험을 공유하세요!</string>
+    <string name="tech_you">나</string>
+    <string name="tech_like">좋아요</string>
+    <string name="cat_title">카테고리</string>
+    <string name="cat_new">새 카테고리</string>
+    <string name="cat_color">색상:</string>
+    <string name="cat_all">모든 카테고리:</string>
+    <string name="cat_delete_title">카테고리 삭제?</string>
+    <string name="cat_delete_message">삭제됩니다. 꿈은 카테고리 없이 유지됩니다.</string>
+    <string name="btn_close">닫기</string>
+    <string name="settings_language">앱 언어</string>
+
+    <!-- i18n round 3 -->
+    <string name="dream_title">꿈</string>
+    <string name="dream_no_title">제목 없음</string>
+    <string name="dream_label_date">날짜</string>
+    <string name="dream_label_time">시간</string>
+    <string name="dream_label_category">카테고리</string>
+    <string name="dream_no_desc">설명 없음</string>
+    <string name="tech_comments">댓글 (%d)</string>
+    <string name="stats_of_all">전체 꿈 중</string>
+    <string name="level_1">초보자</string>
+    <string name="level_2">몽상가</string>
+    <string name="level_3">탐험가</string>
+    <string name="level_4">여행자</string>
+    <string name="level_5">선구자</string>
+    <string name="level_6">꿈의 마스터</string>
+    <string name="level_7">꿈의 건축가</string>
+    <string name="level_8">꿈의 수호자</string>
+    <string name="level_9">전설</string>
+    <string name="ach_first_dream_title">첫 걸음</string>
+    <string name="ach_first_location_title">첫 장소</string>
+    <string name="ach_dreams_5_title">여정의 시작</string>
+    <string name="ach_dreams_10_title">10개</string>
+    <string name="ach_dreams_20_title">20개</string>
+    <string name="ach_dreams_25_title">25개</string>
+    <string name="ach_dreams_50_title">50개</string>
+    <string name="ach_dreams_100_title">100개</string>
+    <string name="ach_dreams_500_title">500개</string>
+    <string name="ach_dreams_1000_title">꿈의 전설</string>
+    <string name="ach_locations_5_title">장소 탐험가</string>
+    <string name="ach_locations_10_title">지도 제작자</string>
+    <string name="ach_locations_20_title">장소의 수호자</string>
+    <string name="ach_locs_in_dream_2_title">이중 포털</string>
+    <string name="ach_locs_in_dream_3_title">삼중 포털</string>
+    <string name="ach_locs_in_dream_5_title">방랑하는 꿈꾸는 자</string>
+    <string name="ach_dreams_in_loc_5_title">좋아하는 장소</string>
+    <string name="ach_dreams_in_loc_10_title">나의 공간</string>
+    <string name="ach_dreams_in_loc_20_title">영구 장소</string>
+    <string name="ach_streak_3_title">3일 연속</string>
+    <string name="ach_streak_7_title">꿈의 주간</string>
+    <string name="ach_streak_14_title">2주</string>
+    <string name="ach_streak_28_title">음력 한 달</string>
+    <string name="ach_streak_30_title">꿈의 달</string>
+    <string name="ach_streak_100_title">100일</string>
+    <string name="ach_categories_3_title">다양성</string>
+    <string name="ach_categories_5_title">수집가</string>
+    <string name="ach_long_dream_title">상세한 꿈</string>
+    <string name="ach_marathon_title">마라톤</string>
+    <string name="ach_night_owl_title">올빼미</string>
+    <string name="ach_early_bird_title">아침형 인간</string>
+    <string name="ach_night_writer_title">밤의 작가</string>
+    <string name="ach_all_weekdays_title">모든 요일</string>
+    <string name="ach_nightmare_title">악몽</string>
+    <string name="ach_comeback_title">컴백</string>
+    <string name="ach_dreamer_week_title">활동적인 주</string>
+    <string name="ach_lucky_77_title">행운아</string>
+    <string name="ach_ghost_title">유령</string>
+    <string name="ach_first_dream_desc">첫 꿈을 기록하세요</string>
+    <string name="ach_first_location_desc">첫 장소를 만드세요</string>
+    <string name="ach_dreams_5_desc">꿈 5개 기록</string>
+    <string name="ach_dreams_10_desc">꿈 10개 기록</string>
+    <string name="ach_dreams_20_desc">꿈 20개 기록</string>
+    <string name="ach_dreams_25_desc">꿈 25개 기록</string>
+    <string name="ach_dreams_50_desc">꿈 50개 기록</string>
+    <string name="ach_dreams_100_desc">꿈 100개 기록</string>
+    <string name="ach_dreams_500_desc">꿈 500개 기록</string>
+    <string name="ach_dreams_1000_desc">꿈 1000개 기록</string>
+    <string name="ach_locations_5_desc">장소 5개 만들기</string>
+    <string name="ach_locations_10_desc">장소 10개 만들기</string>
+    <string name="ach_locations_20_desc">장소 20개 만들기</string>
+    <string name="ach_locs_in_dream_2_desc">꿈 하나에 장소 2개 연결</string>
+    <string name="ach_locs_in_dream_3_desc">꿈 하나에 장소 3개 연결</string>
+    <string name="ach_locs_in_dream_5_desc">꿈 하나에 장소 5개 연결</string>
+    <string name="ach_dreams_in_loc_5_desc">한 장소에서 꿈 5개</string>
+    <string name="ach_dreams_in_loc_10_desc">한 장소에서 꿈 10개</string>
+    <string name="ach_dreams_in_loc_20_desc">한 장소에서 꿈 20개</string>
+    <string name="ach_streak_3_desc">3일 연속 꿈 기록</string>
+    <string name="ach_streak_7_desc">7일 연속 꿈 기록</string>
+    <string name="ach_streak_14_desc">14일 연속</string>
+    <string name="ach_streak_28_desc">28일 연속</string>
+    <string name="ach_streak_30_desc">30일 연속</string>
+    <string name="ach_streak_100_desc">100일 연속</string>
+    <string name="ach_categories_3_desc">3가지 카테고리 사용</string>
+    <string name="ach_categories_5_desc">5가지 카테고리 사용</string>
+    <string name="ach_long_dream_desc">500자 이상의 꿈 기록</string>
+    <string name="ach_marathon_desc">하루에 꿈 3개 기록</string>
+    <string name="ach_night_owl_desc">하루에 꿈 5개 기록</string>
+    <string name="ach_early_bird_desc">오전 7시 전에 꿈 기록</string>
+    <string name="ach_night_writer_desc">오후 11시 이후에 꿈 기록</string>
+    <string name="ach_all_weekdays_desc">일주일 모든 요일에 꿈 기록</string>
+    <string name="ach_nightmare_desc">악몽 카테고리에 꿈 기록</string>
+    <string name="ach_comeback_desc">7일+ 휴식 후 복귀</string>
+    <string name="ach_dreamer_week_desc">최근 7일 중 5일에 꿈 기록</string>
+    <string name="ach_lucky_77_desc">정확히 꿈 77개 기록</string>
+    <string name="ach_ghost_desc">제목 없는 꿈 만들기</string>
+    <string name="dream_label_locations">장소</string>
+    <string name="cat_nightmares">악몽</string>
+    <string name="cat_lucid">명료몽</string>
+    <string name="cat_plot">스토리 꿈</string>
+    <string name="cat_personal">개인 꿈</string>
+    <string name="discard_title">저장되지 않은 변경사항</string>
+    <string name="discard_dream_message">꿈을 저장하지 않았습니다. 저장하지 않고 나가시겠습니까?</string>
+    <string name="discard_location_message">장소를 저장하지 않았습니다. 저장하지 않고 나가시겠습니까?</string>
+    <string name="discard_confirm">나가기</string>
+    <string name="discard_dismiss">돌아가기</string>
+    <string name="pin_forgot_btn">PIN 잊어버림</string>
+    <string name="pin_forgot_title">PIN을 잊으셨나요?</string>
+    <string name="pin_forgot_message">PIN을 재설정하려면 로그아웃 후 다시 로그인하세요.</string>
+    <string name="pin_forgot_guest_message">게스트 모드에서는 PIN을 복구할 수 없습니다. 게스트 모드를 종료할 수만 있습니다.</string>
+    <string name="pin_forgot_reset">로그아웃 후 PIN 재설정</string>
+    <string name="pin_forgot_exit">게스트 모드 종료</string>
+    <string name="main_dreams_recorded">기록됨</string>
+    <string name="auth_welcome">환영합니다</string>
+    <string name="auth_show">표시</string>
+    <string name="auth_hide">숨기기</string>
+    <string name="fab_choose_action">작업 선택</string>
+    <string name="fab_record_dream">꿈 기록</string>
+    <string name="fab_add_location">장소 추가</string>
+    <string name="onboarding_back">← 뒤로</string>
+    <string name="onboarding_next">다음 →</string>
+    <string name="onboarding_start">시작하기 ✨</string>
+    <string name="onboarding_1_title">자각몽이란 무엇인가요?</string>
+    <string name="onboarding_1_body">자각몽은 잠을 자면서도 꿈을 꾸고 있다는 것을 아는 상태입니다. 그 순간 당신은 일어나는 일을 제어할 수 있습니다: 날거나, 환경을 바꾸거나, 원하는 누구든 만날 수 있습니다.\n\n이것은 공상이 아닙니다 — 신경과학자들이 연구하는 실제 현상입니다. 약 55%의 사람들이 최소 한 번 자각몽을 경험했습니다. 연습하면 평범한 기술이 됩니다.</string>
+    <string name="onboarding_2_title">왜 꿈을 기록하나요?</string>
+    <string name="onboarding_2_body">뇌는 깨어난 후 첫 10분 안에 꿈의 90%를 잊습니다. 꿈 일기는 당신의 주요 도구입니다.\n\n• 꿈 기억을 훈련합니다: 더 많이 쓸수록 더 잘 기억합니다\n• 반복되는 이미지와 주제를 알아차리는 데 도움이 됩니다\n• 꿈을 꾸고 있다는 \"신호\"를 인식하는 법을 가르쳐 줍니다 — 자각의 열쇠\n• 시간이 지나면 자각몽으로 이어지는 패턴을 보기 시작할 것입니다</string>
+    <string name="onboarding_3_title">장소 — 당신의 꿈 지도</string>
+    <string name="onboarding_3_body">많은 사람들이 꿈에서 같은 장소로 반복해서 돌아갑니다: 오래된 집, 낯선 도시, 숲, 학교.\n\n장소는 당신을 도와줍니다:\n• 이 장소들을 한 곳에 모으기\n• 얼마나 자주 방문하는지 확인하기\n• 연관된 꿈을 알아차리고 자신만의 \"꿈 지도\" 만들기\n\n꿈에서 익숙한 장소를 알아볼 때 — 그것은 자각을 위한 강력한 트리거입니다.</string>
+    <string name="onboarding_4_title">시작할 준비가 됐나요?</string>
+    <string name="onboarding_4_body">필요한 것은 단 하나 — 깨어나서 바로 쓰는 것입니다. 단편적인 내용도, 단 한 단어도 괜찮습니다.\n\n일주일간 꾸준히 기록하면 더 많이 기억하게 될 것입니다. 한 달 후에는 — 첫 번째 자각의 순간들이 찾아옵니다.\n\n자각몽을 향한 당신의 여정이 지금 시작됩니다. 🌙</string>
+</resources>

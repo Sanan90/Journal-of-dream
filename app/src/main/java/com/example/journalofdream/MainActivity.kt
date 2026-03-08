@@ -12,12 +12,18 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.journalofdream.ui.JournalOfDreamApp
 import com.example.journalofdream.ui.theme.AppTheme
+import com.example.journalofdream.util.LocaleHelper
 import com.example.journalofdream.util.scheduleDailyReminder
 import com.example.journalofdream.util.scheduleQuoteAlarms
 import com.example.journalofdream.util.createNotificationChannel
 import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
+
+    // Применяем язык до того как Activity создаёт View
+    override fun attachBaseContext(newBase: android.content.Context) {
+        super.attachBaseContext(LocaleHelper.applyLanguage(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,5 +1,7 @@
 package com.example.journalofdream.ui.theme
 
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -212,8 +214,8 @@ fun QuotesAdminScreen(navController: NavHostController) {
                     OutlinedTextField(
                         value = newText,
                         onValueChange = { newText = it },
-                        label = { Text("Текст цитаты") },
-                        placeholder = { Text("Введите мотивационную цитату...") },
+                        label = { Text(stringResource(R.string.quotes_field_text)) },
+                        placeholder = { Text(stringResource(R.string.quotes_field_hint)) },
                         modifier = Modifier.fillMaxWidth(),
                         minLines = 3,
                         maxLines = 6
@@ -223,7 +225,7 @@ fun QuotesAdminScreen(navController: NavHostController) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        TextButton(onClick = { showAddDialog = false }) { Text("Отмена") }
+                        TextButton(onClick = { showAddDialog = false }) { Text(stringResource(R.string.btn_cancel)) }
                         Spacer(Modifier.width(8.dp))
                         Button(
                             onClick = {
@@ -246,16 +248,16 @@ fun QuotesAdminScreen(navController: NavHostController) {
         val text = firestoreQuotes.find { it.first == id }?.second ?: ""
         AlertDialog(
             onDismissRequest = { deletingFirestoreId = null },
-            title = { Text("Удалить цитату?") },
+            title = { Text(stringResource(R.string.quotes_delete_title)) },
             text = { Text("\"$text\"", fontStyle = FontStyle.Italic, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)) },
             confirmButton = {
                 TextButton(onClick = {
                     db.collection("quotes").document(id).delete()
                     deletingFirestoreId = null
-                }) { Text("Удалить", color = Color(0xFFEF5350)) }
+                }) { Text(stringResource(R.string.btn_delete), color = Color(0xFFEF5350)) }
             },
             dismissButton = {
-                TextButton(onClick = { deletingFirestoreId = null }) { Text("Отмена") }
+                TextButton(onClick = { deletingFirestoreId = null }) { Text(stringResource(R.string.btn_cancel)) }
             }
         )
     }
@@ -264,16 +266,16 @@ fun QuotesAdminScreen(navController: NavHostController) {
     hidingBuiltinIndex?.let { index ->
         AlertDialog(
             onDismissRequest = { hidingBuiltinIndex = null },
-            title = { Text("Скрыть цитату?") },
+            title = { Text(stringResource(R.string.quotes_hide_title)) },
             text = { Text("\"${dreamQuotes[index]}\"", fontStyle = FontStyle.Italic, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)) },
             confirmButton = {
                 TextButton(onClick = {
                     hiddenBuiltin = hiddenBuiltin + index
                     hidingBuiltinIndex = null
-                }) { Text("Скрыть", color = Color(0xFFFF8A65)) }
+                }) { Text(stringResource(R.string.quotes_hide_btn), color = Color(0xFFFF8A65)) }
             },
             dismissButton = {
-                TextButton(onClick = { hidingBuiltinIndex = null }) { Text("Отмена") }
+                TextButton(onClick = { hidingBuiltinIndex = null }) { Text(stringResource(R.string.btn_cancel)) }
             }
         )
     }

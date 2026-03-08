@@ -124,4 +124,12 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
         val uid = _currentOwnerUid.value ?: "guest"
         return db.locationDao().getLocationWithDreams(locationId, uid)
     }
+
+    /**
+     * Все локации со списком снов — для счётчика и сортировки в списке.
+     */
+    fun getAllLocationsWithDreams(): LiveData<List<LocationWithDreams>> {
+        val uid = _currentOwnerUid.value ?: "guest"
+        return db.locationDao().getAllLocationsWithDreams(uid)
+    }
 }

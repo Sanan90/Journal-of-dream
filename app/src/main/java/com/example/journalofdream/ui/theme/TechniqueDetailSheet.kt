@@ -1,5 +1,9 @@
 package com.example.journalofdream.ui.theme
 
+import androidx.compose.ui.platform.LocalContext
+import com.example.journalofdream.util.LocaleHelper
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -43,6 +47,8 @@ fun TechniqueDetailSheet(
     onDislike: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    val context = LocalContext.current
+    val lang = LocaleHelper.getSavedLanguage(context).let { if (it == "system") context.resources.configuration.locales[0].language else it }
     val repository = remember { CommentRepository() }
     val scope = rememberCoroutineScope()
     val keyboard = LocalSoftwareKeyboardController.current
@@ -88,12 +94,12 @@ fun TechniqueDetailSheet(
                         IconButton(onClick = onDismiss) {
                             Icon(
                                 Icons.Default.ArrowBack,
-                                contentDescription = "Назад",
+                                contentDescription = stringResource(R.string.btn_back),
                                 tint = MaterialTheme.colorScheme.onBackground
                             )
                         }
                         Text(
-                            text = "Техника",
+                            text = stringResource(R.string.tech_label),
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 18.sp,
                             color = MaterialTheme.colorScheme.onBackground
@@ -104,7 +110,7 @@ fun TechniqueDetailSheet(
                 // Название
                 item {
                     Text(
-                        text = technique.name,
+                        text = technique.localizedName(lang),
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp,
                         color = MaterialTheme.colorScheme.onBackground,
@@ -133,7 +139,7 @@ fun TechniqueDetailSheet(
                         )
                     ) {
                         Text(
-                            text = technique.description,
+                            text = technique.localizedDescription(lang),
                             fontSize = 15.sp,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.9f),
                             lineHeight = 24.sp,
@@ -169,7 +175,7 @@ fun TechniqueDetailSheet(
                 // Заголовок комментариев
                 item {
                     Text(
-                        text = "💬 Комментарии (${comments.size})",
+                        text = "💬 " + stringResource(R.string.tech_comments, comments.size),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onBackground
@@ -187,7 +193,7 @@ fun TechniqueDetailSheet(
                             OutlinedTextField(
                                 value = commentText,
                                 onValueChange = { commentText = it },
-                                placeholder = { Text("Ваш опыт с этой техникой...") },
+                                placeholder = { Text(stringResource(R.string.tech_comment_hint)) },
                                 modifier = Modifier.weight(1f),
                                 singleLine = false,
                                 maxLines = 3,
@@ -232,7 +238,7 @@ fun TechniqueDetailSheet(
                                         strokeWidth = 2.dp
                                     )
                                 } else {
-                                    Icon(Icons.Default.Send, "Отправить", tint = Color.White)
+                                    Icon(Icons.Default.Send, stringResource(R.string.tech_send), tint = Color.White)
                                 }
                             }
                         }
@@ -240,7 +246,7 @@ fun TechniqueDetailSheet(
                 } else {
                     item {
                         Text(
-                            "Войдите в аккаунт чтобы оставить комментарий",
+                            stringResource(R.string.tech_login_to_comment),
                             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                             fontSize = 13.sp
                         )
@@ -251,7 +257,7 @@ fun TechniqueDetailSheet(
                 if (comments.isEmpty()) {
                     item {
                         Text(
-                            "Пока нет комментариев. Поделитесь своим опытом!",
+                            stringResource(R.string.tech_no_comments),
                             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f),
                             fontSize = 13.sp,
                             modifier = Modifier.padding(vertical = 8.dp)
@@ -317,7 +323,7 @@ fun CommentCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (isOwn) "Вы" else comment.authorName,
+                    text = if (isOwn) stringResource(R.string.tech_you) else comment.authorName,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 13.sp,
                     color = if (isOwn) Color(0xFF7E57C2) else MaterialTheme.colorScheme.onSurface
@@ -340,7 +346,7 @@ fun CommentCard(
                 IconButton(onClick = onLike, modifier = Modifier.size(32.dp)) {
                     Icon(
                         imageVector = if (isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = "Лайк",
+                        contentDescription = stringResource(R.string.tech_like),
                         tint = if (isLiked) Color(0xFFEF5350) else Color.Gray,
                         modifier = Modifier.size(16.dp)
                     )
@@ -357,7 +363,7 @@ fun CommentCard(
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
                     ) {
                         Text(
-                            if (isAdmin && !isOwn) "🗑 Удалить" else "Удалить",
+                            if (isAdmin && !isOwn) "🗑 " + stringResource(R.string.btn_delete) else stringResource(R.string.btn_delete),
                             color = Color.Red.copy(alpha = 0.6f),
                             fontSize = 12.sp
                         )

@@ -1,8 +1,13 @@
 package com.example.journalofdream.ui.theme
 
+import androidx.compose.ui.platform.LocalContext
+import com.example.journalofdream.model.getLevelTitle
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.rememberScrollState
@@ -69,6 +74,11 @@ fun MainScreen(
 ) {
     val allDreams by dreamViewModel.dreams.observeAsState(emptyList())
     val currentLevel = remember(allDreams) { getLevelForCount(allDreams.size) }
+    val context = LocalContext.current
+    val pluralOne  = stringResource(R.string.plural_dreams_one)
+    val pluralFew  = stringResource(R.string.plural_dreams_few)
+    val pluralMany = stringResource(R.string.plural_dreams_many)
+    val recordedStr = stringResource(R.string.main_dreams_recorded)
     var isVisible by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
     var showLogoutDialog by remember { mutableStateOf(false) }
@@ -85,7 +95,7 @@ fun MainScreen(
                     if (isGuest) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = "Гостевой режим",
+                                text = stringResource(R.string.main_guest),
                                 color = Color.White.copy(alpha = 0.7f),
                                 style = MaterialTheme.typography.bodyMedium
                             )
@@ -95,14 +105,14 @@ fun MainScreen(
                                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
                             ) {
                                 Text(
-                                    text = "Войти",
+                                    text = stringResource(R.string.btn_login),
                                     style = MaterialTheme.typography.labelMedium
                                 )
                             }
                         }
                     } else {
                         // Иначе пишем "Сновидец: ..."
-                        Text("Сновидец: ${displayName ?: "Неизвестно"}")
+                        Text(stringResource(R.string.main_dreamer, displayName ?: stringResource(R.string.main_guest)))
                     }
                 },
                 actions = {
@@ -110,7 +120,7 @@ fun MainScreen(
                     IconButton(onClick = { navController.navigate("settings") }) {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = "Настройки"
+                            contentDescription = stringResource(R.string.settings_title)
                         )
                     }
                     // Иконка выхода (видна только если не гость)
@@ -118,7 +128,7 @@ fun MainScreen(
                         IconButton(onClick = { showLogoutDialog = true }) {
                             Icon(
                                 imageVector = Icons.Default.ExitToApp,
-                                contentDescription = "Выйти"
+                                contentDescription = stringResource(R.string.btn_logout)
                             )
                         }
                     }
@@ -177,7 +187,7 @@ fun MainScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "Добавить запись",
+                        contentDescription = stringResource(R.string.btn_add_dream),
                         tint = Color.White,
                         modifier = Modifier.size(28.dp)
                     )
@@ -203,7 +213,7 @@ fun MainScreen(
                     enter = fadeIn() + scaleIn(initialScale = 0.8f)
                 ) {
                     Text(
-                        text = "Дневник сновидений",
+                        text = stringResource(R.string.nav_diary),
                         color = Color.Gray.copy(alpha = 0.95f),
                         modifier = Modifier.padding(bottom = 8.dp),
                         fontSize = 18.sp,
@@ -230,13 +240,13 @@ fun MainScreen(
                         Text(currentLevel.emoji, fontSize = 20.sp)
                         Column {
                             Text(
-                                text = "Ур. ${currentLevel.level} · ${currentLevel.title}",
+                                text = stringResource(R.string.main_level, currentLevel.level, getLevelTitle(context, currentLevel.level)),
                                 color = levelColor,
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = "${allDreams.size} снов записано",
+                                text = "${allDreams.size} ${pluralDreams(allDreams.size, pluralOne, pluralFew, pluralMany)} $recordedStr",
                                 color = Color.White.copy(alpha = 0.6f),
                                 fontSize = 11.sp
                             )
@@ -271,7 +281,7 @@ fun MainScreen(
                             ),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Дневник снов", color = Color.White, fontSize = 18.sp)
+                        Text(stringResource(R.string.nav_diary), color = Color.White, fontSize = 18.sp)
                     }
                 }
 
@@ -302,7 +312,7 @@ fun MainScreen(
                             ),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Локации", color = Color.White, fontSize = 18.sp)
+                        Text(stringResource(R.string.nav_locations), color = Color.White, fontSize = 18.sp)
                     }
                 }
 
@@ -335,7 +345,7 @@ fun MainScreen(
                             ),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Техники", color = Color.White, fontSize = 18.sp)
+                        Text(stringResource(R.string.nav_techniques), color = Color.White, fontSize = 18.sp)
                     }
                 }
 
@@ -373,7 +383,7 @@ fun MainScreen(
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text("📊", fontSize = 22.sp)
-                                Text("Статистика", color = Color.White, fontSize = 12.sp)
+                                Text(stringResource(R.string.nav_stats), color = Color.White, fontSize = 12.sp)
                             }
                         }
                     }
@@ -405,7 +415,7 @@ fun MainScreen(
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text("📈", fontSize = 22.sp)
-                                Text("График", color = Color.White, fontSize = 12.sp)
+                                Text(stringResource(R.string.nav_chart), color = Color.White, fontSize = 12.sp)
                             }
                         }
                     }
@@ -437,7 +447,7 @@ fun MainScreen(
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text("🏆", fontSize = 22.sp)
-                                Text("Достижения", color = Color.White, fontSize = 12.sp)
+                                Text(stringResource(R.string.nav_achievements), color = Color.White, fontSize = 12.sp)
                             }
                         }
                     }
@@ -462,19 +472,19 @@ fun MainScreen(
                 if (showLogoutDialog) {
                     AlertDialog(
                         onDismissRequest = { showLogoutDialog = false },
-                        title = { Text("Выйти из аккаунта?") },
-                        text = { Text("Вы уверены что хотите выйти? Локальные данные останутся на устройстве.") },
+                        title = { Text(stringResource(R.string.dialog_logout_title)) },
+                        text = { Text(stringResource(R.string.dialog_logout_message)) },
                         confirmButton = {
                             TextButton(onClick = {
                                 showLogoutDialog = false
                                 onLogout()
                             }) {
-                                Text("Выйти", color = MaterialTheme.colorScheme.error)
+                                Text(stringResource(R.string.btn_logout), color = MaterialTheme.colorScheme.error)
                             }
                         },
                         dismissButton = {
                             TextButton(onClick = { showLogoutDialog = false }) {
-                                Text("Отмена")
+                                Text(stringResource(R.string.btn_cancel))
                             }
                         }
                     )

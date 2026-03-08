@@ -1,5 +1,8 @@
 package com.example.journalofdream.ui.dreams
 
+import com.example.journalofdream.util.localizeCategory
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -60,19 +63,19 @@ fun DreamListItem(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Удалить сон?") },
+            title = { Text(stringResource(R.string.dialog_delete_dream_title)) },
             text = { Text("\"${dream.title}\" будет удалён. Это действие нельзя отменить.") },
             confirmButton = {
                 TextButton(onClick = {
                     showDeleteDialog = false
                     onDelete?.invoke(dream)
                 }) {
-                    Text("Удалить", color = Color.Red)
+                    Text(stringResource(R.string.btn_delete), color = Color.Red)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Отмена")
+                    Text(stringResource(R.string.btn_cancel))
                 }
             }
         )
@@ -100,7 +103,7 @@ fun DreamListItem(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Удалить",
+                    contentDescription = stringResource(R.string.btn_delete),
                     tint = Color.White,
                     modifier = Modifier
                         .padding(end = 24.dp)
@@ -153,9 +156,9 @@ fun DreamListItem(
                     // Всегда показываем категорию — высота карточек одинаковая
                     Text(
                         text = if (dream.category.isNotBlank() && dream.category != "Без категории")
-                            dream.category
+                            localizeCategory(dream.category, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal))
                         else
-                            "Без категории",
+                            stringResource(R.string.dreams_no_category),
                         style = MaterialTheme.typography.labelSmall,
                         color = accentColor.copy(alpha = 0.7f),
                         maxLines = 1,

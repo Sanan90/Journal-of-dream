@@ -5,6 +5,7 @@ import com.example.journalofdream.database.AppDatabase
 import com.example.journalofdream.model.Location
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.CoroutineScope
@@ -90,16 +91,34 @@ class LocationRepository(
     }
 
     suspend fun deleteLocation(location: Location): Result<Unit> {
+        // 1. Удаляем локацию из Room (CASCADE в кросс-таблице уберёт связи автоматически)
         db.locationDao().delete(location)
+
         auth.currentUser?.let { user ->
             try {
-                remoteDb.collection("users")
-                    .document(user.uid)
-                    .collection("locations")
+                val userRef = remoteDb.collection("users").document(user.uid)
+
+                // 2. Удаляем локацию из Firestore
+                userRef.collection("locations")
                     .document(location.id.toString())
                     .delete()
                     .await()
-                Log.d("LocationRepository", "deleteLocation: локация [id=${location.id}] удалена из Firestore")
+
+                // 3. Убираем id этой локации из locationIds у всех связанных снов в Firestore.
+                //    Без этого при следующей синхронизации Firestore вернёт locationId в снах
+                //    и DreamRepository создаст локацию-призрак без названия.
+                val dreamsWithLocation = userRef.collection("dreams")
+                    .whereArrayContains("locationIds", location.id)
+                    .get()
+                    .await()
+
+                for (dreamDoc in dreamsWithLocation.documents) {
+                    dreamDoc.reference.update(
+                        "locationIds", FieldValue.arrayRemove(location.id)
+                    ).await()
+                }
+
+                Log.d("LocationRepository", "deleteLocation: локация [id=${location.id}] удалена, очищено ${dreamsWithLocation.size()} снов")
             } catch (e: Exception) {
                 Log.e("LocationRepository", "deleteLocation: ошибка удаления из Firestore", e)
                 return Result.failure(e)

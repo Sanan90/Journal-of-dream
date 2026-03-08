@@ -37,4 +37,9 @@ interface LocationDao {
     // Разовое получение локации по ID и владельцу (для внутренних нужд, например, синхронизации)
     @Query("SELECT * FROM locations WHERE id = :locId AND ownerUid = :ownerUid LIMIT 1")
     suspend fun getLocationByIdOnce(locId: Int, ownerUid: String): Location?
+
+    // Все локации с привязанными снами (для счётчика и сортировки)
+    @Transaction
+    @Query("SELECT * FROM locations WHERE ownerUid = :ownerUid")
+    fun getAllLocationsWithDreams(ownerUid: String): LiveData<List<LocationWithDreams>>
 }

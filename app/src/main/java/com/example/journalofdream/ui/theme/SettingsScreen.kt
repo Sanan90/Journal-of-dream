@@ -1,7 +1,11 @@
 package com.example.journalofdream.ui.theme
 
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -11,14 +15,18 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.journalofdream.MainActivity
 import com.example.journalofdream.ui.auth.PinMode
 import com.example.journalofdream.ui.auth.PinScreen
 import com.example.journalofdream.ui.auth.hasPin
 import com.example.journalofdream.ui.auth.isPinEnabled
 import com.example.journalofdream.ui.auth.removePin
 import com.example.journalofdream.ui.auth.setPinEnabled
+import com.example.journalofdream.util.LocaleHelper
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -47,20 +55,25 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
 
     // PIN состояние — вынесено наверх чтобы показывать поверх всего экрана
     var pinEnabled by remember { mutableStateOf(isPinEnabled(context)) }
+    val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+    val isGuest = currentUser == null || currentUser.isAnonymous
     var showSetPin by remember { mutableStateOf(false) }
     var showChangePin by remember { mutableStateOf(false) }
 
-    // Цитаты из Firestore (только для AdminMode — переход на отдельный экран)
-    // Управление цитатами вынесено в QuotesAdminScreen
+    // Язык приложения
+    var selectedLanguage by remember {
+        mutableStateOf(LocaleHelper.getSavedLanguage(context))
+    }
+    var showLanguagePicker by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Настройки", color = Color.White) },
+                title = { Text(stringResource(R.string.settings_title), color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад", tint = Color.White)
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.btn_back), tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -79,14 +92,29 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                 contentPadding = PaddingValues(bottom = 32.dp)
             ) {
                 item {
+                // Секция языка
+                SettingsSectionTitle("🌐 Язык")
+
+                val currentLang = LocaleHelper.findLanguage(selectedLanguage)
+                SettingsClickRow(
+                    icon = Icons.Default.Language,
+                    title = stringResource(R.string.settings_language),
+                    subtitle = "${currentLang.flag} ${currentLang.displayName}",
+                    onClick = { showLanguagePicker = true }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+                } // закрываем item языка
+
+                item {
                 // Секция уведомлений
                 SettingsSectionTitle("🔔 Уведомления")
 
                 // Включить/выключить уведомления
                 SettingsToggleRow(
                     icon = Icons.Default.Notifications,
-                    title = "Напоминания о записи сна",
-                    subtitle = "Ежедневное напоминание записать сон",
+                    title = stringResource(R.string.settings_notifications),
+                    subtitle = stringResource(R.string.settings_reminder_desc),
                     checked = notificationsEnabled,
                     onCheckedChange = { enabled ->
                         notificationsEnabled = enabled
@@ -102,7 +130,7 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                 // Время уведомления
                 SettingsClickRow(
                     icon = Icons.Default.DateRange,
-                    title = "Время уведомления",
+                    title = stringResource(R.string.settings_notif_time),
                     subtitle = String.format("%02d:%02d", notificationHour, notificationMinute),
                     enabled = notificationsEnabled,
                     onClick = {
@@ -131,8 +159,8 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                 // Мотивационные цитаты
                 SettingsToggleRow(
                     icon = Icons.Default.Notifications,
-                    title = "Мотивационные цитаты",
-                    subtitle = "Цитаты об осознанных снах в 10:00, 16:00 и 22:00",
+                    title = stringResource(R.string.settings_quotes),
+                    subtitle = stringResource(R.string.settings_quotes_desc),
                     checked = motivationalQuotes,
                     onCheckedChange = { enabled ->
                         motivationalQuotes = enabled
@@ -150,33 +178,34 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                 // Секция безопасности
                 SettingsSectionTitle("🔒 Безопасность")
 
-                // Включить/выключить PIN
-                SettingsToggleRow(
-                    icon = Icons.Default.Lock,
-                    title = "Защита PIN-кодом",
-                    subtitle = if (pinEnabled) "Приложение защищено PIN-кодом"
-                               else "Включить защиту приложения",
-                    checked = pinEnabled,
-                    onCheckedChange = { enabled ->
-                        if (enabled) {
-                            showSetPin = true
-                        } else {
-                            removePin(context)
-                            setPinEnabled(context, false)
-                            pinEnabled = false
-                        }
-                    }
-                )
-
-                // Сменить PIN — только если включён
-                if (pinEnabled) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    SettingsClickRow(
+                // Включить/выключить PIN — только для авторизованных (не гостей)
+                if (!isGuest) {
+                    SettingsToggleRow(
                         icon = Icons.Default.Lock,
-                        title = "Сменить PIN-код",
-                        subtitle = "Установить новый PIN-код",
-                        onClick = { showChangePin = true }
+                        title = stringResource(R.string.settings_pin),
+                        subtitle = if (pinEnabled) stringResource(R.string.settings_pin_active)
+                                   else stringResource(R.string.settings_pin_enable),
+                        checked = pinEnabled,
+                        onCheckedChange = { enabled ->
+                            if (enabled) {
+                                showSetPin = true
+                            } else {
+                                removePin(context)
+                                setPinEnabled(context, false)
+                                pinEnabled = false
+                            }
+                        }
                     )
+                    // Сменить PIN — только если включён
+                    if (pinEnabled) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        SettingsClickRow(
+                            icon = Icons.Default.Lock,
+                            title = stringResource(R.string.settings_pin_change),
+                            subtitle = stringResource(R.string.settings_pin_set),
+                            onClick = { showChangePin = true }
+                        )
+                    }
                 }
 
                 // Раздел цитат — только в режиме админа
@@ -185,14 +214,83 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                     SettingsSectionTitle("💬 Цитаты для уведомлений")
                     SettingsClickRow(
                         icon = Icons.Default.Add,
-                        title = "Управление цитатами",
-                        subtitle = "Добавить или удалить цитаты для уведомлений",
+                        title = stringResource(R.string.settings_manage_quotes),
+                        subtitle = stringResource(R.string.settings_manage_quotes_desc),
                         onClick = { navController.navigate("quotes_admin") }
+                    )
+
+                    // TODO: удалить после проверки Crashlytics
+                    Spacer(modifier = Modifier.height(8.dp))
+                    SettingsSectionTitle("🛠️ Тест")
+                    SettingsClickRow(
+                        icon = Icons.Default.Delete,
+                        title = "Краш-тест Crashlytics",
+                        subtitle = "Приложение упадёт — это нормально",
+                        onClick = { throw RuntimeException("Тест Crashlytics — всё работает!") }
                     )
                 }
                 } // закрываем item
             } // закрываем LazyColumn
         }
+    }
+
+    // Диалог выбора языка
+    if (showLanguagePicker) {
+        AlertDialog(
+            onDismissRequest = { showLanguagePicker = false },
+            title = { Text(stringResource(R.string.settings_language)) },
+            text = {
+                androidx.compose.foundation.lazy.LazyColumn {
+                    items(LocaleHelper.supportedLanguages.size) { index ->
+                        val lang = LocaleHelper.supportedLanguages[index]
+                        val isSelected = lang.code == selectedLanguage
+                        Row(
+                            modifier = Modifier
+                                .clickable {
+                                if (!isSelected) {
+                                    selectedLanguage = lang.code
+                                    LocaleHelper.saveLanguage(context, lang.code)
+                                    showLanguagePicker = false
+                                    // Перезапускаем Activity чтобы применить новый язык
+                                    val intent = Intent(context, MainActivity::class.java).apply {
+                                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    }
+                                    context.startActivity(intent)
+                                } else {
+                                    showLanguagePicker = false
+                                }
+                            }
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp, horizontal = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(lang.flag, fontSize = 22.sp)
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Text(
+                                    text = lang.displayName,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                )
+                            }
+                            if (isSelected) {
+                                Text("✓", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                        if (index < LocaleHelper.supportedLanguages.size - 1) {
+                            HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f))
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showLanguagePicker = false }) {
+                    Text(stringResource(R.string.btn_cancel))
+                }
+            }
+        )
     }
 
     // PinScreen поверх всего экрана

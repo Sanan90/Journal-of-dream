@@ -1,5 +1,7 @@
 package com.example.journalofdream.ui.theme
 
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -33,10 +35,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 // Периоды просмотра
-enum class ChartPeriod(val label: String, val days: Int) {
-    WEEK("7 дней", 7),
-    MONTH("30 дней", 30),
-    QUARTER("90 дней", 90)
+enum class ChartPeriod(val labelRes: Int, val days: Int) {
+    WEEK(R.string.chart_7days, 7),
+    MONTH(R.string.chart_30days, 30),
+    QUARTER(R.string.chart_90days, 90)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,10 +53,10 @@ fun ChartScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("График активности", color = Color.White) },
+                title = { Text(stringResource(R.string.chart_title), color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, "Назад", tint = Color.White)
+                        Icon(Icons.Default.ArrowBack, stringResource(R.string.btn_back), tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -80,7 +82,7 @@ fun ChartScreen(
                         FilterChip(
                             selected = period == p,
                             onClick = { period = p },
-                            label = { Text(p.label, fontSize = 13.sp) },
+                            label = { Text(stringResource(p.labelRes), fontSize = 13.sp) },
                             colors = FilterChipDefaults.filterChipColors(
                                 selectedContainerColor = Color(0xFF7E57C2),
                                 selectedLabelColor = Color.White,
@@ -127,7 +129,7 @@ fun ActivityBarChart(dreams: List<Dream>, period: ChartPeriod) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
-                "Сны по дням",
+                stringResource(R.string.chart_dreams_by_day),
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
@@ -202,9 +204,9 @@ fun SummaryCards(dreams: List<Dream>, period: ChartPeriod) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        ChartStatCard("📝", "Всего снов", "$total", Modifier.weight(1f))
-        ChartStatCard("📅", "Активных дней", "$activeDays", Modifier.weight(1f))
-        ChartStatCard("📈", "Среднее/день", String.format("%.1f", avg), Modifier.weight(1f))
+        ChartStatCard("📝", stringResource(R.string.chart_total), "$total", Modifier.weight(1f))
+        ChartStatCard("📅", stringResource(R.string.chart_active_days), "$activeDays", Modifier.weight(1f))
+        ChartStatCard("📈", stringResource(R.string.chart_avg), String.format("%.1f", avg), Modifier.weight(1f))
     }
 }
 
@@ -232,7 +234,7 @@ fun ChartStatCard(emoji: String, label: String, value: String, modifier: Modifie
 @Composable
 fun WeekdayChart(dreams: List<Dream>) {
     // Счёт по дням недели
-    val weekdayNames = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
+    val weekdayNames = listOf(stringResource(R.string.chart_mon), stringResource(R.string.chart_tue), stringResource(R.string.chart_wed), stringResource(R.string.chart_thu), stringResource(R.string.chart_fri), stringResource(R.string.chart_sat), stringResource(R.string.chart_sun))
     val counts = remember(dreams) {
         val map = IntArray(7)
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -260,7 +262,7 @@ fun WeekdayChart(dreams: List<Dream>) {
         colors = CardDefaults.cardColors(containerColor = Color.Black.copy(alpha = 0.3f))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("По дням недели", color = Color.White,
+            Text(stringResource(R.string.chart_by_weekday), color = Color.White,
                 fontWeight = FontWeight.Bold, fontSize = 16.sp)
             Spacer(modifier = Modifier.height(12.dp))
             Row(
@@ -326,10 +328,10 @@ fun HourlyChart(dreams: List<Dream>) {
         colors = CardDefaults.cardColors(containerColor = Color.Black.copy(alpha = 0.3f))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("По времени суток", color = Color.White,
+            Text(stringResource(R.string.chart_by_time), color = Color.White,
                 fontWeight = FontWeight.Bold, fontSize = 16.sp)
             Spacer(modifier = Modifier.height(4.dp))
-            Text("Когда чаще всего записываешь сны",
+            Text(stringResource(R.string.chart_time_hint),
                 color = Color.White.copy(alpha = 0.5f), fontSize = 12.sp)
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -387,10 +389,10 @@ fun HourlyChart(dreams: List<Dream>) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 listOf(
-                    Color(0xFF1A237E) to "Ночь",
-                    Color(0xFF7E57C2) to "Утро",
-                    Color(0xFFFFA726) to "День",
-                    Color(0xFFEF5350) to "Вечер"
+                    Color(0xFF1A237E) to stringResource(R.string.chart_night),
+                    Color(0xFF7E57C2) to stringResource(R.string.chart_morning),
+                    Color(0xFFFFA726) to stringResource(R.string.chart_day),
+                    Color(0xFFEF5350) to stringResource(R.string.chart_evening)
                 ).forEach { (color, label) ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(

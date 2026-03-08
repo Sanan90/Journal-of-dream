@@ -1,5 +1,9 @@
 package com.example.journalofdream.ui.theme
 
+import com.example.journalofdream.util.localizeCategory
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,12 +34,12 @@ data class StatsData(
     val bestDay: Pair<String, Int>? // дата -> количество снов
 )
 
-fun computeStats(dreams: List<Dream>): StatsData {
+fun computeStats(dreams: List<Dream>, noCategoryLabel: String = "Без категории"): StatsData {
     val total = dreams.size
 
     // По категориям
     val byCategory = dreams
-        .groupBy { it.category.ifBlank { "Без категории" } }
+        .groupBy { it.category.ifBlank { noCategoryLabel } }
         .mapValues { it.value.size }
         .toList()
         .sortedByDescending { it.second }
@@ -97,17 +101,21 @@ fun StatsScreen(
     dreamViewModel: DreamViewModel
 ) {
     val dreams by dreamViewModel.dreams.observeAsState(emptyList())
-    val stats = remember(dreams) { computeStats(dreams) }
+    val noCategoryLabel = stringResource(R.string.dreams_no_category)
+    val stats = remember(dreams) { computeStats(dreams, noCategoryLabel) }
+    val pluralOne = stringResource(R.string.plural_dreams_one)
+    val pluralFew = stringResource(R.string.plural_dreams_few)
+    val pluralMany = stringResource(R.string.plural_dreams_many)
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Статистика", color = Color.White) },
+                title = { Text(stringResource(R.string.stats_title), color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Назад",
+                            contentDescription = stringResource(R.string.btn_back),
                             tint = Color.White
                         )
                     }
@@ -130,7 +138,7 @@ fun StatsScreen(
                         Text("📊", fontSize = 64.sp)
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            "Статистика появится\nкогда вы запишете первый сон",
+                            stringResource(R.string.stats_empty),
                             color = Color.White.copy(alpha = 0.7f),
                             fontSize = 16.sp
                         )
@@ -156,13 +164,13 @@ fun StatsScreen(
                                 modifier = Modifier.weight(1f),
                                 emoji = "🌙",
                                 value = stats.total.toString(),
-                                label = "Всего снов"
+                                label = stringResource(R.string.stats_total)
                             )
                             StatCard(
                                 modifier = Modifier.weight(1f),
                                 emoji = "🔥",
                                 value = stats.maxStreak.toString(),
-                                label = "Макс. streak"
+                                label = stringResource(R.string.stats_streak)
                             )
                         }
                     }
@@ -174,7 +182,7 @@ fun StatsScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 emoji = "🏆",
                                 value = formatDateForStats(date),
-                                label = "Лучший день — $count ${pluralDreams(count)}"
+                                label = stringResource(R.string.stats_best_day, count, pluralDreams(count, pluralOne, pluralFew, pluralMany))
                             )
                         }
                     }
@@ -182,7 +190,7 @@ fun StatsScreen(
                     // По категориям
                     item {
                         Text(
-                            text = "По категориям",
+                            text = stringResource(R.string.stats_by_category),
                             color = Color.White,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
@@ -192,7 +200,7 @@ fun StatsScreen(
 
                     items(stats.byCategory.entries.toList()) { (category, count) ->
                         CategoryStatRow(
-                            category = category,
+                            category = localizeCategory(category, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal)),
                             count = count,
                             total = stats.total
                         )
@@ -246,6 +254,9 @@ fun StatCard(
 @Composable
 fun CategoryStatRow(category: String, count: Int, total: Int) {
     val fraction = if (total > 0) count.toFloat() / total else 0f
+    val pluralOne = stringResource(R.string.plural_dreams_one)
+    val pluralFew = stringResource(R.string.plural_dreams_few)
+    val pluralMany = stringResource(R.string.plural_dreams_many)
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -268,7 +279,7 @@ fun CategoryStatRow(category: String, count: Int, total: Int) {
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "$count ${pluralDreams(count)}",
+                    text = "$count ${pluralDreams(count, pluralOne, pluralFew, pluralMany)}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -283,7 +294,7 @@ fun CategoryStatRow(category: String, count: Int, total: Int) {
                 trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
             )
             Text(
-                text = "${(fraction * 100).toInt()}% от всех снов",
+                text = "${(fraction * 100).toInt()}% " + stringResource(R.string.stats_of_all),
                 fontSize = 11.sp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
                 modifier = Modifier.padding(top = 4.dp)
@@ -292,11 +303,9 @@ fun CategoryStatRow(category: String, count: Int, total: Int) {
     }
 }
 
-fun pluralDreams(count: Int): String {
-    return when {
-        count % 100 in 11..19 -> "снов"
-        count % 10 == 1 -> "сон"
-        count % 10 in 2..4 -> "сна"
-        else -> "снов"
-    }
+fun pluralDreams(count: Int, one: String, few: String, many: String): String = when {
+    count % 100 in 11..19 -> many
+    count % 10 == 1 -> one
+    count % 10 in 2..4 -> few
+    else -> many
 }

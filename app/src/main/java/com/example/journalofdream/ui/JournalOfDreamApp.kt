@@ -1,5 +1,6 @@
 package com.example.journalofdream.ui
 
+import com.example.journalofdream.ui.auth.removePin
 import android.content.Context
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
@@ -34,6 +35,7 @@ import com.example.journalofdream.ui.theme.SettingsScreen
 import com.example.journalofdream.ui.theme.StatsScreen
 import com.example.journalofdream.ui.theme.TechniquesScreen
 import com.example.journalofdream.ui.theme.QuotesAdminScreen
+import com.example.journalofdream.ui.theme.OnboardingScreen
 import com.example.journalofdream.viewmodel.TechniqueViewModel
 import com.example.journalofdream.ui.theme.ViewDreamScreen
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -53,12 +55,35 @@ fun JournalOfDreamApp() {
         if (!pinUnlocked) {
             PinScreen(
                 mode = PinMode.ENTER,
-                onSuccess = { pinUnlocked = true }
+                onSuccess = { pinUnlocked = true },
+                onForgotPin = {
+                    // Сбрасываем PIN, выходим из аккаунта и перезапускаем Activity
+                    removePin(context)
+                    com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
+                    context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                        .edit().putBoolean("skipAuth", false).apply()
+                    // Полный перезапуск — NavHost пересоздастся с auth как startDestination
+                    (context as? android.app.Activity)?.recreate()
+                }
             )
             return@AppTheme
         }
 
         val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+
+        // Онбординг — показываем один раз при первом запуске
+        var onboardingDone by remember {
+            mutableStateOf(sharedPreferences.getBoolean("onboarding_done", false))
+        }
+        if (!onboardingDone) {
+            OnboardingScreen(
+                onFinish = {
+                    sharedPreferences.edit().putBoolean("onboarding_done", true).apply()
+                    onboardingDone = true
+                }
+            )
+            return@AppTheme
+        }
 
         // Флаг, указывающий, что пользователь решил пропустить авторизацию (guest mode)
         val skipAuth = remember { mutableStateOf(sharedPreferences.getBoolean("skipAuth", false)) }
@@ -260,7 +285,8 @@ fun JournalOfDreamApp() {
             composable("achievements") {
                 AchievementsScreen(
                     navController = navController,
-                    dreamViewModel = dreamViewModel
+                    dreamViewModel = dreamViewModel,
+                    locationViewModel = locationViewModel
                 )
             }
 

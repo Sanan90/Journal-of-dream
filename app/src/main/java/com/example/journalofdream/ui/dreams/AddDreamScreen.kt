@@ -1,5 +1,10 @@
 package com.example.journalofdream.ui.dreams
 
+import androidx.activity.compose.BackHandler
+import com.example.journalofdream.util.localizeCategory
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -62,18 +67,45 @@ fun AddDreamScreen(
     dreamViewModel: DreamViewModel = viewModel(),
     locationViewModel: LocationViewModel = viewModel()
 ) {
+    val context = LocalContext.current
     // Поля ввода для нового сна
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var isCategoryMenuExpanded by remember { mutableStateOf(false) }
     var showError by remember { mutableStateOf(false) }
+    var showExitDialog by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf(getCurrentDate()) }
     var showDatePicker by remember { mutableStateOf(false) }
     var selectedTime by remember { mutableStateOf(getCurrentTime()) }
     var showTimePicker by remember { mutableStateOf(false) }
 
-    val context = androidx.compose.ui.platform.LocalContext.current
+    // Есть ли несохранённые изменения
+    val hasUnsavedChanges = title.isNotBlank() || content.isNotBlank()
+
+    // Перехват кнопки Назад
+    BackHandler(enabled = hasUnsavedChanges) {
+        showExitDialog = true
+    }
+
+    // Диалог подтверждения выхода
+    if (showExitDialog) {
+        AlertDialog(
+            onDismissRequest = { showExitDialog = false },
+            title = { Text(stringResource(R.string.discard_title)) },
+            text = { Text(stringResource(R.string.discard_dream_message)) },
+            confirmButton = {
+                TextButton(onClick = { showExitDialog = false; navController.popBackStack() }) {
+                    Text(stringResource(R.string.discard_confirm), color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showExitDialog = false }) {
+                    Text(stringResource(R.string.discard_dismiss))
+                }
+            }
+        )
+    }
 
     // DatePickerDialog
     if (showDatePicker) {
@@ -126,12 +158,12 @@ fun AddDreamScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Добавить сон") },
+                title = { Text(stringResource(R.string.dream_add_title)) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { if (hasUnsavedChanges) showExitDialog = true else navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Назад",
+                            contentDescription = stringResource(R.string.btn_back),
                             tint = Color.White
                         )
                     }
@@ -161,7 +193,7 @@ fun AddDreamScreen(
                             title = it
                             if (it.isNotBlank()) showError = false
                         },
-                        label = { Text("Название сна") },
+                        label = { Text(stringResource(R.string.dream_field_name)) },
                         textStyle = TextStyle(fontSize = 18.sp),
                         singleLine = true,
                         isError = showError,
@@ -185,7 +217,7 @@ fun AddDreamScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.DateRange,
-                                contentDescription = "Выбрать дату",
+                                contentDescription = stringResource(R.string.dream_pick_date),
                                 tint = Color.White,
                                 modifier = Modifier.padding(end = 4.dp)
                             )
@@ -221,7 +253,7 @@ fun AddDreamScreen(
                         OutlinedTextField(
                             value = content,
                             onValueChange = { content = it },
-                            label = { Text("Описание сна") },
+                            label = { Text(stringResource(R.string.dream_field_desc)) },
                             textStyle = TextStyle(fontSize = 16.sp),
                             modifier = Modifier
                                 .weight(1f)
@@ -261,7 +293,7 @@ fun AddDreamScreen(
                                 .padding(16.dp)
                         ) {
                             Text(
-                                text = selectedCategory?.name ?: "Без категории",
+                                text = selectedCategory?.name?.let { localizeCategory(it, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal)) } ?: stringResource(R.string.dreams_no_category),
                                 color = Color.White,
                                 fontSize = 16.sp
                             )
@@ -271,7 +303,7 @@ fun AddDreamScreen(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 DropdownMenuItem(
-                                    text = { Text("Без категории") },
+                                    text = { Text(stringResource(R.string.dreams_no_category)) },
                                     onClick = {
                                         selectedCategory = null
                                         isCategoryMenuExpanded = false
@@ -279,7 +311,7 @@ fun AddDreamScreen(
                                 )
                                 categories.forEach { cat ->
                                     DropdownMenuItem(
-                                        text = { Text(cat.name) },
+                                        text = { Text(localizeCategory(cat.name, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal))) },
                                         onClick = {
                                             selectedCategory = cat
                                             isCategoryMenuExpanded = false
@@ -293,7 +325,7 @@ fun AddDreamScreen(
                         IconButton(onClick = { showCategoryManager = true }) {
                             Icon(
                                 imageVector = Icons.Default.Add,
-                                contentDescription = "Управление категориями",
+                                contentDescription = stringResource(R.string.dream_manage_categories),
                                 tint = Color.White
                             )
                         }
@@ -316,7 +348,7 @@ fun AddDreamScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                     ) {
                         Text(
-                            text = if (selectedLocationIds.isEmpty()) "Выбрать локации" else "Локации выбраны: ${selectedLocationIds.size}",
+                            text = if (selectedLocationIds.isEmpty()) stringResource(R.string.dream_pick_locations) else stringResource(R.string.dream_locations_selected, selectedLocationIds.size),
                             color = Color.White
                         )
                     }
@@ -325,7 +357,7 @@ fun AddDreamScreen(
                     if (isLocationDialogOpen) {
                         AlertDialog(
                             onDismissRequest = { isLocationDialogOpen = false },
-                            title = { Text("Выберите локации") },
+                            title = { Text(stringResource(R.string.dream_pick_locations)) },
                             text = {
                                 LazyColumn {
                                     items(allLocations) { location ->
@@ -371,7 +403,7 @@ fun AddDreamScreen(
                     // Сообщение об ошибке валидации
                     if (showError) {
                         Text(
-                            text = "Введите название сна",
+                            text = stringResource(R.string.dream_error_name),
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
@@ -391,7 +423,7 @@ fun AddDreamScreen(
                                 content = content.trim(),
                                 date = selectedDate,
                                 time = selectedTime,
-                                category = selectedCategory?.name ?: "Без категории"
+                                category = selectedCategory?.name ?: context.getString(R.string.dreams_no_category)
                             )
                             // Сохраняем сон вместе с выбранными локациями
                             dreamViewModel.addDream(dream, selectedLocationIds.toList())
@@ -401,7 +433,7 @@ fun AddDreamScreen(
                         modifier = Modifier.align(Alignment.End),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.2f))
                     ) {
-                        Text(text = "Сохранить", color = Color.White)
+                        Text(text = stringResource(R.string.btn_save), color = Color.White)
                     }
                 }
             }

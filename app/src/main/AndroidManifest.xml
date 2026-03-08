@@ -21,6 +21,11 @@
         android:allowBackup="false"
         android:fullBackupContent="false">
 
+        <!-- Crashlytics — включить сбор крашей -->
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="true" />
+
         <activity android:name=".SplashActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

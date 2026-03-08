@@ -1,5 +1,7 @@
 package com.example.journalofdream.ui.theme
 
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -37,24 +39,44 @@ import com.example.journalofdream.viewmodel.DreamViewModel
 @Composable
 fun AchievementsScreen(
     navController: NavHostController,
-    dreamViewModel: DreamViewModel
+    dreamViewModel: DreamViewModel,
+    locationViewModel: com.example.journalofdream.viewmodel.LocationViewModel? = null
 ) {
     val dreams by dreamViewModel.dreams.observeAsState(emptyList())
+    val pluralOne = stringResource(R.string.plural_dreams_one)
+    val pluralFew = stringResource(R.string.plural_dreams_few)
+    val pluralMany = stringResource(R.string.plural_dreams_many)
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("achievements_prefs", android.content.Context.MODE_PRIVATE) }
 
     // Подсчёт стрика
     val streak = remember(dreams) { computeStreak(dreams) }
     val usedCategories = remember(dreams) {
-        dreams.map { it.category.ifBlank { "Без категории" } }.toSet().size
+        dreams.map { it.category.ifBlank { context.getString(R.string.dreams_no_category) } }.toSet().size
+    }
+
+    // Данные локаций
+    val locationsWithDreams by (locationViewModel?.getAllLocationsWithDreams()
+        ?: androidx.lifecycle.MutableLiveData(emptyList())).observeAsState(emptyList())
+
+    val locationsCount = locationsWithDreams.size
+    // Максимальное количество снов в одной локации
+    val maxDreamsInLoc = remember(locationsWithDreams) {
+        locationsWithDreams.maxOfOrNull { it.dreams.size } ?: 0
+    }
+    // Максимальное количество локаций привязанных к одному сну
+    val maxLocsInDream = remember(dreams) {
+        dreams.maxOfOrNull { it.locationIds.size } ?: 0
     }
 
     val currentLevel = remember(dreams) { getLevelForCount(dreams.size) }
     val nextLevel = remember(currentLevel) { getNextLevel(currentLevel) }
 
     // Считаем какие достижения разблокированы сейчас
-    val currentlyUnlocked = remember(dreams, streak, usedCategories) {
-        allAchievements.filter { it.isUnlocked(dreams, streak, usedCategories) }.map { it.id }.toSet()
+    val currentlyUnlocked = remember(dreams, streak, usedCategories, locationsCount, maxDreamsInLoc, maxLocsInDream) {
+        allAchievements.filter {
+            it.isUnlocked(dreams, streak, usedCategories, locationsCount, maxDreamsInLoc, maxLocsInDream)
+        }.map { it.id }.toSet()
     }
 
     // Загружаем ранее сохранённые достижения из SharedPreferences
@@ -72,10 +94,10 @@ fun AchievementsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Достижения", color = Color.White) },
+                title = { Text(stringResource(R.string.achievements_title), color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад", tint = Color.White)
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.btn_back), tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
@@ -106,7 +128,7 @@ fun AchievementsScreen(
                     val unlocked = unlockedAchievements.size
                     val total = allAchievements.size
                     Text(
-                        text = "Достижения $unlocked/$total",
+                        text = stringResource(R.string.achievements_count, unlocked, total),
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
@@ -140,6 +162,10 @@ fun AchievementsScreen(
 
 @Composable
 fun LevelCard(dreams: Int, currentLevel: DreamLevel, nextLevel: DreamLevel?) {
+    val context = LocalContext.current
+    val pluralOne = stringResource(R.string.plural_dreams_one)
+    val pluralFew = stringResource(R.string.plural_dreams_few)
+    val pluralMany = stringResource(R.string.plural_dreams_many)
     val levelColor = hexToColorSafe(currentLevel.color)
 
     // Прогресс до следующего уровня
@@ -187,13 +213,13 @@ fun LevelCard(dreams: Int, currentLevel: DreamLevel, nextLevel: DreamLevel?) {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "Уровень ${currentLevel.level}",
+                text = stringResource(R.string.achievements_level, currentLevel.level),
                 color = levelColor,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
             )
             Text(
-                text = currentLevel.title,
+                text = getLevelTitle(context, currentLevel.level),
                 color = Color.White,
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold
@@ -208,13 +234,13 @@ fun LevelCard(dreams: Int, currentLevel: DreamLevel, nextLevel: DreamLevel?) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "$dreams снов",
+                        text = "$dreams ${if (dreams % 100 in 11..19) pluralMany else when (dreams % 10) { 1 -> pluralOne; in 2..4 -> pluralFew; else -> pluralMany }}",
                         color = Color.White,
                         fontSize = 13.sp
                     )
                     Text(
-                        text = if (nextLevel != null) "до ${nextLevel.title}: ${nextLevel.minDreams - dreams}"
-                               else "Максимальный уровень! 👑",
+                        text = if (nextLevel != null) stringResource(R.string.achievements_next_level, getLevelTitle(context, nextLevel.level), nextLevel.minDreams - dreams)
+                               else stringResource(R.string.achievements_max_level),
                         color = Color.White.copy(alpha = 0.7f),
                         fontSize = 13.sp
                     )
@@ -277,6 +303,7 @@ fun LevelCard(dreams: Int, currentLevel: DreamLevel, nextLevel: DreamLevel?) {
 
 @Composable
 fun AchievementCard(achievement: Achievement, isUnlocked: Boolean) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -306,7 +333,7 @@ fun AchievementCard(achievement: Achievement, isUnlocked: Boolean) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = achievement.title,
+                text = getAchievementTitle(context, achievement.id),
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 color = if (isUnlocked) Color.White else Color.White.copy(alpha = 0.3f),

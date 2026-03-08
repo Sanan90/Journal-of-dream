@@ -5,7 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.journalofdream.R
 
 @Composable
 fun ChooseActionDialog(
@@ -15,27 +17,27 @@ fun ChooseActionDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = "Выберите действие") },
+        title = { Text(text = stringResource(R.string.fab_choose_action)) },
         text = {
             Column {
                 Button(
                     onClick = onDreamSelected,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Записать сновидение")
+                    Text(stringResource(R.string.fab_record_dream))
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = onLocationSelected,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Добавить локацию")
+                    Text(stringResource(R.string.fab_add_location))
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.btn_cancel))
             }
         }
     )

@@ -1,5 +1,7 @@
 package com.example.journalofdream.ui.theme
 
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
@@ -20,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.example.journalofdream.util.LocaleHelper
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
@@ -90,11 +93,11 @@ fun TechniquesScreen(
                                 onAdminModeChanged(true)
                                 tapCount = 0
                             } else {
-                                setError("Неверный код")
+                                setError(context.getString(R.string.tech_wrong_code))
                             }
                         }
                         .addOnFailureListener {
-                            setError("Ошибка подключения")
+                            setError(context.getString(R.string.tech_conn_error))
                         }
                 } else {
                     if (enteredCode == cached) {
@@ -102,7 +105,7 @@ fun TechniquesScreen(
                         onAdminModeChanged(true)
                         tapCount = 0
                     } else {
-                        setError("Неверный код")
+                        setError(context.getString(R.string.tech_wrong_code))
                     }
                 }
             },
@@ -151,16 +154,16 @@ fun TechniquesScreen(
     if (deletingTechnique != null) {
         AlertDialog(
             onDismissRequest = { deletingTechnique = null },
-            title = { Text("Удалить технику?") },
-            text = { Text("«${deletingTechnique!!.name}» будет удалена навсегда.") },
+            title = { Text(stringResource(R.string.btn_delete) + " технику?") },
+            text = { Text("«${deletingTechnique!!.localizedName(LocalContext.current.resources.configuration.locales[0].language)}» будет удалена навсегда.") },
             confirmButton = {
                 TextButton(onClick = {
                     viewModel.deleteTechnique(deletingTechnique!!.id)
                     deletingTechnique = null
-                }) { Text("Удалить", color = Color.Red) }
+                }) { Text(stringResource(R.string.btn_delete), color = Color.Red) }
             },
             dismissButton = {
-                TextButton(onClick = { deletingTechnique = null }) { Text("Отмена") }
+                TextButton(onClick = { deletingTechnique = null }) { Text(stringResource(R.string.btn_cancel)) }
             }
         )
     }
@@ -171,7 +174,7 @@ fun TechniquesScreen(
                 title = {
                     // Нажатие 7 раз — полностью невидимое, без ripple эффекта
                     Text(
-                        text = if (isAdminMode) "🔧 Техники (Админ)" else "Техники",
+                        text = if (isAdminMode) "🔧 " + stringResource(R.string.nav_techniques) + " (Admin)" else stringResource(R.string.nav_techniques),
                         color = Color.White,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
@@ -191,7 +194,7 @@ fun TechniquesScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, "Назад", tint = Color.White)
+                        Icon(Icons.Default.ArrowBack, stringResource(R.string.btn_back), tint = Color.White)
                     }
                 },
                 actions = {
@@ -202,7 +205,7 @@ fun TechniquesScreen(
                         exit = fadeOut() + scaleOut()
                     ) {
                         IconButton(onClick = { showAddDialog = true }) {
-                            Icon(Icons.Default.Add, "Добавить", tint = Color.White)
+                            Icon(Icons.Default.Add, stringResource(R.string.btn_add), tint = Color.White)
                         }
                     }
                 },
@@ -220,7 +223,7 @@ fun TechniquesScreen(
             } else if (sortedTechniques.isEmpty()) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
-                        "Техники ещё не добавлены",
+                        stringResource(R.string.tech_empty),
                         color = Color.White.copy(alpha = 0.5f),
                         textAlign = TextAlign.Center
                     )
@@ -240,7 +243,7 @@ fun TechniquesScreen(
                             FilterChip(
                                 selected = sort == TechniqueSort.BY_LIKES,
                                 onClick = { sort = TechniqueSort.BY_LIKES },
-                                label = { Text("👍 По популярности", fontSize = 12.sp) },
+                                label = { Text("👍 " + stringResource(R.string.locations_sort_popular), fontSize = 12.sp) },
                                 colors = FilterChipDefaults.filterChipColors(
                                     selectedContainerColor = Color(0xFF7E57C2),
                                     selectedLabelColor = Color.White,
@@ -251,7 +254,7 @@ fun TechniquesScreen(
                             FilterChip(
                                 selected = sort == TechniqueSort.BY_NEW,
                                 onClick = { sort = TechniqueSort.BY_NEW },
-                                label = { Text("🆕 Новые", fontSize = 12.sp) },
+                                label = { Text("🆕 " + stringResource(R.string.tech_sort_new), fontSize = 12.sp) },
                                 colors = FilterChipDefaults.filterChipColors(
                                     selectedContainerColor = Color(0xFF7E57C2),
                                     selectedLabelColor = Color.White,
@@ -295,6 +298,8 @@ fun TechniqueCard(
     onDelete: () -> Unit,
     onClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val lang = LocaleHelper.getSavedLanguage(context).let { if (it == "system") context.resources.configuration.locales[0].language else it }
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -312,7 +317,7 @@ fun TechniqueCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = technique.name,
+                    text = technique.localizedName(lang),
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -320,11 +325,11 @@ fun TechniqueCard(
                 )
                 if (isAdminMode) {
                     IconButton(onClick = onEdit, modifier = Modifier.size(32.dp)) {
-                        Icon(Icons.Default.Edit, "Редактировать",
+                        Icon(Icons.Default.Edit, stringResource(R.string.btn_edit),
                             tint = Color(0xFF7E57C2), modifier = Modifier.size(18.dp))
                     }
                     IconButton(onClick = onDelete, modifier = Modifier.size(32.dp)) {
-                        Icon(Icons.Default.Delete, "Удалить",
+                        Icon(Icons.Default.Delete, stringResource(R.string.btn_delete),
                             tint = Color.Red.copy(alpha = 0.7f), modifier = Modifier.size(18.dp))
                     }
                 }
@@ -334,7 +339,7 @@ fun TechniqueCard(
 
             // Описание — максимум 4 строки, остальное в BottomSheet
             Text(
-                text = technique.description,
+                text = technique.localizedDescription(lang),
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                 lineHeight = 20.sp,
@@ -453,7 +458,7 @@ fun AdminCodeDialog(
                 modifier = Modifier.padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("🔐 Введите код", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text("🔐 " + stringResource(R.string.tech_enter_code), fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = code,
@@ -463,7 +468,7 @@ fun AdminCodeDialog(
                             error = null
                         }
                     },
-                    label = { Text("Код доступа") },
+                    label = { Text(stringResource(R.string.tech_access_code)) },
                     isError = error != null,
                     supportingText = { if (error != null) Text(error!!, color = Color.Red) },
                     singleLine = true,
@@ -473,13 +478,13 @@ fun AdminCodeDialog(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    TextButton(onClick = onDismiss) { Text("Отмена") }
+                    TextButton(onClick = onDismiss) { Text(stringResource(R.string.btn_cancel)) }
                     Button(onClick = {
                         onConfirm(code) { msg ->
                             error = msg
                             code = ""
                         }
-                    }) { Text("Войти") }
+                    }) { Text(stringResource(R.string.btn_login)) }
                 }
             }
         }
@@ -502,7 +507,7 @@ fun TechniqueEditDialog(
         Card(shape = RoundedCornerShape(20.dp)) {
             Column(modifier = Modifier.padding(24.dp)) {
                 Text(
-                    text = if (technique != null) "Редактировать технику" else "Новая техника",
+                    text = if (technique != null) stringResource(R.string.tech_edit_title) else stringResource(R.string.tech_add_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
@@ -511,7 +516,7 @@ fun TechniqueEditDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it; nameError = false },
-                    label = { Text("Название *") },
+                    label = { Text(stringResource(R.string.dream_field_name) + " *") },
                     isError = nameError,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
@@ -524,7 +529,7 @@ fun TechniqueEditDialog(
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it; descError = false },
-                    label = { Text("Описание *") },
+                    label = { Text(stringResource(R.string.dream_field_desc) + " *") },
                     isError = descError,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -538,10 +543,10 @@ fun TechniqueEditDialog(
                 OutlinedTextField(
                     value = source,
                     onValueChange = { source = it },
-                    label = { Text("Источник (необязательно)") },
+                    label = { Text(stringResource(R.string.tech_source_optional)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Книга, сайт, форум...") }
+                    placeholder = { Text(stringResource(R.string.tech_source_hint)) }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -550,7 +555,7 @@ fun TechniqueEditDialog(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TextButton(onClick = onDismiss) { Text("Отмена") }
+                    TextButton(onClick = onDismiss) { Text(stringResource(R.string.btn_cancel)) }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(onClick = {
                         nameError = name.isBlank()
@@ -558,7 +563,7 @@ fun TechniqueEditDialog(
                         if (!nameError && !descError) {
                             onConfirm(name, description, source)
                         }
-                    }) { Text("Сохранить") }
+                    }) { Text(stringResource(R.string.btn_save)) }
                 }
             }
         }

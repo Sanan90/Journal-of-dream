@@ -1,5 +1,7 @@
 package com.example.journalofdream.ui.locations
 
+import androidx.compose.ui.res.stringResource
+import com.example.journalofdream.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -41,7 +43,7 @@ fun EditLocationScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Редактировать локацию", color = Color.White) },
+                title = { Text(stringResource(R.string.location_edit_title), color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
@@ -87,7 +89,7 @@ fun EditLocationScreen(
                     OutlinedTextField(
                         value = locationName,
                         onValueChange = { locationName = it },
-                        label = { Text("Название локации", color = Color.White.copy(alpha = 0.7f)) },
+                        label = { Text(stringResource(R.string.location_field_name), color = Color.White.copy(alpha = 0.7f)) },
                         textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
@@ -102,7 +104,7 @@ fun EditLocationScreen(
                     OutlinedTextField(
                         value = locationDescription,
                         onValueChange = { locationDescription = it },
-                        label = { Text("Описание локации", color = Color.White.copy(alpha = 0.7f)) },
+                        label = { Text(stringResource(R.string.location_field_desc), color = Color.White.copy(alpha = 0.7f)) },
                         textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -130,7 +132,7 @@ fun EditLocationScreen(
                             containerColor = Color.White.copy(alpha = 0.2f)
                         )
                     ) {
-                        Text("Сохранить изменения", color = Color.White, fontSize = 16.sp)
+                        Text(stringResource(R.string.dream_save_changes), color = Color.White, fontSize = 16.sp)
                     }
                 }
             }
@@ -139,19 +141,19 @@ fun EditLocationScreen(
             if (showDeleteDialog) {
                 AlertDialog(
                     onDismissRequest = { showDeleteDialog = false },
-                    title = { Text("Удалить локацию?") },
-                    text = { Text("Это действие нельзя отменить.") },
+                    title = { Text(stringResource(R.string.dialog_delete_location_title)) },
+                    text = { Text(stringResource(R.string.dialog_delete_location_message)) },
                     confirmButton = {
                         TextButton(onClick = {
                             locationState.value?.let { locationViewModel.deleteLocation(it) }
                             navController.popBackStack()
                         }) {
-                            Text("Удалить", color = Color.Red)
+                            Text(stringResource(R.string.btn_delete), color = Color.Red)
                         }
                     },
                     dismissButton = {
                         TextButton(onClick = { showDeleteDialog = false }) {
-                            Text("Отмена")
+                            Text(stringResource(R.string.btn_cancel))
                         }
                     }
                 )
