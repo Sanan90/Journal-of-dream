@@ -1,0 +1,132 @@
+=======================================================
+GOOGLE PLAY — ОПИСАНИЕ ПРИЛОЖЕНИЯ
+=======================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+РУССКИЙ ЯЗЫК
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+НАЗВАНИЕ (до 30 символов):
+Дневник снов — осознанные сны
+
+КРАТКОЕ ОПИСАНИЕ (до 80 символов):
+Записывай сны, изучай техники осознанности и исследуй мир сновидений
+
+ПОЛНОЕ ОПИСАНИЕ (до 4000 символов):
+🌙 Дневник снов — твой личный помощник для изучения мира сновидений и освоения техник осознанных снов.
+
+Осознанный сон — это состояние, когда ты спишь и одновременно понимаешь, что находишься во сне. Ты можешь управлять происходящим, летать, менять окружение. Это реальный навык, который развивается с практикой. Главный инструмент — дневник снов.
+
+📖 ДНЕВНИК СНОВ
+• Записывай сны сразу после пробуждения, пока они ещё свежи
+• Добавляй дату, время, категорию и настроение
+• Ищи по ключевым словам в своём архиве снов
+• Данные синхронизируются между устройствами через облако
+
+🗺️ КАРТА ЛОКАЦИЙ
+• Создавай места, которые часто снятся — дом, город, лес
+• Привязывай сны к локациям и замечай повторяющиеся паттерны
+• Статистика посещений каждого места
+• Узнавая знакомое место во сне — это мощный триггер осознанности
+
+✨ ТЕХНИКИ ОСОЗНАННЫХ СНОВ
+• Подробные описания проверенных техник: WILD, MILD, DILD, WBTB и другие
+• Рейтинги и комментарии от практикующих
+• Сортировка по популярности и новизне
+
+📊 СТАТИСТИКА И ПРОГРЕСС
+• Графики активности по дням и неделям
+• Серии и рекорды ведения дневника
+• Статистика по категориям снов
+• 38 уникальных достижений — от новичка до мастера снов
+
+🔔 НАПОМИНАНИЯ И ЦИТАТЫ
+• Ежедневное напоминание записать сон (настраиваемое время)
+• Мотивационные цитаты об осознанных снах трижды в день
+• Всё уведомления можно отключить в настройках
+
+🔒 БЕЗОПАСНОСТЬ И ПРИВАТНОСТЬ
+• Защита приложения PIN-кодом
+• Твои сны видишь только ты — полная приватность данных
+• Работает офлайн, синхронизация при наличии интернета
+• Гостевой режим без регистрации
+
+🌐 МУЛЬТИЯЗЫЧНОСТЬ
+Приложение доступно на 15 языках: русский, английский, азербайджанский, немецкий, французский, испанский, португальский, турецкий, арабский, корейский, японский, нидерландский, польский, итальянский, китайский.
+
+Начни вести дневник сегодня — и через месяц ты удивишься, как изменилось качество твоих снов. 🌙
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ENGLISH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TITLE (up to 30 characters):
+Dream Journal — Lucid Dreaming
+
+SHORT DESCRIPTION (up to 80 characters):
+Record dreams, learn lucid dreaming techniques, explore your dream world
+
+FULL DESCRIPTION (up to 4000 characters):
+🌙 Dream Journal is your personal companion for exploring the world of dreams and mastering lucid dreaming techniques.
+
+A lucid dream is a state where you're asleep but aware that you're dreaming — and you can take control. You can fly, reshape your surroundings, meet anyone. It's a real skill that develops with practice. And a dream journal is the most important tool to get there.
+
+📖 DREAM DIARY
+• Record dreams right after waking up, while they're still vivid
+• Add date, time, category and mood to each entry
+• Search your entire dream archive by keyword
+• Cloud sync keeps your diary across all your devices
+
+🗺️ DREAM LOCATIONS
+• Create places that appear in your dreams — home, city, forest, school
+• Link dreams to locations and spot recurring patterns
+• See visit statistics for each place
+• Recognizing a familiar place in a dream is a powerful lucidity trigger
+
+✨ LUCID DREAMING TECHNIQUES
+• Detailed guides to proven techniques: WILD, MILD, DILD, WBTB and more
+• Community ratings and comments
+• Sort by popularity or newest
+
+📊 STATS & PROGRESS
+• Activity charts by day and week
+• Streaks and personal records
+• Dream category breakdown
+• 38 unique achievements — from beginner to dream master
+
+🔔 REMINDERS & QUOTES
+• Daily reminder to record your dream (customizable time)
+• Motivational lucid dreaming quotes three times a day
+• All notifications can be disabled in settings
+
+🔒 PRIVACY & SECURITY
+• PIN code protection for the app
+• Your dreams are visible only to you — complete data privacy
+• Works offline, syncs when connected
+• Guest mode with no sign-up required
+
+🌐 15 LANGUAGES
+Available in: Russian, English, Azerbaijani, German, French, Spanish, Portuguese, Turkish, Arabic, Korean, Japanese, Dutch, Polish, Italian, Chinese.
+
+Start your journal today — and in a month, you'll be amazed at how your dream recall has transformed. 🌙
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+КАК РАЗМЕСТИТЬ PRIVACY POLICY НА GITHUB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Открой свой репозиторий на GitHub
+2. Создай новую папку "docs" в корне репозитория
+3. Загрузи файл privacy_policy.html в папку docs
+4. Перейди в Settings → Pages
+5. В разделе "Source" выбери ветку main, папку /docs
+6. Нажми Save
+7. Через 1-2 минуты твоя страница будет доступна по адресу:
+   https://ИМЯ_ПОЛЬЗОВАТЕЛЯ.github.io/ИМЯ_РЕПОЗИТОРИЯ/privacy_policy.html
+
+Этот URL вставляешь в Google Play Console в поле "Privacy Policy URL".
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ВАЖНО: поменяй email в privacy_policy.html
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+В файле стоит заглушка: journalofdream.app@gmail.com
+Замени на свой реальный email для связи.
