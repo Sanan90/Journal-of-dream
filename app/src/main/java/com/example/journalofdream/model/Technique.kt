@@ -41,6 +41,11 @@ data class Technique(
     val description_pl: String = "",
     val description_it: String = "",
     val description_zh: String = "",
+    // Украинский и казахский
+    val name_uk: String = "",
+    val name_kk: String = "",
+    val description_uk: String = "",
+    val description_kk: String = "",
 ) {
     // Возвращает название на нужном языке, фолбэк на ru
     fun localizedName(lang: String): String = when (lang) {
@@ -58,6 +63,8 @@ data class Technique(
         "pl" -> name_pl.ifBlank { name }
         "it" -> name_it.ifBlank { name }
         "zh" -> name_zh.ifBlank { name }
+        "uk" -> name_uk.ifBlank { name }
+        "kk" -> name_kk.ifBlank { name }
         else -> name
     }
 
@@ -76,6 +83,8 @@ data class Technique(
         "pl" -> description_pl.ifBlank { description }
         "it" -> description_it.ifBlank { description }
         "zh" -> description_zh.ifBlank { description }
+        "uk" -> description_uk.ifBlank { description }
+        "kk" -> description_kk.ifBlank { description }
         else -> description
     }
 }

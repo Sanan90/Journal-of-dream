@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Арман күнделігі</string>
+
+    <!-- Жалпы -->
+    <string name="btn_save">Сақтау</string>
+    <string name="btn_cancel">Болдырмау</string>
+    <string name="btn_delete">Жою</string>
+    <string name="btn_edit">Өңдеу</string>
+    <string name="btn_back">Артқа</string>
+    <string name="btn_add">Қосу</string>
+
+    <!-- Басты экран -->
+    <string name="main_title">Армандар күнделігі</string>
+    <string name="main_dreams_count">%d арман жазылды</string>
+    <string name="main_level">Дең. %1$d · %2$s</string>
+    <string name="main_guest">Қонақ режимі</string>
+    <string name="main_dreamer">Армандаушы: %s</string>
+    <string name="nav_dreams">Армандар тізімі</string>
+    <string name="nav_diary">Армандар күнделігі</string>
+    <string name="nav_stats">Статистика</string>
+    <string name="nav_chart">График</string>
+    <string name="nav_achievements">Жетістіктер</string>
+    <string name="nav_locations">Локациялар</string>
+    <string name="nav_settings">Параметрлер</string>
+    <string name="nav_techniques">Техникалар</string>
+    <string name="btn_login">Кіру</string>
+    <string name="dialog_logout_title">Есептен шығу?</string>
+    <string name="dialog_logout_message">Шығуды қалайсыз ба? Жергілікті деректер құрылғыда қалады.</string>
+    <string name="btn_logout">Шығу</string>
+    <string name="dialog_add_title">Арман немесе локация қосу?</string>
+    <string name="btn_add_dream">Жазба қосу</string>
+
+    <!-- Армандар тізімі -->
+    <string name="dreams_title">Армандар тізімі</string>
+    <string name="dreams_list">Тізім</string>
+    <string name="dreams_months">Айлар</string>
+    <string name="dreams_search">Іздеу</string>
+    <string name="dreams_sort_az">А-Я</string>
+    <string name="dreams_sort_date">Күні</string>
+    <string name="dreams_empty">Сізде әлі арман жоқ</string>
+    <string name="dreams_empty_hint">Бірінші арманды қосу үшін + басыңыз</string>
+    <string name="dreams_empty_month">Бұл айда арман жоқ</string>
+    <string name="dreams_not_found">Ештеңе табылмады</string>
+    <string name="dreams_add">Арман қосу</string>
+    <string name="dreams_no_category">Санатсыз</string>
+    <string name="dreams_all">Барлық армандар</string>
+
+    <!-- Айлар -->
+    <string name="month_jan">Қаңтар</string>
+    <string name="month_feb">Ақпан</string>
+    <string name="month_mar">Наурыз</string>
+    <string name="month_apr">Сәуір</string>
+    <string name="month_may">Мамыр</string>
+    <string name="month_jun">Маусым</string>
+    <string name="month_jul">Шілде</string>
+    <string name="month_aug">Тамыз</string>
+    <string name="month_sep">Қыркүйек</string>
+    <string name="month_oct">Қазан</string>
+    <string name="month_nov">Қараша</string>
+    <string name="month_dec">Желтоқсан</string>
+
+    <!-- Арман қосу/өңдеу -->
+    <string name="dream_add_title">Арман қосу</string>
+    <string name="dream_edit_title">Арманды өңдеу</string>
+    <string name="dream_field_name">Арман атауы</string>
+    <string name="dream_field_desc">Арман сипаттамасы</string>
+    <string name="dream_error_name">Арман атауын енгізіңіз</string>
+    <string name="dream_pick_date">Күнді таңдау</string>
+    <string name="dream_pick_locations">Локацияларды таңдау</string>
+    <string name="dream_locations_hint">Локацияларды таңдаңыз</string>
+    <string name="dream_locations_selected">Локация таңдалды: %d</string>
+    <string name="dream_manage_categories">Санаттарды басқару</string>
+    <string name="dream_save_changes">Өзгерістерді сақтау</string>
+    <string name="dialog_delete_dream_title">Арманды жою?</string>
+    <string name="dialog_delete_dream_message">«%s» жойылады. Бұл әрекетті болдырмау мүмкін емес.</string>
+
+    <!-- Локациялар -->
+    <string name="locations_title">Локациялар</string>
+    <string name="locations_total">Барлығы: %d</string>
+    <string name="locations_empty">Сізде әлі локация жоқ</string>
+    <string name="locations_empty_hint">Біріншісін қосу үшін + басыңыз</string>
+    <string name="locations_add">Локация қосу</string>
+    <string name="locations_sort_popular">Танымалдылығы бойынша</string>
+    <string name="locations_sort_alpha">Алфавит бойынша</string>
+    <string name="locations_sort_last">Соңғы арман бойынша</string>
+    <string name="locations_last_dream">Соңғы арман: %s</string>
+    <string name="locations_no_dreams">Арман жоқ</string>
+    <string name="dialog_delete_location_title">Локацияны жою?</string>
+    <string name="dialog_delete_location_message">«%s» жойылады.</string>
+    <string name="dialog_delete_location_dreams">%1$d %2$s қалады, бірақ локациямен байланыс жоғалады.</string>
+    <string name="location_add_title">Локация қосу</string>
+    <string name="location_field_name">Локация атауы</string>
+    <string name="location_field_desc">Локация сипаттамасы</string>
+    <string name="location_field_desc_optional">Сипаттама (міндетті емес)</string>
+    <string name="location_error_name">Атауды енгізіңіз</string>
+    <string name="location_edit_title">Өңдеу</string>
+    <string name="location_dreams_title">Осы локациядағы армандар</string>
+    <string name="location_dreams_empty_title">Арман жоқ</string>
+    <string name="location_dreams_empty_hint">Армандарды осы локацияға\nжасау немесе өңдеу кезінде байланыстырыңыз</string>
+    <string name="location_stat_dreams">Арман</string>
+    <string name="location_stat_first">Бірінші арман</string>
+    <string name="location_stat_last">Соңғы арман</string>
+
+    <!-- Статистика -->
+    <string name="stats_title">Статистика</string>
+    <string name="stats_total">Барлық армандар</string>
+    <string name="stats_streak">Макс. серия</string>
+    <string name="stats_by_category">Санаттар бойынша</string>
+    <string name="stats_empty">Статистика бірінші арманды\nжазғаннан кейін пайда болады</string>
+    <string name="stats_best_day">Ең жақсы күн — %1$d %2$s</string>
+
+    <!-- График -->
+    <string name="chart_title">Белсенділік графигі</string>
+    <string name="chart_7days">7 күн</string>
+    <string name="chart_30days">30 күн</string>
+    <string name="chart_90days">90 күн</string>
+    <string name="chart_dreams_by_day">Күндер бойынша армандар</string>
+    <string name="chart_active_days">Белсенді күндер</string>
+    <string name="chart_total">Барлық армандар</string>
+    <string name="chart_avg">Орташа/күн</string>
+    <string name="chart_by_weekday">Апта күндері бойынша</string>
+    <string name="chart_by_time">Тәулік уақыты бойынша</string>
+    <string name="chart_time_hint">Армандарды жиі қашан жазасың</string>
+    <string name="chart_morning">Таң</string>
+    <string name="chart_day">Күн</string>
+    <string name="chart_evening">Кеш</string>
+    <string name="chart_night">Түн</string>
+    <string name="chart_mon">Дс</string>
+    <string name="chart_tue">Сс</string>
+    <string name="chart_wed">Ср</string>
+    <string name="chart_thu">Бс</string>
+    <string name="chart_fri">Жм</string>
+    <string name="chart_sat">Сб</string>
+    <string name="chart_sun">Жс</string>
+
+    <!-- Жетістіктер -->
+    <string name="achievements_title">Жетістіктер</string>
+    <string name="achievements_count">Жетістіктер %1$d/%2$d</string>
+    <string name="achievements_max_level">Максималды деңгей! 👑</string>
+    <string name="achievements_level">Деңгей %d</string>
+    <string name="achievements_next_level">%1$s дейін: %2$d</string>
+    <string name="achievements_dreams_count">%d арман</string>
+
+    <!-- Параметрлер -->
+    <string name="settings_title">Параметрлер</string>
+    <string name="settings_notifications">🔔 Хабарландырулар</string>
+    <string name="settings_reminder">Арман жазу еске салғышы</string>
+    <string name="settings_reminder_desc">Арман жазуды күнделікті еске салу</string>
+    <string name="settings_notif_time">Хабарландыру уақыты</string>
+    <string name="settings_quotes">💬 Хабарландыру дәйексөздері</string>
+    <string name="settings_quotes_desc">Саналы армандар туралы дәйексөздер 10:00, 16:00 және 22:00-де</string>
+    <string name="settings_manage_quotes">Дәйексөздерді басқару</string>
+    <string name="settings_manage_quotes_desc">Хабарландырулар үшін дәйексөздер қосу немесе жою</string>
+    <string name="settings_security">🔒 Қауіпсіздік</string>
+    <string name="settings_pin">PIN-кодпен қорғау</string>
+    <string name="settings_pin_enable">Қолданбаны қорғауды қосу</string>
+    <string name="settings_pin_set">Жаңа PIN-код орнату</string>
+    <string name="settings_pin_change">PIN-кодты өзгерту</string>
+    <string name="settings_pin_active">Қолданба PIN-кодпен қорғалған</string>
+
+    <!-- Жіктеулер -->
+    <string name="plural_dreams_one">арман</string>
+    <string name="plural_dreams_few">арман</string>
+    <string name="plural_dreams_many">арман</string>
+
+    <!-- Авторизация -->
+    <string name="auth_email">Электрондық пошта</string>
+    <string name="auth_password">Құпия сөз</string>
+    <string name="auth_forgot_password">Құпия сөзді ұмыттыңыз ба?</string>
+    <string name="auth_register">Тіркелу</string>
+    <string name="auth_google">Google арқылы кіру</string>
+    <string name="auth_guest">Авторизациясыз жалғастыру</string>
+
+    <!-- Техникалар -->
+    <string name="tech_sort_new">Жаңа</string>
+    <string name="tech_enter_code">Кодты енгізіңіз</string>
+    <string name="tech_access_code">Кіру коды</string>
+    <string name="tech_source_optional">Дереккөз (міндетті емес)</string>
+    <string name="tech_source_hint">Кітап, сайт, форум...</string>
+
+    <!-- Дәйексөздер/PIN/Онбординг -->
+    <string name="quotes_field_text">Дәйексөз мәтіні</string>
+    <string name="quotes_field_hint">Мотивациялық дәйексөз енгізіңіз...</string>
+    <string name="quotes_delete_title">Дәйексөзді жою?</string>
+    <string name="quotes_hide_title">Дәйексөзді жасыру?</string>
+    <string name="quotes_hide_btn">Жасыру</string>
+    <string name="pin_enter">PIN енгізу</string>
+    <string name="onboarding_skip">Өткізу</string>
+
+    <!-- Жаңа жолдар -->
+    <string name="tech_wrong_code">Қате код</string>
+    <string name="tech_conn_error">Байланыс қатесі</string>
+    <string name="tech_empty">Техникалар әлі қосылмаған</string>
+    <string name="tech_edit_title">Техниканы өңдеу</string>
+    <string name="tech_add_title">Жаңа техника</string>
+    <string name="tech_label">Техника</string>
+    <string name="tech_comment_hint">Бұл техникамен тәжірибеңіз...</string>
+    <string name="tech_send">Жіберу</string>
+    <string name="tech_login_to_comment">Пікір қалдыру үшін есепке кіріңіз</string>
+    <string name="tech_no_comments">Әлі пікір жоқ. Тәжірибеңізбен бөлісіңіз!</string>
+    <string name="tech_you">Сіз</string>
+    <string name="tech_like">Ұнату</string>
+    <string name="cat_title">Санаттар</string>
+    <string name="cat_new">Жаңа санат</string>
+    <string name="cat_color">Түс:</string>
+    <string name="cat_all">Барлық санаттар:</string>
+    <string name="cat_delete_title">Санатты жою?</string>
+    <string name="cat_delete_message">жойылады. Осы санаттағы армандар қалады, бірақ санат тазаланады.</string>
+    <string name="btn_close">Жабу</string>
+    <string name="settings_language">Қолданба тілі</string>
+
+    <string name="dream_title">Арман</string>
+    <string name="dream_no_title">Атаусыз</string>
+    <string name="dream_label_date">Күні</string>
+    <string name="dream_label_time">Уақыты</string>
+    <string name="dream_label_category">Санат</string>
+    <string name="dream_no_desc">Сипаттама қосылмаған</string>
+    <string name="tech_comments">Пікірлер (%d)</string>
+    <string name="stats_of_all">барлық армандардан</string>
+
+    <!-- Деңгейлер -->
+    <string name="level_1">Жаңадан бастаушы</string>
+    <string name="level_2">Армандаушы</string>
+    <string name="level_3">Зерттеуші</string>
+    <string name="level_4">Саяхатшы</string>
+    <string name="level_5">Визионер</string>
+    <string name="level_6">Арман шебері</string>
+    <string name="level_7">Қиял сәулетшісі</string>
+    <string name="level_8">Арман сақшысы</string>
+    <string name="level_9">Аңыз</string>
+
+    <!-- Жетістіктер - атаулар -->
+    <string name="ach_first_dream_title">Алғашқы қадам</string>
+    <string name="ach_first_location_title">Бірінші орын</string>
+    <string name="ach_dreams_5_title">Жолдың басы</string>
+    <string name="ach_dreams_10_title">Оншама</string>
+    <string name="ach_dreams_20_title">Жиырмашама</string>
+    <string name="ach_dreams_25_title">Жүздің ширегі</string>
+    <string name="ach_dreams_50_title">Елу арман</string>
+    <string name="ach_dreams_100_title">Жүздік</string>
+    <string name="ach_dreams_500_title">Бес жүз арман</string>
+    <string name="ach_dreams_1000_title">Арман аңызы</string>
+    <string name="ach_locations_5_title">Орындар зерттеушісі</string>
+    <string name="ach_locations_10_title">Картограф</string>
+    <string name="ach_locations_20_title">Орындар сақшысы</string>
+    <string name="ach_locs_in_dream_2_title">Қос портал</string>
+    <string name="ach_locs_in_dream_3_title">Үштік өту</string>
+    <string name="ach_locs_in_dream_5_title">Армандаушы-саяхатшы</string>
+    <string name="ach_dreams_in_loc_5_title">Сүйікті орын</string>
+    <string name="ach_dreams_in_loc_10_title">Туған бұрыш</string>
+    <string name="ach_dreams_in_loc_20_title">Тұрақты локация</string>
+    <string name="ach_streak_3_title">3 күн қатарынан</string>
+    <string name="ach_streak_7_title">Арман аптасы</string>
+    <string name="ach_streak_14_title">Екі апта</string>
+    <string name="ach_streak_28_title">Ай айы</string>
+    <string name="ach_streak_30_title">Арман айы</string>
+    <string name="ach_streak_100_title">Жүз күн</string>
+    <string name="ach_categories_3_title">Әртүрлілік</string>
+    <string name="ach_categories_5_title">Коллекционер</string>
+    <string name="ach_long_dream_title">Толық арман</string>
+    <string name="ach_marathon_title">Марафон</string>
+    <string name="ach_night_owl_title">Үкі</string>
+    <string name="ach_early_bird_title">Ерте тұрушы</string>
+    <string name="ach_night_writer_title">Түнгі жазушы</string>
+    <string name="ach_all_weekdays_title">Аптаның барлық күндері</string>
+    <string name="ach_nightmare_title">Қорқынышты түс</string>
+    <string name="ach_comeback_title">Оралу</string>
+    <string name="ach_dreamer_week_title">Белсенді апта</string>
+    <string name="ach_lucky_77_title">Бақытты</string>
+    <string name="ach_ghost_title">Елес</string>
+
+    <!-- Жетістіктер - сипаттамалар -->
+    <string name="ach_first_dream_desc">Бірінші арманды жазыңыз</string>
+    <string name="ach_first_location_desc">Бірінші локация жасаңыз</string>
+    <string name="ach_dreams_5_desc">5 арман жазыңыз</string>
+    <string name="ach_dreams_10_desc">10 арман жазыңыз</string>
+    <string name="ach_dreams_20_desc">20 арман жазыңыз</string>
+    <string name="ach_dreams_25_desc">25 арман жазыңыз</string>
+    <string name="ach_dreams_50_desc">50 арман жазыңыз</string>
+    <string name="ach_dreams_100_desc">100 арман жазыңыз</string>
+    <string name="ach_dreams_500_desc">500 арман жазыңыз</string>
+    <string name="ach_dreams_1000_desc">1000 арман жазыңыз</string>
+    <string name="ach_locations_5_desc">5 локация жасаңыз</string>
+    <string name="ach_locations_10_desc">10 локация жасаңыз</string>
+    <string name="ach_locations_20_desc">20 локация жасаңыз</string>
+    <string name="ach_locs_in_dream_2_desc">Бір арманға 2 локация байланыстырыңыз</string>
+    <string name="ach_locs_in_dream_3_desc">Бір арманға 3 локация байланыстырыңыз</string>
+    <string name="ach_locs_in_dream_5_desc">Бір арманға 5 локация байланыстырыңыз</string>
+    <string name="ach_dreams_in_loc_5_desc">Бір локацияда 5 арман жазыңыз</string>
+    <string name="ach_dreams_in_loc_10_desc">Бір локацияда 10 арман жазыңыз</string>
+    <string name="ach_dreams_in_loc_20_desc">Бір локацияда 20 арман жазыңыз</string>
+    <string name="ach_streak_3_desc">3 күн қатарынан арман жазыңыз</string>
+    <string name="ach_streak_7_desc">7 күн қатарынан арман жазыңыз</string>
+    <string name="ach_streak_14_desc">14 күн қатарынан арман жазыңыз</string>
+    <string name="ach_streak_28_desc">28 күн қатарынан арман жазыңыз</string>
+    <string name="ach_streak_30_desc">30 күн қатарынан арман жазыңыз</string>
+    <string name="ach_streak_100_desc">100 күн қатарынан арман жазыңыз</string>
+    <string name="ach_categories_3_desc">3 түрлі санатты қолданыңыз</string>
+    <string name="ach_categories_5_desc">5 түрлі санатты қолданыңыз</string>
+    <string name="ach_long_dream_desc">500 таңбадан ұзын арман жазыңыз</string>
+    <string name="ach_marathon_desc">Бір күнде 3 арман жазыңыз</string>
+    <string name="ach_night_owl_desc">Бір күнде 5 арман жазыңыз</string>
+    <string name="ach_early_bird_desc">Таңғы 7-ге дейін арман жазыңыз</string>
+    <string name="ach_night_writer_desc">23:00-ден кейін арман жазыңыз</string>
+    <string name="ach_all_weekdays_desc">Аптаның әр күніне бір арманнан жазыңыз</string>
+    <string name="ach_nightmare_desc">Қорқынышты түс санатымен арман жазыңыз</string>
+    <string name="ach_comeback_desc">7+ күн үзілістен кейін оралыңыз</string>
+    <string name="ach_dreamer_week_desc">Соңғы 7 күннің 5-інде арман жазыңыз</string>
+    <string name="ach_lucky_77_desc">Дәл 77 арман жазыңыз</string>
+    <string name="ach_ghost_desc">Тақырыпсыз арман жасаңыз</string>
+
+    <string name="dream_label_locations">Локациялар</string>
+    <string name="cat_nightmares">Қорқынышты түстер</string>
+    <string name="cat_lucid">Саналы армандар</string>
+    <string name="cat_plot">Сюжеттік армандар</string>
+    <string name="cat_personal">Жеке армандар</string>
+    <string name="discard_title">Сақталмаған өзгерістер</string>
+    <string name="discard_dream_message">Арманды сақтамадыңыз. Сақтамай шығу керек пе?</string>
+    <string name="discard_location_message">Локацияны сақтамадыңыз. Сақтамай шығу керек пе?</string>
+    <string name="discard_confirm">Шығу</string>
+    <string name="discard_dismiss">Оралу</string>
+    <string name="pin_forgot_btn">PIN ұмыттым</string>
+    <string name="pin_forgot_title">PIN ұмыттыңыз ба?</string>
+    <string name="pin_forgot_message">PIN қалпына келтіру үшін есептен шығып, қайта кіру керек. PIN автоматты түрде алынады.</string>
+    <string name="pin_forgot_guest_message">Қонақ режимінде PIN қалпына келтіру мүмкін емес. Қонақ режимінен шығуға болады — деректер құрылғыда қалады.</string>
+    <string name="pin_forgot_reset">Шығу және PIN тазалау</string>
+    <string name="pin_forgot_exit">Қонақ режимінен шығу</string>
+    <string name="main_dreams_recorded">жазылды</string>
+    <string name="auth_welcome">Қош келдіңіз</string>
+    <string name="auth_show">Көрсету</string>
+    <string name="auth_hide">Жасыру</string>
+    <string name="fab_choose_action">Әрекетті таңдаңыз</string>
+    <string name="fab_record_dream">Арманды жазу</string>
+    <string name="fab_add_location">Локация қосу</string>
+    <string name="onboarding_back">← Артқа</string>
+    <string name="onboarding_next">Алға →</string>
+    <string name="onboarding_start">Бастау ✨</string>
+    <string name="onboarding_1_title">Саналы арман дегеніміз не?</string>
+    <string name="onboarding_1_body">Саналы арман — бұл сіз ұйықтап жатқанда арманда екеніңізді түсінетін жағдай. Сол сәтте сіз болып жатқанды басқара аласыз: ұша аласыз, қоршаған ортаны өзгерте аласыз, кіммен болса да кездесе аласыз.\n\nБұл фантастика емес — нейробиологтар зерттейтін нақты феномен. Адамдардың шамамен 55%-ы өмірінде кем дегенде бір рет саналы арман көрген. Жаттығумен бұл қарапайым дағдыға айналады.</string>
+    <string name="onboarding_2_title">Армандарды неге жазу керек?</string>
+    <string name="onboarding_2_body">Мидың оянудан кейінгі алғашқы 10 минутта арманның 90%-ын ұмытады. Арман күнделігі — сіздің негізгі құралыңыз.\n\n• Арман жадын дамытады: неғұрлым көп жазсаңыз, соғұрлым жақсы есте сақтайсыз\n• Қайталанатын бейнелер мен тақырыптарды байқауға көмектеседі\n• Арманда екеніңіздің «белгілерін» тануды үйретеді — бұл саналылықтың кілті\n• Уақыт өте келе саналы армандарға апаратын үлгілерді байқай бастайсыз</string>
+    <string name="onboarding_3_title">Локациялар — арман картаңыз</string>
+    <string name="onboarding_3_body">Көп адамдар армандарында бір орындарға қайта-қайта оралады: ескі үй, бейтаныс қала, орман, мектеп.\n\nЛокациялар көмектеседі:\n• Осы орындарды бір жерде жинақтауға\n• Сонда қаншалықты жиі болатыныңызды көруге\n• Байланысты армандарды байқауға және «арман картасын» құруға\n\nАрманда таныс орынды таныған кезде — бұл саналылық үшін күшті триггер.</string>
+    <string name="onboarding_4_title">Бастауға дайынсыз ба?</string>
+    <string name="onboarding_4_body">Барлығы қажет — оянып, бірден жазу. Тіпті үзінділер, тіпті бір сөз болса да.\n\nБір апталық тұрақты жазбалардан кейін көбірек есте сақтайтыныңызды байқайсыз. Бір айдан кейін — алғашқы саналы сәттер.\n\nСаналы армандарға жолыңыз дәл қазір басталады. 🌙</string>
+    <string name="notif_quote_title">🌙 Саналы армандар</string>
+    <string name="notif_reminder_title">Арманды жазу уақыты 🌙</string>
+    <string name="notif_reminder_message">Естеліктер жаңа кезде арманды жазыңыз!</string>
+    <string name="setup_title">Арман еске салғышы</string>
+    <string name="setup_subtitle">Арманды жазу туралы\nсізге қашан еске салу керек?</string>
+    <string name="setup_skip">Өткізу</string>
+    <string name="setup_done">Дайын ✓</string>
+    <string name="support_subtitle">Қолданба ұнаса —\nәзірлеушіні кофемен сыйлаңыз ☕</string>
+    <string name="support_sbp_title">🇷🇺 СБЖ (Жылдам төлемдер жүйесі)</string>
+    <string name="support_sbp_hint">Банк қолданбасындағы QR-кодты сканерлеңіз</string>
+    <string name="support_sbp_copy">📋 Нөмірді көшіру</string>
+    <string name="support_crypto_title">₿ Криптовалюта</string>
+    <string name="support_copy_btn">📋 Көшіру</string>
+    <string name="support_copied">Көшірілді!</string>
+    <string name="support_thanks">Қолдауыңызға рахмет! 🙏\nБұл қолданбаны жақсартуға шабыттандырады.</string>
+    <string name="support_menu_title">Кофемен сыйлау ☕</string>
+    <string name="support_menu_subtitle">Әзірлеушіні қолдау</string>
+    <string name="support_section">☕ Қолдау</string>
+    <string name="auth_title_login">Қайта келдіңіз</string>
+    <string name="auth_title_register">Есеп жасау</string>
+    <string name="auth_subtitle_login">Жалғастыру үшін кіріңіз</string>
+    <string name="auth_subtitle_register">Атыңызды айтыңыз</string>
+    <string name="auth_name">Аты</string>
+    <string name="auth_name_error">Атыңызды енгізіңіз</string>
+    <string name="auth_email_error">Дұрыс email енгізіңіз</string>
+    <string name="auth_password_error">Кем дегенде 6 таңба</string>
+    <string name="auth_login_btn">Кіру</string>
+    <string name="auth_register_btn">Есеп жасау</string>
+    <string name="auth_no_account">Есеп жоқ па? Тіркелу</string>
+    <string name="auth_has_account">Есебіңіз бар ма? Кіру</string>
+    <string name="auth_forgot">Құпия сөзді ұмыттыңыз ба?</string>
+    <string name="auth_reset_sent">Хат жіберілді:</string>
+    <string name="auth_wrong_creds">Қате email немесе құпия сөз</string>
+    <string name="auth_loading">Күте тұрыңыз...</string>
+    <string name="auth_verify_sent">Поштаны растаңыз — хат жіберілді:</string>
+    <string name="auth_google_btn">Google арқылы кіру</string>
+    <string name="auth_guest_btn">Қонақ ретінде кіру</string>
+    <string name="auth_or">немесе</string>
+    <string name="auth_not_verified">Пошта расталмаған. Кіріс хаттарыңызды тексеріп, хаттағы сілтемеге өтіңіз</string>
+</resources>
