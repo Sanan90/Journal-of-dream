@@ -395,4 +395,6 @@
     <string name="deleted_user_name">Видалений користувач</string>
     <string name="unknown_user">Невідомий користувач</string>
     <string name="ok">OK</string>
+    <string name="settings_section_language">🌐 Мова</string>
+
 </resources>

@@ -389,4 +389,6 @@
     <string name="deleted_user_name">Silinmiş istifadəçi</string>
     <string name="unknown_user">Naməlum istifadəçi</string>
     <string name="ok">OK</string>
+    <string name="settings_section_language">🌐 Dil</string>
+
 </resources>

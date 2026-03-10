@@ -388,4 +388,6 @@
     <string name="deleted_user_name">Verwijderde gebruiker</string>
     <string name="unknown_user">Onbekende gebruiker</string>
     <string name="ok">OK</string>
+    <string name="settings_section_language">🌐 Taal</string>
+
 </resources>

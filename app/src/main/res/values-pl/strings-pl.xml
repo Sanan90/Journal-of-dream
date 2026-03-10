@@ -388,4 +388,6 @@
     <string name="deleted_user_name">Usunięty użytkownik</string>
     <string name="unknown_user">Nieznany użytkownik</string>
     <string name="ok">OK</string>
+    <string name="settings_section_language">🌐 Język</string>
+
 </resources>

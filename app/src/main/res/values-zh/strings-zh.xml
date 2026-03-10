@@ -389,4 +389,6 @@
     <string name="deleted_user_name">已删除用户</string>
     <string name="unknown_user">未知用户</string>
     <string name="ok">OK</string>
+    <string name="settings_section_language">🌐 语言</string>
+
 </resources>

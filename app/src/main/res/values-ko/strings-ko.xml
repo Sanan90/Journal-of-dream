@@ -388,4 +388,6 @@
     <string name="deleted_user_name">삭제된 사용자</string>
     <string name="unknown_user">알 수 없는 사용자</string>
     <string name="ok">OK</string>
+    <string name="settings_section_language">🌐 언어</string>
+
 </resources>

@@ -395,4 +395,6 @@
     <string name="deleted_user_name">Жойылған пайдаланушы</string>
     <string name="unknown_user">Белгісіз пайдаланушы</string>
     <string name="ok">OK</string>
+    <string name="settings_section_language">🌐 Тіл</string>
+
 </resources>

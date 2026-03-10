@@ -388,4 +388,6 @@
     <string name="deleted_user_name">削除されたユーザー</string>
     <string name="unknown_user">不明なユーザー</string>
     <string name="ok">OK</string>
+    <string name="settings_section_language">🌐 言語</string>
+
 </resources>

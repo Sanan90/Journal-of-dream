@@ -108,9 +108,10 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
             ) {
                 item {
                 // Секция языка
-                SettingsSectionTitle("🌐 Язык")
+                    SettingsSectionTitle(stringResource(R.string.settings_section_language))
 
-                val currentLang = LocaleHelper.findLanguage(selectedLanguage)
+
+                    val currentLang = LocaleHelper.findLanguage(selectedLanguage)
                 SettingsClickRow(
                     icon = Icons.Default.Language,
                     title = stringResource(R.string.settings_language),
@@ -123,9 +124,10 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
 
                 item {
                 // Секция уведомлений
-                SettingsSectionTitle("🔔 Уведомления")
+                    SettingsSectionTitle(stringResource(R.string.settings_notifications))
 
-                // Включить/выключить уведомления
+
+                    // Включить/выключить уведомления
                     SettingsToggleRow(
                         icon = Icons.Default.Notifications,
                         title = stringResource(R.string.settings_notifications),
@@ -194,9 +196,10 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Секция безопасности
-                SettingsSectionTitle("🔒 Безопасность")
+                    SettingsSectionTitle(stringResource(R.string.settings_security))
 
-                // Включить/выключить PIN — только для авторизованных (не гостей)
+
+                    // Включить/выключить PIN — только для авторизованных (не гостей)
                 if (!isGuest) {
                     SettingsToggleRow(
                         icon = Icons.Default.Lock,
