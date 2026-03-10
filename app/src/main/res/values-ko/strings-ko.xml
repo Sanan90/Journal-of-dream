@@ -376,4 +376,16 @@
     <string name="auth_guest_btn">게스트로 계속하기</string>
     <string name="auth_or">또는</string>
     <string name="auth_not_verified">이메일이 인증되지 않았습니다. 받은편지함을 확인하고 링크를 클릭하세요</string>
+
+    <string name="settings_delete_account">계정 삭제</string>
+    <string name="settings_delete_account_desc">계정과 관련된 모든 데이터를 삭제합니다</string>
+    <string name="delete_account_title">계정을 삭제할까요?</string>
+    <string name="delete_account_message">이 작업을 수행하면 계정, 꿈, 장소, PIN, 댓글 및 기타 관련 데이터가 삭제됩니다. 이 작업은 되돌릴 수 없습니다.</string>
+    <string name="delete_account_confirm">삭제</string>
+    <string name="delete_account_progress">계정 삭제 중...</string>
+    <string name="delete_account_error_recent_login">계정을 삭제하려면 다시 로그인해야 합니다. 로그아웃한 뒤 다시 로그인하고 다시 시도하세요.</string>
+    <string name="delete_account_error_generic">계정을 삭제하지 못했습니다</string>
+    <string name="deleted_user_name">삭제된 사용자</string>
+    <string name="unknown_user">알 수 없는 사용자</string>
+    <string name="ok">OK</string>
 </resources>

@@ -42,4 +42,7 @@ interface LocationDao {
     @Transaction
     @Query("SELECT * FROM locations WHERE ownerUid = :ownerUid")
     fun getAllLocationsWithDreams(ownerUid: String): LiveData<List<LocationWithDreams>>
+
+    @Query("DELETE FROM locations WHERE ownerUid = :ownerUid")
+    suspend fun deleteAllLocationsByOwner(ownerUid: String)
 }

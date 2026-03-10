@@ -377,4 +377,16 @@
     <string name="auth_guest_btn">Continue as guest</string>
     <string name="auth_or">or</string>
     <string name="auth_not_verified">Email not verified. Please check your inbox and click the confirmation link</string>
+
+    <string name="settings_delete_account">Delete account</string>
+    <string name="settings_delete_account_desc">Delete your account and all related data</string>
+    <string name="delete_account_title">Delete account?</string>
+    <string name="delete_account_message">This action will delete your account, dreams, locations, PIN, comments, and other related data. This cannot be undone.</string>
+    <string name="delete_account_confirm">Delete</string>
+    <string name="delete_account_progress">Deleting account...</string>
+    <string name="delete_account_error_recent_login">To delete your account, you need to sign in again. Sign out, sign back in, and try again.</string>
+    <string name="delete_account_error_generic">Failed to delete account</string>
+    <string name="deleted_user_name">Deleted user</string>
+    <string name="unknown_user">Unknown user</string>
+    <string name="ok">OK</string>
 </resources>

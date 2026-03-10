@@ -376,4 +376,16 @@
     <string name="auth_guest_btn">Continuer en tant qu\'invité</string>
     <string name="auth_or">ou</string>
     <string name="auth_not_verified">Email non vérifié. Vérifie ta boîte de réception et clique sur le lien</string>
+
+    <string name="settings_delete_account">Supprimer le compte</string>
+    <string name="settings_delete_account_desc">Supprimer le compte et toutes les données associées</string>
+    <string name="delete_account_title">Supprimer le compte ?</string>
+    <string name="delete_account_message">Cette action supprimera votre compte, vos rêves, vos lieux, votre PIN, vos commentaires et d’autres données associées. Cette action est irréversible.</string>
+    <string name="delete_account_confirm">Supprimer</string>
+    <string name="delete_account_progress">Suppression du compte...</string>
+    <string name="delete_account_error_recent_login">Pour supprimer votre compte, vous devez vous reconnecter. Déconnectez-vous, reconnectez-vous puis réessayez.</string>
+    <string name="delete_account_error_generic">Impossible de supprimer le compte</string>
+    <string name="deleted_user_name">Utilisateur supprimé</string>
+    <string name="unknown_user">Utilisateur inconnu</string>
+    <string name="ok">OK</string>
 </resources>

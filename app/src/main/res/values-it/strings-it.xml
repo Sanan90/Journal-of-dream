@@ -377,4 +377,16 @@
     <string name="auth_guest_btn">Continua come ospite</string>
     <string name="auth_or">o</string>
     <string name="auth_not_verified">Email non verificata. Controlla la tua posta in arrivo e clicca sul link</string>
+
+    <string name="settings_delete_account">Elimina account</string>
+    <string name="settings_delete_account_desc">Elimina l’account e tutti i dati correlati</string>
+    <string name="delete_account_title">Eliminare l’account?</string>
+    <string name="delete_account_message">Questa azione eliminerà il tuo account, sogni, luoghi, PIN, commenti e altri dati correlati. Non sarà possibile annullarla.</string>
+    <string name="delete_account_confirm">Elimina</string>
+    <string name="delete_account_progress">Eliminazione account...</string>
+    <string name="delete_account_error_recent_login">Per eliminare l’account, devi accedere di nuovo all’app. Esci, rientra e riprova.</string>
+    <string name="delete_account_error_generic">Impossibile eliminare l’account</string>
+    <string name="deleted_user_name">Utente eliminato</string>
+    <string name="unknown_user">Utente sconosciuto</string>
+    <string name="ok">OK</string>
 </resources>

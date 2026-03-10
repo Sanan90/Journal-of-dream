@@ -376,4 +376,16 @@
     <string name="auth_guest_btn">المتابعة كضيف</string>
     <string name="auth_or">أو</string>
     <string name="auth_not_verified">البريد الإلكتروني غير مُحقق. تحقق من صندوق الوارد وانقر على الرابط</string>
+
+    <string name="settings_delete_account">حذف الحساب</string>
+    <string name="settings_delete_account_desc">حذف الحساب وجميع البيانات المرتبطة به</string>
+    <string name="delete_account_title">هل تريد حذف الحساب؟</string>
+    <string name="delete_account_message">سيؤدي هذا الإجراء إلى حذف حسابك، وأحلامك، والأماكن، ورمز PIN، والتعليقات، والبيانات الأخرى المرتبطة. لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="delete_account_confirm">حذف</string>
+    <string name="delete_account_progress">جارٍ حذف الحساب...</string>
+    <string name="delete_account_error_recent_login">لحذف حسابك، يجب عليك تسجيل الدخول مرة أخرى. سجّل الخروج، ثم سجّل الدخول مجددًا وحاول مرة أخرى.</string>
+    <string name="delete_account_error_generic">تعذر حذف الحساب</string>
+    <string name="deleted_user_name">مستخدم محذوف</string>
+    <string name="unknown_user">مستخدم غير معروف</string>
+    <string name="ok">OK</string>
 </resources>

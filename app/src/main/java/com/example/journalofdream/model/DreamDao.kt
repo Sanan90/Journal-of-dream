@@ -59,5 +59,8 @@ interface DreamDao {
     @Query("SELECT * FROM dreams WHERE localId = :dreamId AND ownerUid = :ownerUid")
     suspend fun getDreamByIdOnce(dreamId: Int, ownerUid: String): Dream?
 
+    @Query("DELETE FROM dreams WHERE ownerUid = :ownerUid")
+    suspend fun deleteAllDreamsByOwner(ownerUid: String)
+
 
 }

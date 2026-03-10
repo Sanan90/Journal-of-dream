@@ -115,13 +115,18 @@ class CommentRepository {
         return try {
             val techniqueRef = db.collection("techniques").document(techniqueId)
             val commentRef = techniqueRef.collection("comments").document(commentId)
+
             db.runTransaction { transaction ->
                 val techSnap = transaction.get(techniqueRef)
                 val count = techSnap.getLong("commentsCount")?.toInt() ?: 0
                 transaction.delete(commentRef)
                 transaction.update(techniqueRef, "commentsCount", maxOf(0, count - 1))
             }.await()
+
             Result.success(Unit)
-        } catch (e: Exception) { Result.failure(e) }
+        } catch (e: Exception) {
+            Log.e("CommentRepo", "Ошибка удаления commentId=$commentId techniqueId=$techniqueId", e)
+            Result.failure(e)
+        }
     }
 }

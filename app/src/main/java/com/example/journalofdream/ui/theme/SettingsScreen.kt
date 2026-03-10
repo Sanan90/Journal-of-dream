@@ -43,6 +43,15 @@ import com.example.journalofdream.util.scheduleDailyReminder
 import com.example.journalofdream.util.cancelDailyReminder
 import com.example.journalofdream.util.scheduleQuoteAlarms
 
+import android.app.Activity
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.ui.window.DialogProperties
+import com.example.journalofdream.util.deleteCurrentUserAccountAndData
+import kotlinx.coroutines.launch
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.example.journalofdream.util.cancelDailyReminder
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = false) {
@@ -60,6 +69,11 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
     val isGuest = currentUser == null || currentUser.isAnonymous
     var showSetPin by remember { mutableStateOf(false) }
     var showChangePin by remember { mutableStateOf(false) }
+
+    var showDeleteAccountDialog by remember { mutableStateOf(false) }
+    var isDeletingAccount by remember { mutableStateOf(false) }
+    var deleteAccountError by remember { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
 
     // Язык приложения
     var selectedLanguage by remember {
@@ -210,6 +224,15 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                             onClick = { showChangePin = true }
                         )
                     }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    SettingsClickRow(
+                        icon = Icons.Default.Delete,
+                        title = stringResource(R.string.settings_delete_account),
+                        subtitle = stringResource(R.string.settings_delete_account_desc),
+                        onClick = { showDeleteAccountDialog = true }
+                    )
                 }
 
                 // Раздел цитат — только в режиме админа
@@ -223,15 +246,6 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                         onClick = { navController.navigate("quotes_admin") }
                     )
 
-                    // TODO: удалить после проверки Crashlytics
-                    Spacer(modifier = Modifier.height(8.dp))
-                    SettingsSectionTitle("🛠️ Тест")
-                    SettingsClickRow(
-                        icon = Icons.Default.Delete,
-                        title = "Краш-тест Crashlytics",
-                        subtitle = "Приложение упадёт — это нормально",
-                        onClick = { throw RuntimeException("Тест Crashlytics — всё работает!") }
-                    )
                 }
                 } // закрываем item
 
@@ -329,6 +343,108 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
 
     // Диалоги цитат вынесены в QuotesAdminScreen
 } // закрываем Box
+
+    if (showDeleteAccountDialog) {
+        AlertDialog(
+            onDismissRequest = { if (!isDeletingAccount) showDeleteAccountDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
+                )
+            },
+            title = { Text(stringResource(R.string.delete_account_title)) },
+            text = { Text(stringResource(R.string.delete_account_message)) },
+            confirmButton = {
+                TextButton(
+                    enabled = !isDeletingAccount,
+                    onClick = {
+                        scope.launch {
+                            isDeletingAccount = true
+                            deleteAccountError = null
+
+                            val result = deleteCurrentUserAccountAndData(context)
+
+                            isDeletingAccount = false
+                            showDeleteAccountDialog = false
+
+                            result.onSuccess {
+                                removePin(context)
+                                setPinEnabled(context, false)
+
+                                prefs.edit()
+                                    .putBoolean("skipAuth", false)
+                                    .apply()
+
+                                val googleClient = GoogleSignIn.getClient(
+                                    context,
+                                    GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                        .requestIdToken(context.getString(R.string.default_web_client_id))
+                                        .requestEmail()
+                                        .build()
+                                )
+                                googleClient.signOut()
+                                com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
+
+                                val intent = Intent(context, MainActivity::class.java).apply {
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                }
+                                context.startActivity(intent)
+                                (context as? Activity)?.finish()
+                            }.onFailure { e ->
+                                val msg = e.message.orEmpty()
+
+                                deleteAccountError =
+                                    if (
+                                        msg.contains("recent", ignoreCase = true) ||
+                                        msg.contains("credential", ignoreCase = true) ||
+                                        msg.contains("login", ignoreCase = true)
+                                    ) {
+                                        context.getString(R.string.delete_account_error_recent_login)
+                                    } else {
+                                        "${context.getString(R.string.delete_account_error_generic)}: $msg"
+                                    }
+                            }
+                        }
+                    }
+                ) {
+                    Text(
+                        text = if (isDeletingAccount) {
+                            stringResource(R.string.delete_account_progress)
+                        } else {
+                            stringResource(R.string.delete_account_confirm)
+                        },
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    enabled = !isDeletingAccount,
+                    onClick = { showDeleteAccountDialog = false }
+                ) {
+                    Text(stringResource(R.string.btn_cancel))
+                }
+            },
+            properties = DialogProperties(
+                dismissOnBackPress = !isDeletingAccount,
+                dismissOnClickOutside = !isDeletingAccount
+            )
+        )
+    }
+    deleteAccountError?.let { errorText ->
+        AlertDialog(
+            onDismissRequest = { deleteAccountError = null },
+            title = { Text(stringResource(R.string.delete_account_title)) },
+            text = { Text(errorText) },
+            confirmButton = {
+                TextButton(onClick = { deleteAccountError = null }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
 } // закрываем SettingsScreen
 
 @Composable

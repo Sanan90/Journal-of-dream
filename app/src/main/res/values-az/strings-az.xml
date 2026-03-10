@@ -377,4 +377,16 @@
     <string name="auth_guest_btn">Qonaq kimi daxil ol</string>
     <string name="auth_or">və ya</string>
     <string name="auth_not_verified">E-poçt təsdiqlənməyib. Gələn qutunuzu yoxlayın və linkə klikləyin</string>
+
+    <string name="settings_delete_account">Hesabı sil</string>
+    <string name="settings_delete_account_desc">Hesabı və bütün əlaqəli məlumatları sil</string>
+    <string name="delete_account_title">Hesab silinsin?</string>
+    <string name="delete_account_message">Bu əməliyyat hesabınızı, yuxularınızı, məkanlarınızı, PIN kodunuzu, şərhlərinizi və digər əlaqəli məlumatları siləcək. Bunu geri qaytarmaq mümkün olmayacaq.</string>
+    <string name="delete_account_confirm">Sil</string>
+    <string name="delete_account_progress">Hesab silinir...</string>
+    <string name="delete_account_error_recent_login">Hesabı silmək üçün tətbiqə yenidən daxil olmalısınız. Çıxış edin, yenidən daxil olun və təkrar cəhd edin.</string>
+    <string name="delete_account_error_generic">Hesabı silmək alınmadı</string>
+    <string name="deleted_user_name">Silinmiş istifadəçi</string>
+    <string name="unknown_user">Naməlum istifadəçi</string>
+    <string name="ok">OK</string>
 </resources>

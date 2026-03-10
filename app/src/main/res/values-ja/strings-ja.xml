@@ -376,4 +376,16 @@
     <string name="auth_guest_btn">ゲストとして続ける</string>
     <string name="auth_or">または</string>
     <string name="auth_not_verified">メールが未確認です。受信トレイを確認してリンクをクリックしてください</string>
+
+    <string name="settings_delete_account">アカウントを削除</string>
+    <string name="settings_delete_account_desc">アカウントと関連データをすべて削除します</string>
+    <string name="delete_account_title">アカウントを削除しますか？</string>
+    <string name="delete_account_message">この操作により、アカウント、夢、場所、PIN、コメント、その他の関連データが削除されます。この操作は元に戻せません。</string>
+    <string name="delete_account_confirm">削除</string>
+    <string name="delete_account_progress">アカウントを削除中...</string>
+    <string name="delete_account_error_recent_login">アカウントを削除するには、もう一度サインインする必要があります。サインアウトして再度サインインしてから、もう一度お試しください。</string>
+    <string name="delete_account_error_generic">アカウントを削除できませんでした</string>
+    <string name="deleted_user_name">削除されたユーザー</string>
+    <string name="unknown_user">不明なユーザー</string>
+    <string name="ok">OK</string>
 </resources>

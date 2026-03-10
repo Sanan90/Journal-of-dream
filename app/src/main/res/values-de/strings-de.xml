@@ -376,4 +376,16 @@
     <string name="auth_guest_btn">Als Gast fortfahren</string>
     <string name="auth_or">oder</string>
     <string name="auth_not_verified">E-Mail nicht bestätigt. Bitte prüfe deinen Posteingang und klicke den Link</string>
+
+    <string name="settings_delete_account">Konto löschen</string>
+    <string name="settings_delete_account_desc">Konto und alle zugehörigen Daten löschen</string>
+    <string name="delete_account_title">Konto löschen?</string>
+    <string name="delete_account_message">Diese Aktion löscht Ihr Konto, Träume, Orte, PIN, Kommentare und andere zugehörige Daten. Dies kann nicht rückgängig gemacht werden.</string>
+    <string name="delete_account_confirm">Löschen</string>
+    <string name="delete_account_progress">Konto wird gelöscht...</string>
+    <string name="delete_account_error_recent_login">Um Ihr Konto zu löschen, müssen Sie sich erneut anmelden. Melden Sie sich ab, dann wieder an und versuchen Sie es erneut.</string>
+    <string name="delete_account_error_generic">Konto konnte nicht gelöscht werden</string>
+    <string name="deleted_user_name">Gelöschter Benutzer</string>
+    <string name="unknown_user">Unbekannter Benutzer</string>
+    <string name="ok">OK</string>
 </resources>

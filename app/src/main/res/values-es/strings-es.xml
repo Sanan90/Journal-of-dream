@@ -376,4 +376,16 @@
     <string name="auth_guest_btn">Continuar como invitado</string>
     <string name="auth_or">o</string>
     <string name="auth_not_verified">Email no verificado. Revisa tu bandeja de entrada y haz clic en el enlace</string>
+
+    <string name="settings_delete_account">Eliminar cuenta</string>
+    <string name="settings_delete_account_desc">Eliminar la cuenta y todos los datos relacionados</string>
+    <string name="delete_account_title">¿Eliminar cuenta?</string>
+    <string name="delete_account_message">Esta acción eliminará tu cuenta, sueños, ubicaciones, PIN, comentarios y otros datos relacionados. Esto no se podrá deshacer.</string>
+    <string name="delete_account_confirm">Eliminar</string>
+    <string name="delete_account_progress">Eliminando cuenta...</string>
+    <string name="delete_account_error_recent_login">Para eliminar tu cuenta, debes iniciar sesión de nuevo. Cierra sesión, vuelve a entrar y vuelve a intentarlo.</string>
+    <string name="delete_account_error_generic">No se pudo eliminar la cuenta</string>
+    <string name="deleted_user_name">Usuario eliminado</string>
+    <string name="unknown_user">Usuario desconocido</string>
+    <string name="ok">OK</string>
 </resources>

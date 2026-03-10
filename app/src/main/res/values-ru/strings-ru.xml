@@ -377,4 +377,17 @@
     <string name="auth_guest_btn">Войти как гость</string>
     <string name="auth_or">или</string>
     <string name="auth_not_verified">Почта не подтверждена. Проверьте входящие и перейдите по ссылке в письме</string>
+
+    <string name="settings_delete_account">Удалить аккаунт</string>
+    <string name="settings_delete_account_desc">Удалить аккаунт и все связанные данные</string>
+    <string name="delete_account_title">Удалить аккаунт?</string>
+    <string name="delete_account_message">Это действие удалит ваш аккаунт, сны, локации, PIN, комментарии и другие связанные данные. Отменить это будет нельзя.</string>
+    <string name="delete_account_confirm">Удалить</string>
+    <string name="delete_account_progress">Удаление аккаунта...</string>
+    <string name="delete_account_error_recent_login">Для удаления аккаунта нужно заново войти в приложение. Выйдите, войдите снова и повторите попытку.</string>
+    <string name="delete_account_error_generic">Не удалось удалить аккаунт</string>
+    <string name="deleted_user_name">Удалённый пользователь</string>
+    <string name="unknown_user">Неизвестный пользователь</string>
+    <string name="ok">OK</string>
+
 </resources>

@@ -63,7 +63,14 @@ fun AuthScreen(
     val focusManager = LocalFocusManager.current
 
     // Режим: false = вход, true = регистрация
-    var isRegisterMode by remember { mutableStateOf(false) }
+    val prefs = context.getSharedPreferences("app_prefs", Activity.MODE_PRIVATE)
+    val hasAuthHistory = remember {
+        prefs.getBoolean("has_auth_history", false)
+    }
+
+    var isRegisterMode by remember {
+        mutableStateOf(!hasAuthHistory)
+    }
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -106,11 +113,20 @@ fun AuthScreen(
             auth.signInWithCredential(credential).addOnCompleteListener(activity!!) { res ->
                 isLoading = false
                 if (res.isSuccessful) {
-                    auth.currentUser?.let { locationViewModel.onUserLogin(it); dreamViewModel.onUserLogin() }
+                    prefs.edit().putBoolean("has_auth_history", true).apply()
+                    auth.currentUser?.let {
+                        locationViewModel.onUserLogin(it)
+                        dreamViewModel.onUserLogin()
+                    }
                     onAuthSuccess()
-                } else errorMessage = res.exception?.message
+                } else {
+                    errorMessage = res.exception?.message
+                }
             }
-        } catch (e: Exception) { isLoading = false; errorMessage = e.message }
+        } catch (e: Exception) {
+            isLoading = false
+            errorMessage = e.message
+        }
     }
 
     // Пульсирующий glow
@@ -294,14 +310,12 @@ fun AuthScreen(
                                                 .setDisplayName(name.trim()).build()
                                             auth.currentUser?.updateProfile(profileUpdate)
                                                 ?.addOnCompleteListener {
-                                                    // Отправляем письмо подтверждения
+                                                    prefs.edit().putBoolean("has_auth_history", true).apply()
                                                     auth.currentUser?.sendEmailVerification()
                                                     isLoading = false
-                                                    // Показываем экран подтверждения почты
                                                     isRegisterMode = false
                                                     password = ""
                                                     successMessage = "$strVerifySent ${email.trim()}"
-                                                    // Выходим — пользователь должен подтвердить почту
                                                     auth.signOut()
                                                 }
                                         } else {
@@ -326,11 +340,16 @@ fun AuthScreen(
                                                     // Повторно отправляем письмо
                                                     user.sendEmailVerification()
                                                 } else {
-                                                    user?.let { locationViewModel.onUserLogin(it); dreamViewModel.onUserLogin() }
+                                                    prefs.edit().putBoolean("has_auth_history", true).apply()
+                                                    user?.let {
+                                                        locationViewModel.onUserLogin(it)
+                                                        dreamViewModel.onUserLogin()
+                                                    }
                                                     onAuthSuccess()
                                                 }
                                             } ?: run {
                                                 isLoading = false
+                                                prefs.edit().putBoolean("has_auth_history", true).apply()
                                                 onAuthSuccess()
                                             }
                                         } else {

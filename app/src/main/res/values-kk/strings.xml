@@ -383,4 +383,16 @@
     <string name="auth_guest_btn">Қонақ ретінде кіру</string>
     <string name="auth_or">немесе</string>
     <string name="auth_not_verified">Пошта расталмаған. Кіріс хаттарыңызды тексеріп, хаттағы сілтемеге өтіңіз</string>
+
+    <string name="settings_delete_account">Тіркелгіні жою</string>
+    <string name="settings_delete_account_desc">Тіркелгіні және оған қатысты барлық деректерді жою</string>
+    <string name="delete_account_title">Тіркелгі жойылсын ба?</string>
+    <string name="delete_account_message">Бұл әрекет сіздің тіркелгіңізді, түстеріңізді, орындарыңызды, PIN кодыңызды, пікірлеріңізді және басқа қатысты деректерді жояды. Мұны кері қайтару мүмкін болмайды.</string>
+    <string name="delete_account_confirm">Жою</string>
+    <string name="delete_account_progress">Тіркелгі жойылып жатыр...</string>
+    <string name="delete_account_error_recent_login">Тіркелгіні жою үшін қолданбаға қайта кіруіңіз керек. Шығып, қайта кіріп, әрекетті қайталаңыз.</string>
+    <string name="delete_account_error_generic">Тіркелгіні жою мүмкін болмады</string>
+    <string name="deleted_user_name">Жойылған пайдаланушы</string>
+    <string name="unknown_user">Белгісіз пайдаланушы</string>
+    <string name="ok">OK</string>
 </resources>

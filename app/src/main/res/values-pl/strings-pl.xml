@@ -376,4 +376,16 @@
     <string name="auth_guest_btn">Kontynuuj jako gość</string>
     <string name="auth_or">lub</string>
     <string name="auth_not_verified">Email nie potwierdzony. Sprawdź skrzynkę i kliknij link w wiadomości</string>
+
+    <string name="settings_delete_account">Usuń konto</string>
+    <string name="settings_delete_account_desc">Usuń konto i wszystkie powiązane dane</string>
+    <string name="delete_account_title">Usunąć konto?</string>
+    <string name="delete_account_message">Ta operacja usunie Twoje konto, sny, lokalizacje, PIN, komentarze i inne powiązane dane. Nie będzie można tego cofnąć.</string>
+    <string name="delete_account_confirm">Usuń</string>
+    <string name="delete_account_progress">Usuwanie konta...</string>
+    <string name="delete_account_error_recent_login">Aby usunąć konto, musisz ponownie zalogować się do aplikacji. Wyloguj się, zaloguj ponownie i spróbuj jeszcze raz.</string>
+    <string name="delete_account_error_generic">Nie udało się usunąć konta</string>
+    <string name="deleted_user_name">Usunięty użytkownik</string>
+    <string name="unknown_user">Nieznany użytkownik</string>
+    <string name="ok">OK</string>
 </resources>

@@ -376,4 +376,16 @@
     <string name="auth_guest_btn">Misafir olarak devam et</string>
     <string name="auth_or">veya</string>
     <string name="auth_not_verified">E-posta doğrulanmadı. Gelen kutunuzu kontrol edin ve bağlantıya tıklayın</string>
+
+    <string name="settings_delete_account">Hesabı sil</string>
+    <string name="settings_delete_account_desc">Hesabı ve ilgili tüm verileri sil</string>
+    <string name="delete_account_title">Hesap silinsin mi?</string>
+    <string name="delete_account_message">Bu işlem hesabınızı, rüyalarınızı, konumlarınızı, PIN’inizi, yorumlarınızı ve diğer ilgili verileri silecektir. Bu işlem geri alınamaz.</string>
+    <string name="delete_account_confirm">Sil</string>
+    <string name="delete_account_progress">Hesap siliniyor...</string>
+    <string name="delete_account_error_recent_login">Hesabı silmek için uygulamaya yeniden giriş yapmanız gerekir. Çıkış yapın, tekrar giriş yapın ve yeniden deneyin.</string>
+    <string name="delete_account_error_generic">Hesap silinemedi</string>
+    <string name="deleted_user_name">Silinmiş kullanıcı</string>
+    <string name="unknown_user">Bilinmeyen kullanıcı</string>
+    <string name="ok">OK</string>
 </resources>

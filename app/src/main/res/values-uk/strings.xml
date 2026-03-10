@@ -383,4 +383,16 @@
     <string name="auth_guest_btn">Увійти як гість</string>
     <string name="auth_or">або</string>
     <string name="auth_not_verified">Пошта не підтверджена. Перевірте вхідні та перейдіть за посиланням у листі</string>
+
+    <string name="settings_delete_account">Видалити акаунт</string>
+    <string name="settings_delete_account_desc">Видалити акаунт і всі пов’язані дані</string>
+    <string name="delete_account_title">Видалити акаунт?</string>
+    <string name="delete_account_message">Ця дія видалить ваш акаунт, сни, локації, PIN, коментарі та інші пов’язані дані. Скасувати це буде неможливо.</string>
+    <string name="delete_account_confirm">Видалити</string>
+    <string name="delete_account_progress">Видалення акаунта...</string>
+    <string name="delete_account_error_recent_login">Щоб видалити акаунт, потрібно знову увійти в застосунок. Вийдіть, увійдіть знову і повторіть спробу.</string>
+    <string name="delete_account_error_generic">Не вдалося видалити акаунт</string>
+    <string name="deleted_user_name">Видалений користувач</string>
+    <string name="unknown_user">Невідомий користувач</string>
+    <string name="ok">OK</string>
 </resources>

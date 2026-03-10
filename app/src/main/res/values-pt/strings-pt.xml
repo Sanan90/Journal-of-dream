@@ -376,4 +376,16 @@
     <string name="auth_guest_btn">Continuar como convidado</string>
     <string name="auth_or">ou</string>
     <string name="auth_not_verified">Email não verificado. Verifique sua caixa de entrada e clique no link</string>
+
+    <string name="settings_delete_account">Excluir conta</string>
+    <string name="settings_delete_account_desc">Excluir a conta e todos os dados relacionados</string>
+    <string name="delete_account_title">Excluir conta?</string>
+    <string name="delete_account_message">Esta ação excluirá sua conta, sonhos, locais, PIN, comentários e outros dados relacionados. Isso não poderá ser desfeito.</string>
+    <string name="delete_account_confirm">Excluir</string>
+    <string name="delete_account_progress">Excluindo conta...</string>
+    <string name="delete_account_error_recent_login">Para excluir sua conta, você precisa entrar novamente no aplicativo. Saia, entre novamente e tente outra vez.</string>
+    <string name="delete_account_error_generic">Não foi possível excluir a conta</string>
+    <string name="deleted_user_name">Usuário excluído</string>
+    <string name="unknown_user">Usuário desconhecido</string>
+    <string name="ok">OK</string>
 </resources>
