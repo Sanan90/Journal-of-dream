@@ -1,13 +1,15 @@
 package com.example.journalofdream.util
 
-import android.app.*
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.example.journalofdream.MainActivity
 import com.example.journalofdream.R
 import com.example.journalofdream.ReminderReceiver
 import com.example.journalofdream.QuoteReceiver
@@ -30,12 +32,18 @@ fun createNotificationChannel(context: Context) {
         ).apply {
             description = "Уведомления для напоминаний о записи сна"
         }
-        context.getSystemService(NotificationManager::class.java)
-            .createNotificationChannel(channel)
+
+        val manager = context.getSystemService(NotificationManager::class.java)
+        manager.createNotificationChannel(channel)
     }
 }
 
-fun showNotification(context: Context, title: String, message: String, notificationId: Int = NOTIFICATION_ID_REMINDER) {
+fun showNotification(
+    context: Context,
+    title: String,
+    message: String,
+    notificationId: Int = NOTIFICATION_ID_REMINDER
+) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         val check = context.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
         if (check != android.content.pm.PackageManager.PERMISSION_GRANTED) {
@@ -47,7 +55,9 @@ fun showNotification(context: Context, title: String, message: String, notificat
     val launchIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
     val pendingIntent = launchIntent?.let {
         PendingIntent.getActivity(
-            context, 0, it,
+            context,
+            0,
+            it,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
@@ -69,6 +79,10 @@ fun scheduleDailyReminder(context: Context, hour: Int, minute: Int) {
     scheduleAlarm(context, hour, minute, ALARM_REQUEST_CODE, ReminderReceiver::class.java)
 }
 
+fun cancelDailyReminder(context: Context) {
+    cancelAlarm(context, ALARM_REQUEST_CODE, ReminderReceiver::class.java)
+}
+
 fun scheduleQuoteAlarms(context: Context) {
     scheduleAlarm(context, 10, 0, ALARM_REQUEST_CODE_QUOTE_10, QuoteReceiver::class.java)
     scheduleAlarm(context, 16, 0, ALARM_REQUEST_CODE_QUOTE_16, QuoteReceiver::class.java)
@@ -85,12 +99,22 @@ fun scheduleAlarmByRequestCode(context: Context, hour: Int, minute: Int, request
     scheduleAlarm(context, hour, minute, requestCode, QuoteReceiver::class.java)
 }
 
-private fun <T> scheduleAlarm(context: Context, hour: Int, minute: Int, requestCode: Int, receiverClass: Class<T>) {
+private fun <T> scheduleAlarm(
+    context: Context,
+    hour: Int,
+    minute: Int,
+    requestCode: Int,
+    receiverClass: Class<T>
+) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    val intent = Intent(context, receiverClass)
-    intent.putExtra("request_code", requestCode)
+    val intent = Intent(context, receiverClass).apply {
+        putExtra("request_code", requestCode)
+    }
+
     val pendingIntent = PendingIntent.getBroadcast(
-        context, requestCode, intent,
+        context,
+        requestCode,
+        intent,
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
 
@@ -100,31 +124,60 @@ private fun <T> scheduleAlarm(context: Context, hour: Int, minute: Int, requestC
         set(Calendar.MINUTE, minute)
         set(Calendar.SECOND, 0)
         set(Calendar.MILLISECOND, 0)
-        if (before(now)) add(Calendar.DAY_OF_MONTH, 1)
+
+        if (before(now)) {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }
     }
 
-    val alarmManager2 = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val canScheduleExact = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        alarmManager2.canScheduleExactAlarms()
-    } else true
+        alarmManager.canScheduleExactAlarms()
+    } else {
+        true
+    }
 
     if (canScheduleExact) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                pendingIntent
+            )
         } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+            alarmManager.setExact(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                pendingIntent
+            )
         }
     } else {
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                pendingIntent
+            )
+        } else {
+            alarmManager.set(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                pendingIntent
+            )
+        }
     }
 }
 
 private fun <T> cancelAlarm(context: Context, requestCode: Int, receiverClass: Class<T>) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(context, receiverClass)
+
     val pendingIntent = PendingIntent.getBroadcast(
-        context, requestCode, intent,
+        context,
+        requestCode,
+        intent,
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     )
+
     alarmManager.cancel(pendingIntent)
+    pendingIntent.cancel()
 }

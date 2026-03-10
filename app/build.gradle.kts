@@ -2,22 +2,20 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
-    id("kotlin-kapt") // Для работы с Room
+    id("kotlin-kapt")
     id("com.google.firebase.crashlytics")
-
 }
-
 
 android {
     namespace = "com.example.journalofdream"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.journalofdream"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 35
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -37,6 +35,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
@@ -56,24 +55,23 @@ android {
 
 dependencies {
     implementation("androidx.biometric:biometric:1.1.0")
-    // --- Firebase ---
+
+    // Firebase
     implementation(platform(libs.firebase.bom.v3330))
     implementation(libs.google.firebase.analytics.ktx)
     implementation(libs.google.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.play.services.auth.v2060)
     implementation(libs.firebase.auth)
-
     implementation("com.google.firebase:firebase-crashlytics-ktx")
 
-
-    // --- AndroidX Core + Lifecycle ---
+    // AndroidX Core + Lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx.v287) // LiveData
+    implementation(libs.androidx.lifecycle.livedata.ktx.v287)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    // --- Jetpack Compose ---
+    // Jetpack Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -82,13 +80,13 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
 
-    // --- UI Components ---
+    // UI Components
     implementation(libs.material)
     implementation(libs.androidx.viewpager2)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.constraintlayout)
 
-    // --- Room ---
+    // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.runtime.livedata)
@@ -96,7 +94,7 @@ dependencies {
 
     implementation("androidx.compose.material:material-icons-extended")
 
-    // --- Testing ---
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

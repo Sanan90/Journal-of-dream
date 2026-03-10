@@ -40,6 +40,7 @@ import androidx.navigation.NavHostController
 import com.example.journalofdream.ui.common.BackgroundScreen
 import com.example.journalofdream.util.cancelQuoteAlarms
 import com.example.journalofdream.util.scheduleDailyReminder
+import com.example.journalofdream.util.cancelDailyReminder
 import com.example.journalofdream.util.scheduleQuoteAlarms
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,19 +112,22 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                 SettingsSectionTitle("🔔 Уведомления")
 
                 // Включить/выключить уведомления
-                SettingsToggleRow(
-                    icon = Icons.Default.Notifications,
-                    title = stringResource(R.string.settings_notifications),
-                    subtitle = stringResource(R.string.settings_reminder_desc),
-                    checked = notificationsEnabled,
-                    onCheckedChange = { enabled ->
-                        notificationsEnabled = enabled
-                        prefs.edit().putBoolean("notifications_enabled", enabled).apply()
-                        if (enabled) {
-                            scheduleDailyReminder(context, notificationHour, notificationMinute)
+                    SettingsToggleRow(
+                        icon = Icons.Default.Notifications,
+                        title = stringResource(R.string.settings_notifications),
+                        subtitle = stringResource(R.string.settings_reminder_desc),
+                        checked = notificationsEnabled,
+                        onCheckedChange = { enabled ->
+                            notificationsEnabled = enabled
+                            prefs.edit().putBoolean("notifications_enabled", enabled).apply()
+
+                            if (enabled) {
+                                scheduleDailyReminder(context, notificationHour, notificationMinute)
+                            } else {
+                                cancelDailyReminder(context)
+                            }
                         }
-                    }
-                )
+                    )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
