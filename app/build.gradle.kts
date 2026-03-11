@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.journalofdream"
+    namespace = "com.dreamjournal.journalofdream"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.journalofdream"
+        applicationId = "com.dreamjournal.journalofdream"
         minSdk = 24
         targetSdk = 35
         versionCode = 2

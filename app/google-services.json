@@ -1,10 +1,48 @@
 {
   "project_info": {
     "project_number": "502456233313",
+    "firebase_url": "https://journalofdream-90266-default-rtdb.firebaseio.com",
     "project_id": "journalofdream-90266",
     "storage_bucket": "journalofdream-90266.firebasestorage.app"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502456233313:android:c46678f7887e9e26aee920",
+        "android_client_info": {
+          "package_name": "com.dreamjournal.journalofdream"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502456233313-6fgjfq978amphpceinss7ta8kjd0vus2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dreamjournal.journalofdream",
+            "certificate_hash": "2783ae9f6b1f651f14e6ba0a087a368a3f21c128"
+          }
+        },
+        {
+          "client_id": "502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIwOvv8DlCQSTndqGPlVrELIxg5ZJ2iZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:502456233313:android:4703566404dc91e3aee920",

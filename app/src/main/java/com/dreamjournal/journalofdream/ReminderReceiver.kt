@@ -1,0 +1,47 @@
+package com.dreamjournal.journalofdream
+
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.util.Log
+import com.dreamjournal.journalofdream.util.LocaleHelper
+import com.dreamjournal.journalofdream.util.scheduleDailyReminder
+import com.dreamjournal.journalofdream.util.showNotification
+import com.dreamjournal.journalofdream.R
+import java.util.Calendar
+
+class ReminderReceiver : BroadcastReceiver() {
+
+    override fun onReceive(context: Context, intent: Intent) {
+        Log.d("ReminderReceiver", "Будильник сработал!")
+
+        val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
+        if (!notificationsEnabled) return
+
+        // Проверяем записал ли пользователь сон сегодня
+        val todayKey = getTodayKey()
+        val dreamRecorded = prefs.getBoolean(todayKey, false)
+
+        if (!dreamRecorded) {
+            // Применяем язык приложения к контексту
+            val localizedContext = LocaleHelper.applyLanguage(context)
+            showNotification(
+                context,
+                title = localizedContext.getString(R.string.notif_reminder_title),
+                message = localizedContext.getString(R.string.notif_reminder_message)
+            )
+        }
+
+        // Планируем следующее напоминание
+        val hour = prefs.getInt("notification_hour", 8)
+        val minute = prefs.getInt("notification_minute", 0)
+        scheduleDailyReminder(context, hour, minute)
+        Log.d("ReminderReceiver", "Следующий будильник на $hour:$minute")
+    }
+
+    private fun getTodayKey(): String {
+        val now = Calendar.getInstance()
+        return "dream_recorded_${now.get(Calendar.YEAR)}_${now.get(Calendar.MONTH) + 1}_${now.get(Calendar.DAY_OF_MONTH)}"
+    }
+}
