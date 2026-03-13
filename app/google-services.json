@@ -47,7 +47,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:502456233313:android:4703566404dc91e3aee920",
         "android_client_info": {
-          "package_name": "com.example.journalofdream"
+          "package_name": "com.dreamjournal.journalofdream"
         }
       },
       "oauth_client": [
@@ -55,7 +55,7 @@
           "client_id": "502456233313-tfbl4bhauvgtlq6tl9qlagbmuiv9eoj6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.journalofdream",
+            "package_name": "com.dreamjournal.journalofdream",
             "certificate_hash": "2783ae9f6b1f651f14e6ba0a087a368a3f21c128"
           }
         },
