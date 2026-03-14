@@ -12,9 +12,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -58,7 +60,22 @@ fun formatDateForDisplay(date: String): String {
         val outputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         outputFormat.format(inputFormat.parse(date)!!)
     } catch (e: Exception) {
-        date // если формат старый — показываем как есть
+        date
+    }
+}
+
+// Форматирует дату для автоназвания: "Сон 12 марта"
+fun formatDateForTitle(date: String, context: android.content.Context): String {
+    return try {
+        val langCode = com.dreamjournal.journalofdream.util.LocaleHelper.getSavedLanguage(context)
+        val locale = if (langCode == "system") Locale.getDefault() else Locale(langCode)
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val parsed = inputFormat.parse(date)!!
+        val day = SimpleDateFormat("d", locale).format(parsed)
+        val month = SimpleDateFormat("MMMM", locale).format(parsed)
+        context.getString(R.string.dream_auto_title, day, month)
+    } catch (e: Exception) {
+        date
     }
 }
 
@@ -72,27 +89,23 @@ fun AddDreamScreen(
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    // Поля ввода для нового сна
+
     var title by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<Category?>(null) }
     var isCategoryMenuExpanded by remember { mutableStateOf(false) }
-    var showError by remember { mutableStateOf(false) }
     var showExitDialog by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf(getCurrentDate()) }
     var showDatePicker by remember { mutableStateOf(false) }
     var selectedTime by remember { mutableStateOf(getCurrentTime()) }
     var showTimePicker by remember { mutableStateOf(false) }
 
-    // Есть ли несохранённые изменения
     val hasUnsavedChanges = title.isNotBlank() || content.isNotBlank()
 
-    // Перехват кнопки Назад
     BackHandler(enabled = hasUnsavedChanges) {
         showExitDialog = true
     }
 
-    // Диалог подтверждения выхода
     if (showExitDialog) {
         AlertDialog(
             onDismissRequest = { showExitDialog = false },
@@ -111,7 +124,6 @@ fun AddDreamScreen(
         )
     }
 
-    // DatePickerDialog
     if (showDatePicker) {
         val cal = java.util.Calendar.getInstance()
         android.app.DatePickerDialog(
@@ -130,7 +142,6 @@ fun AddDreamScreen(
         }
     }
 
-    // TimePickerDialog
     if (showTimePicker) {
         val cal = java.util.Calendar.getInstance()
         android.app.TimePickerDialog(
@@ -141,22 +152,18 @@ fun AddDreamScreen(
             },
             cal.get(java.util.Calendar.HOUR_OF_DAY),
             cal.get(java.util.Calendar.MINUTE),
-            true // 24-часовой формат
+            true
         ).also {
             it.setOnCancelListener { showTimePicker = false }
             it.show()
         }
     }
 
-    // Состояния для выбора локаций
     var isLocationDialogOpen by remember { mutableStateOf(false) }
     val selectedLocationIds = remember { mutableStateListOf<Int>() }
 
-    // ViewModel для категорий (если требуется)
     val categoryViewModel: CategoryViewModel = viewModel()
     val categories by categoryViewModel.allCategories.observeAsState(listOf())
-
-    // Список всех локаций текущего пользователя (для отображения в диалоге)
     val allLocations by locationViewModel.locations.observeAsState(emptyList())
 
     Scaffold(
@@ -164,7 +171,9 @@ fun AddDreamScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.dream_add_title)) },
                 navigationIcon = {
-                    IconButton(onClick = { if (hasUnsavedChanges) showExitDialog = true else navController.popBackStack() }) {
+                    IconButton(onClick = {
+                        if (hasUnsavedChanges) showExitDialog = true else navController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = stringResource(R.string.btn_back),
@@ -181,42 +190,44 @@ fun AddDreamScreen(
         },
         content = { paddingValues ->
             Box(modifier = Modifier.fillMaxSize()) {
-                // Фоновое изображение/цвет
                 BackgroundScreen()
 
+                // imePadding() — контент поднимается над клавиатурой
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
+                        .imePadding()
+                        .verticalScroll(rememberScrollState())
                         .padding(16.dp)
-                        .clickable(indication = null, interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }) {
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+                        ) {
                             focusManager.clearFocus()
                             keyboardController?.hide()
                         }
                 ) {
-                    // Поле ввода заголовка сна
                     OutlinedTextField(
                         value = title,
-                        onValueChange = {
-                            title = it
-                            if (it.isNotBlank()) showError = false
-                        },
+                        onValueChange = { title = it },
                         label = { Text(stringResource(R.string.dream_field_name)) },
+                        placeholder = { Text(
+                            formatDateForTitle(selectedDate, context),
+                            color = Color.White.copy(alpha = 0.4f)
+                        )},
                         textStyle = TextStyle(fontSize = 18.sp),
                         singleLine = true,
-                        isError = showError,
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Выбор даты и времени сна в одну строку
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        // Дата
                         OutlinedButton(
                             onClick = { showDatePicker = true },
                             modifier = Modifier.weight(1f),
@@ -235,7 +246,6 @@ fun AddDreamScreen(
                                 fontSize = 13.sp
                             )
                         }
-                        // Время
                         OutlinedButton(
                             onClick = { showTimePicker = true },
                             modifier = Modifier.weight(0.7f),
@@ -248,10 +258,8 @@ fun AddDreamScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Поле ввода содержания сна + кнопка голосового ввода
                     val speechLauncher = rememberSpeechLauncher { recognized ->
-                        content = if (content.isBlank()) recognized
-                                  else "$content $recognized"
+                        content = if (content.isBlank()) recognized else "$content $recognized"
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -265,11 +273,11 @@ fun AddDreamScreen(
                             textStyle = TextStyle(fontSize = 16.sp),
                             modifier = Modifier
                                 .weight(1f)
-                                .height(120.dp),
-                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                            keyboardActions = KeyboardActions(onDone = { })
+                                .heightIn(min = 120.dp),
+                            // minLines убирает ограничение по высоте снизу
+                            minLines = 5,
+                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
                         )
-                        // Кнопка микрофона
                         IconButton(
                             onClick = { speechLauncher() },
                             modifier = Modifier
@@ -286,7 +294,6 @@ fun AddDreamScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Выбор категории + управление категориями
                     var showCategoryManager by remember { mutableStateOf(false) }
 
                     Row(
@@ -301,7 +308,14 @@ fun AddDreamScreen(
                                 .padding(16.dp)
                         ) {
                             Text(
-                                text = selectedCategory?.name?.let { localizeCategory(it, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal)) } ?: stringResource(R.string.dreams_no_category),
+                                text = selectedCategory?.name?.let {
+                                    localizeCategory(it,
+                                        stringResource(R.string.dreams_no_category),
+                                        stringResource(R.string.cat_nightmares),
+                                        stringResource(R.string.cat_lucid),
+                                        stringResource(R.string.cat_plot),
+                                        stringResource(R.string.cat_personal))
+                                } ?: stringResource(R.string.dreams_no_category),
                                 color = Color.White,
                                 fontSize = 16.sp
                             )
@@ -312,24 +326,22 @@ fun AddDreamScreen(
                             ) {
                                 DropdownMenuItem(
                                     text = { Text(stringResource(R.string.dreams_no_category)) },
-                                    onClick = {
-                                        selectedCategory = null
-                                        isCategoryMenuExpanded = false
-                                    }
+                                    onClick = { selectedCategory = null; isCategoryMenuExpanded = false }
                                 )
                                 categories.forEach { cat ->
                                     DropdownMenuItem(
-                                        text = { Text(localizeCategory(cat.name, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal))) },
-                                        onClick = {
-                                            selectedCategory = cat
-                                            isCategoryMenuExpanded = false
-                                        }
+                                        text = { Text(localizeCategory(cat.name,
+                                            stringResource(R.string.dreams_no_category),
+                                            stringResource(R.string.cat_nightmares),
+                                            stringResource(R.string.cat_lucid),
+                                            stringResource(R.string.cat_plot),
+                                            stringResource(R.string.cat_personal))) },
+                                        onClick = { selectedCategory = cat; isCategoryMenuExpanded = false }
                                     )
                                 }
                             }
                         }
 
-                        // Кнопка управления категориями (добавить/удалить)
                         IconButton(onClick = { showCategoryManager = true }) {
                             Icon(
                                 imageVector = Icons.Default.Add,
@@ -349,19 +361,20 @@ fun AddDreamScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Кнопка для выбора локаций
                     Button(
                         onClick = { isLocationDialogOpen = true },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                     ) {
                         Text(
-                            text = if (selectedLocationIds.isEmpty()) stringResource(R.string.dream_pick_locations) else stringResource(R.string.dream_locations_selected, selectedLocationIds.size),
+                            text = if (selectedLocationIds.isEmpty())
+                                stringResource(R.string.dream_pick_locations)
+                            else
+                                stringResource(R.string.dream_locations_selected, selectedLocationIds.size),
                             color = Color.White
                         )
                     }
 
-                    // Диалог со списком локаций для выбора
                     if (isLocationDialogOpen) {
                         AlertDialog(
                             onDismissRequest = { isLocationDialogOpen = false },
@@ -375,22 +388,16 @@ fun AddDreamScreen(
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .clickable {
-                                                    if (isSelected) {
-                                                        selectedLocationIds.remove(location.id)
-                                                    } else {
-                                                        selectedLocationIds.add(location.id)
-                                                    }
+                                                    if (isSelected) selectedLocationIds.remove(location.id)
+                                                    else selectedLocationIds.add(location.id)
                                                 }
                                                 .padding(8.dp)
                                         ) {
                                             Checkbox(
                                                 checked = isSelected,
                                                 onCheckedChange = {
-                                                    if (isSelected) {
-                                                        selectedLocationIds.remove(location.id)
-                                                    } else {
-                                                        selectedLocationIds.add(location.id)
-                                                    }
+                                                    if (isSelected) selectedLocationIds.remove(location.id)
+                                                    else selectedLocationIds.add(location.id)
                                                 }
                                             )
                                             Text(text = location.name)
@@ -408,34 +415,21 @@ fun AddDreamScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Сообщение об ошибке валидации
-                    if (showError) {
-                        Text(
-                            text = stringResource(R.string.dream_error_name),
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(bottom = 4.dp)
-                        )
-                    }
-
-                    // Кнопка сохранения нового сна
                     Button(
                         onClick = {
-                            if (title.isBlank()) {
-                                showError = true
-                                return@Button
-                            }
-                            showError = false
-                            // Создаём объект Dream из введённых данных
+                            val finalTitle = if (title.isBlank())
+                                formatDateForTitle(selectedDate, context)
+                            else
+                                title.trim()
+
                             val dream = Dream(
-                                title = title.trim(),
+                                title = finalTitle,
                                 content = content.trim(),
                                 date = selectedDate,
                                 time = selectedTime,
                                 category = selectedCategory?.name ?: context.getString(R.string.dreams_no_category)
                             )
-                            // Сохраняем сон вместе с выбранными локациями
                             dreamViewModel.addDream(dream, selectedLocationIds.toList())
-                            // Возврат к списку после сохранения
                             navController.popBackStack()
                         },
                         modifier = Modifier.align(Alignment.End),

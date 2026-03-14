@@ -9,9 +9,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -21,14 +23,13 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.activity.compose.BackHandler
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.dreamjournal.journalofdream.model.Category
@@ -38,10 +39,6 @@ import com.dreamjournal.journalofdream.viewmodel.CategoryViewModel
 import com.dreamjournal.journalofdream.viewmodel.DreamViewModel
 import com.dreamjournal.journalofdream.viewmodel.LocationViewModel
 
-/**
- * Экран редактирования существующего сна.
- * @param dreamId – идентификатор сна, переданный через NavHost (аргумент маршрута "editDream/{id}").
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditDreamScreen(
@@ -52,34 +49,56 @@ fun EditDreamScreen(
     categoryViewModel: CategoryViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    // Преобразуем идентификатор из строки в Int (если не получилось, ставим 0)
     val dreamIdInt = dreamId.toIntOrNull() ?: 0
 
-    // Получаем LiveData сна с его локациями из ViewModel
     val dreamWithLocationsLD = dreamViewModel.getDreamWithLocationsById(dreamIdInt)
     val dreamWithLocationsState by dreamWithLocationsLD.observeAsState()
 
-    // Список всех локаций пользователя (для выбора новых/удаления старых привязок)
     val allLocations by locationViewModel.locations.observeAsState(emptyList())
-    // Список категорий (для выпадающего списка категорий)
     val categories by categoryViewModel.allCategories.observeAsState(emptyList())
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    // Если данные сна ещё загружаются (dreamWithLocations == null), можно показать индикатор загрузки или пустое пространство
     dreamWithLocationsState?.let { dreamWithLocs ->
         val dream = dreamWithLocs.dream
 
-        // Поля состояния с начальными значениями из загруженного сна
         var title by remember { mutableStateOf(dream.title) }
         var content by remember { mutableStateOf(dream.content) }
-
-        // Инициализация выбранной категории
-        // ИСПРАВЛЕНО: используем LaunchedEffect, т.к. при первом remember categories ещё пустой список
         var selectedCategory by remember { mutableStateOf<Category?>(null) }
         var categoryMenuExpanded by remember { mutableStateOf(false) }
         var showDeleteDialog by remember { mutableStateOf(false) }
         var showTitleError by remember { mutableStateOf(false) }
+        var showExitDialog by remember { mutableStateOf(false) }
+
+        // Есть ли несохранённые изменения
+        val hasUnsavedChanges = title != dream.title || content != dream.content
+
+        // Перехват кнопки Назад — если есть изменения показываем диалог
+        BackHandler(enabled = hasUnsavedChanges) {
+            showExitDialog = true
+        }
+
+        // Диалог подтверждения выхода без сохранения
+        if (showExitDialog) {
+            AlertDialog(
+                onDismissRequest = { showExitDialog = false },
+                title = { Text(stringResource(R.string.discard_title)) },
+                text = { Text(stringResource(R.string.discard_dream_message)) },
+                confirmButton = {
+                    TextButton(onClick = {
+                        showExitDialog = false
+                        navController.popBackStack()
+                    }) {
+                        Text(stringResource(R.string.discard_confirm), color = MaterialTheme.colorScheme.error)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showExitDialog = false }) {
+                        Text(stringResource(R.string.discard_dismiss))
+                    }
+                }
+            )
+        }
 
         LaunchedEffect(categories) {
             if (selectedCategory == null && categories.isNotEmpty()) {
@@ -87,15 +106,12 @@ fun EditDreamScreen(
             }
         }
 
-        // Состояния для управления выбором локаций
         var isLocationDialogOpen by remember { mutableStateOf(false) }
         val selectedLocationIds = remember { mutableStateListOf<Int>() }
 
-        // Время сна — берём из существующего или текущее
         var selectedTime by remember { mutableStateOf(dream.time.ifBlank { getCurrentTime() }) }
         var showTimePicker by remember { mutableStateOf(false) }
 
-        // TimePickerDialog
         if (showTimePicker) {
             val timeParts = selectedTime.split(":").map { it.toIntOrNull() ?: 0 }
             android.app.TimePickerDialog(
@@ -113,7 +129,6 @@ fun EditDreamScreen(
             }
         }
 
-        // ИСПРАВЛЕНО: при загрузке сна заполняем список выбранных локаций (IDs) для корректного отображения
         LaunchedEffect(dreamWithLocs) {
             selectedLocationIds.clear()
             selectedLocationIds.addAll(dreamWithLocs.locations.map { it.id })
@@ -124,7 +139,10 @@ fun EditDreamScreen(
                 TopAppBar(
                     title = { Text(stringResource(R.string.dream_edit_title)) },
                     navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = {
+                            if (hasUnsavedChanges) showExitDialog = true
+                            else navController.popBackStack()
+                        }) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = stringResource(R.string.btn_back),
@@ -151,9 +169,10 @@ fun EditDreamScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(paddingValues)
+                            .imePadding()
+                            .verticalScroll(rememberScrollState())
                             .padding(16.dp)
                     ) {
-                        // Поля ввода с текущими значениями сна
                         OutlinedTextField(
                             value = title,
                             onValueChange = {
@@ -164,9 +183,6 @@ fun EditDreamScreen(
                             textStyle = TextStyle(fontSize = 18.sp),
                             singleLine = true,
                             isError = showTitleError,
-                            supportingText = if (showTitleError) {
-                                { Text(stringResource(R.string.dream_field_name)) }
-                            } else null,
                             modifier = Modifier.fillMaxWidth(),
                             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
                         )
@@ -180,14 +196,13 @@ fun EditDreamScreen(
                             textStyle = TextStyle(fontSize = 16.sp),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(120.dp),
-                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                                .heightIn(min = 120.dp),
+                            minLines = 5,
+                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Default),
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Выбор категории + управление категориями
                         var showCategoryManager by remember { mutableStateOf(false) }
 
                         Row(
@@ -202,7 +217,14 @@ fun EditDreamScreen(
                                     .padding(16.dp)
                             ) {
                                 Text(
-                                    text = selectedCategory?.name?.let { localizeCategory(it, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal)) } ?: stringResource(R.string.dreams_no_category),
+                                    text = selectedCategory?.name?.let {
+                                        localizeCategory(it,
+                                            stringResource(R.string.dreams_no_category),
+                                            stringResource(R.string.cat_nightmares),
+                                            stringResource(R.string.cat_lucid),
+                                            stringResource(R.string.cat_plot),
+                                            stringResource(R.string.cat_personal))
+                                    } ?: stringResource(R.string.dreams_no_category),
                                     color = Color.White,
                                     fontSize = 18.sp
                                 )
@@ -212,18 +234,17 @@ fun EditDreamScreen(
                                 ) {
                                     DropdownMenuItem(
                                         text = { Text(stringResource(R.string.dreams_no_category)) },
-                                        onClick = {
-                                            selectedCategory = null
-                                            categoryMenuExpanded = false
-                                        }
+                                        onClick = { selectedCategory = null; categoryMenuExpanded = false }
                                     )
                                     categories.forEach { category ->
                                         DropdownMenuItem(
-                                            text = { Text(localizeCategory(category.name, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal))) },
-                                            onClick = {
-                                                selectedCategory = category
-                                                categoryMenuExpanded = false
-                                            }
+                                            text = { Text(localizeCategory(category.name,
+                                                stringResource(R.string.dreams_no_category),
+                                                stringResource(R.string.cat_nightmares),
+                                                stringResource(R.string.cat_lucid),
+                                                stringResource(R.string.cat_plot),
+                                                stringResource(R.string.cat_personal))) },
+                                            onClick = { selectedCategory = category; categoryMenuExpanded = false }
                                         )
                                     }
                                 }
@@ -248,19 +269,20 @@ fun EditDreamScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Кнопка выбора локаций (открывает диалог)
                         Button(
                             onClick = { isLocationDialogOpen = true },
                             modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                         ) {
                             Text(
-                                text = if (selectedLocationIds.isEmpty()) stringResource(R.string.dream_pick_locations) else stringResource(R.string.dream_locations_selected, selectedLocationIds.size),
+                                text = if (selectedLocationIds.isEmpty())
+                                    stringResource(R.string.dream_pick_locations)
+                                else
+                                    stringResource(R.string.dream_locations_selected, selectedLocationIds.size),
                                 color = Color.White
                             )
                         }
 
-                        // Диалог выбора локаций (аналогичен AddDreamScreen)
                         if (isLocationDialogOpen) {
                             AlertDialog(
                                 onDismissRequest = { isLocationDialogOpen = false },
@@ -274,22 +296,16 @@ fun EditDreamScreen(
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .clickable {
-                                                        if (isSelected) {
-                                                            selectedLocationIds.remove(location.id)
-                                                        } else {
-                                                            selectedLocationIds.add(location.id)
-                                                        }
+                                                        if (isSelected) selectedLocationIds.remove(location.id)
+                                                        else selectedLocationIds.add(location.id)
                                                     }
                                                     .padding(8.dp)
                                             ) {
                                                 Checkbox(
                                                     checked = isSelected,
                                                     onCheckedChange = {
-                                                        if (isSelected) {
-                                                            selectedLocationIds.remove(location.id)
-                                                        } else {
-                                                            selectedLocationIds.add(location.id)
-                                                        }
+                                                        if (isSelected) selectedLocationIds.remove(location.id)
+                                                        else selectedLocationIds.add(location.id)
                                                     }
                                                 )
                                                 Text(text = location.name)
@@ -307,12 +323,10 @@ fun EditDreamScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Дата и время сна
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            // Дата — только отображение (менять дату в редактировании не даём)
                             OutlinedButton(
                                 onClick = {},
                                 enabled = false,
@@ -326,7 +340,6 @@ fun EditDreamScreen(
                                     fontSize = 13.sp
                                 )
                             }
-                            // Время — можно менять
                             OutlinedButton(
                                 onClick = { showTimePicker = true },
                                 modifier = Modifier.weight(0.7f),
@@ -339,7 +352,6 @@ fun EditDreamScreen(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Кнопка сохранения изменений
                         Button(
                             onClick = {
                                 if (title.isBlank()) {
@@ -366,12 +378,11 @@ fun EditDreamScreen(
             }
         )
 
-        // Диалог подтверждения удаления сна
         if (showDeleteDialog) {
             AlertDialog(
                 onDismissRequest = { showDeleteDialog = false },
                 title = { Text(stringResource(R.string.dialog_delete_dream_title)) },
-                text = { Text("\"${dream.title}\" будет удалён. Это действие нельзя отменить.") },
+                text = { Text("\"${dream.title}\" ${stringResource(R.string.dialog_delete_dream_message)}") },
                 confirmButton = {
                     TextButton(onClick = {
                         showDeleteDialog = false
@@ -389,9 +400,6 @@ fun EditDreamScreen(
             )
         }
     } ?: run {
-        // Если сон не найден или ещё не загружен, можно вывести пустой экран или индикатор
-        Box(modifier = Modifier.fillMaxSize()) {
-            // Placeholder для состояния загрузки/отсутствия данных
-        }
+        Box(modifier = Modifier.fillMaxSize())
     }
 }

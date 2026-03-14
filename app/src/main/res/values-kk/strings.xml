@@ -397,4 +397,7 @@
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 Тіл</string>
 
+
+
+    <string name="dream_auto_title">%1$s %2$s арманы</string>
 </resources>

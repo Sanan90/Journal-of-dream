@@ -397,4 +397,7 @@
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 Мова</string>
 
+
+
+    <string name="dream_auto_title">Сон %1$s %2$s</string>
 </resources>
