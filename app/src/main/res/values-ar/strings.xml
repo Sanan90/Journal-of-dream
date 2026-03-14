@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">مفكرة الأحلام</string>
+
+    <!-- عام -->
+    <string name="btn_save">حفظ</string>
+    <string name="btn_cancel">إلغاء</string>
+    <string name="btn_delete">حذف</string>
+    <string name="btn_edit">تعديل</string>
+    <string name="btn_back">رجوع</string>
+    <string name="btn_add">إضافة</string>
+
+    <!-- الشاشة الرئيسية -->
+    <string name="main_title">مفكرة الأحلام</string>
+    <string name="main_dreams_count">%d أحلام مسجّلة</string>
+    <string name="main_level">مستوى %1$d · %2$s</string>
+    <string name="main_guest">وضع الضيف</string>
+    <string name="main_dreamer">الحالم: %s</string>
+    <string name="nav_dreams">قائمة الأحلام</string>
+    <string name="nav_diary">مفكرة الأحلام</string>
+    <string name="nav_stats">إحصائيات</string>
+    <string name="nav_chart">رسم بياني</string>
+    <string name="nav_achievements">الإنجازات</string>
+    <string name="nav_locations">الأماكن</string>
+    <string name="nav_settings">الإعدادات</string>
+    <string name="nav_techniques">التقنيات</string>
+    <string name="btn_login">تسجيل الدخول</string>
+    <string name="dialog_logout_title">تسجيل الخروج؟</string>
+    <string name="dialog_logout_message">هل أنت متأكد من الخروج؟ ستبقى البيانات المحلية على الجهاز.</string>
+    <string name="btn_logout">خروج</string>
+    <string name="dialog_add_title">إضافة حلم أم مكان؟</string>
+    <string name="btn_add_dream">إضافة مدخل</string>
+
+    <!-- قائمة الأحلام -->
+    <string name="dreams_title">قائمة الأحلام</string>
+    <string name="dreams_list">القائمة</string>
+    <string name="dreams_months">الأشهر</string>
+    <string name="dreams_search">بحث</string>
+    <string name="dreams_sort_az">أ-ي</string>
+    <string name="dreams_sort_date">التاريخ</string>
+    <string name="dreams_empty">لا توجد أحلام بعد</string>
+    <string name="dreams_empty_hint">اضغط + لإضافة أول حلم</string>
+    <string name="dreams_empty_month">لا توجد أحلام هذا الشهر</string>
+    <string name="dreams_not_found">لا توجد نتائج</string>
+    <string name="dreams_add">إضافة حلم</string>
+    <string name="dreams_no_category">بدون تصنيف</string>
+    <string name="dreams_all">جميع الأحلام</string>
+
+    <!-- الأشهر -->
+    <string name="month_jan">يناير</string>
+    <string name="month_feb">فبراير</string>
+    <string name="month_mar">مارس</string>
+    <string name="month_apr">أبريل</string>
+    <string name="month_may">مايو</string>
+    <string name="month_jun">يونيو</string>
+    <string name="month_jul">يوليو</string>
+    <string name="month_aug">أغسطس</string>
+    <string name="month_sep">سبتمبر</string>
+    <string name="month_oct">أكتوبر</string>
+    <string name="month_nov">نوفمبر</string>
+    <string name="month_dec">ديسمبر</string>
+
+    <!-- إضافة/تعديل حلم -->
+    <string name="dream_add_title">إضافة حلم</string>
+    <string name="dream_edit_title">تعديل الحلم</string>
+    <string name="dream_field_name">عنوان الحلم</string>
+    <string name="dream_field_desc">وصف الحلم</string>
+    <string name="dream_error_name">الرجاء إدخال عنوان الحلم</string>
+    <string name="dream_pick_date">اختر تاريخًا</string>
+    <string name="dream_pick_locations">اختر الأماكن</string>
+    <string name="dream_locations_hint">حدد الأماكن</string>
+    <string name="dream_locations_selected">%d مكان محدد</string>
+    <string name="dream_manage_categories">إدارة التصنيفات</string>
+    <string name="dream_save_changes">حفظ التغييرات</string>
+    <string name="dialog_delete_dream_title">حذف الحلم؟</string>
+    <string name="dialog_delete_dream_message">سيُحذف «%s» نهائيًا.</string>
+
+    <!-- الأماكن -->
+    <string name="locations_title">الأماكن</string>
+    <string name="locations_total">الإجمالي: %d</string>
+    <string name="locations_empty">لا توجد أماكن بعد</string>
+    <string name="locations_empty_hint">اضغط + لإضافة أول مكان</string>
+    <string name="locations_add">إضافة مكان</string>
+    <string name="locations_sort_popular">حسب الشعبية</string>
+    <string name="locations_sort_alpha">أبجديًا</string>
+    <string name="locations_sort_last">حسب آخر حلم</string>
+    <string name="locations_last_dream">آخر حلم: %s</string>
+    <string name="locations_no_dreams">لا توجد أحلام بعد</string>
+    <string name="dialog_delete_location_title">حذف المكان؟</string>
+    <string name="dialog_delete_location_message">سيُحذف «%s».</string>
+    <string name="dialog_delete_location_dreams">ستبقى %1$d %2$s، لكن الرابط بالمكان سيُزال.</string>
+    <string name="location_add_title">إضافة مكان</string>
+    <string name="location_field_name">اسم المكان</string>
+    <string name="location_field_desc">وصف المكان</string>
+    <string name="location_field_desc_optional">الوصف (اختياري)</string>
+    <string name="location_error_name">الرجاء إدخال اسم</string>
+    <string name="location_edit_title">تعديل</string>
+    <string name="location_dreams_title">أحلام في هذا المكان</string>
+    <string name="location_dreams_empty_title">لا توجد أحلام بعد</string>
+    <string name="location_dreams_empty_hint">اربط حلمًا بهذا المكان\nعند إنشائه أو تعديله</string>
+    <string name="location_stat_dreams">أحلام</string>
+    <string name="location_stat_first">أول حلم</string>
+    <string name="location_stat_last">آخر حلم</string>
+
+    <!-- إحصائيات -->
+    <string name="stats_title">إحصائيات</string>
+    <string name="stats_total">إجمالي الأحلام</string>
+    <string name="stats_streak">أطول سلسلة</string>
+    <string name="stats_by_category">حسب التصنيف</string>
+    <string name="stats_empty">ستظهر الإحصائيات\nبعد تسجيل أول حلم</string>
+    <string name="stats_best_day">أفضل يوم — %1$d %2$s</string>
+
+    <!-- الرسم البياني -->
+    <string name="chart_title">رسم بياني للنشاط</string>
+    <string name="chart_7days">٧ أيام</string>
+    <string name="chart_30days">٣٠ يومًا</string>
+    <string name="chart_90days">٩٠ يومًا</string>
+    <string name="chart_dreams_by_day">الأحلام يوميًا</string>
+    <string name="chart_active_days">الأيام النشطة</string>
+    <string name="chart_total">إجمالي الأحلام</string>
+    <string name="chart_avg">متوسط/يوم</string>
+    <string name="chart_by_weekday">حسب يوم الأسبوع</string>
+    <string name="chart_by_time">حسب وقت اليوم</string>
+    <string name="chart_time_hint">متى تسجّل أحلامك في الغالب</string>
+    <string name="chart_morning">الصباح</string>
+    <string name="chart_day">الظهيرة</string>
+    <string name="chart_evening">المساء</string>
+    <string name="chart_night">الليل</string>
+    <string name="chart_mon">الإثنين</string>
+    <string name="chart_tue">الثلاثاء</string>
+    <string name="chart_wed">الأربعاء</string>
+    <string name="chart_thu">الخميس</string>
+    <string name="chart_fri">الجمعة</string>
+    <string name="chart_sat">السبت</string>
+    <string name="chart_sun">الأحد</string>
+
+    <!-- الإنجازات -->
+    <string name="achievements_title">الإنجازات</string>
+    <string name="achievements_count">الإنجازات %1$d/%2$d</string>
+    <string name="achievements_max_level">أعلى مستوى! 👑</string>
+    <string name="achievements_level">المستوى %d</string>
+    <string name="achievements_next_level">حتى %1$s: %2$d</string>
+    <string name="achievements_dreams_count">%d أحلام</string>
+
+    <!-- الإعدادات -->
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_notifications">🔔 الإشعارات</string>
+    <string name="settings_reminder">تذكيرات تسجيل الأحلام</string>
+    <string name="settings_reminder_desc">تذكير يومي لتسجيل الأحلام</string>
+    <string name="settings_notif_time">وقت الإشعار</string>
+    <string name="settings_quotes">💬 إشعارات الاقتباسات</string>
+    <string name="settings_quotes_desc">اقتباسات عن الأحلام الواعية في 10:00 و16:00 و22:00</string>
+    <string name="settings_manage_quotes">إدارة الاقتباسات</string>
+    <string name="settings_manage_quotes_desc">إضافة أو حذف اقتباسات للإشعارات</string>
+    <string name="settings_security">🔒 الأمان</string>
+    <string name="settings_pin">حماية برمز PIN</string>
+    <string name="settings_pin_enable">تفعيل حماية التطبيق</string>
+    <string name="settings_pin_set">تعيين رمز PIN جديد</string>
+    <string name="settings_pin_change">تغيير رمز PIN</string>
+    <string name="settings_pin_active">التطبيق محمي برمز PIN</string>
+
+    <string name="plural_dreams_one">حلم</string>
+    <string name="plural_dreams_few">أحلام</string>
+    <string name="plural_dreams_many">أحلام</string>
+
+    <!-- Авторизация -->
+    <string name="auth_email">البريد الإلكتروني</string>
+    <string name="auth_password">كلمة المرور</string>
+    <string name="auth_forgot_password">نسيت كلمة المرور؟</string>
+    <string name="auth_register">إنشاء حساب</string>
+    <string name="auth_google">تسجيل بجوجل</string>
+    <string name="auth_guest">المتابعة بدون حساب</string>
+
+    <!-- Техники -->
+    <string name="tech_sort_new">جديد</string>
+    <string name="tech_enter_code">أدخل الرمز</string>
+    <string name="tech_access_code">رمز الوصول</string>
+    <string name="tech_source_optional">المصدر (اختياري)</string>
+    <string name="tech_source_hint">كتاب، موقع، منتدى...</string>
+
+    <!-- Цитаты/PIN/Онбординг -->
+    <string name="quotes_field_text">نص الاقتباس</string>
+    <string name="quotes_field_hint">أدخل اقتباساً تحفيزياً...</string>
+    <string name="quotes_delete_title">حذف الاقتباس؟</string>
+    <string name="quotes_hide_title">إخفاء الاقتباس؟</string>
+    <string name="quotes_hide_btn">إخفاء</string>
+    <string name="pin_enter">أدخل PIN</string>
+    <string name="onboarding_skip">تخطي</string>
+
+    <!-- Новые строки -->
+    <string name="tech_wrong_code">رمز خاطئ</string>
+    <string name="tech_conn_error">خطأ في الاتصال</string>
+    <string name="tech_empty">لم تُضف تقنيات بعد</string>
+    <string name="tech_edit_title">تعديل التقنية</string>
+    <string name="tech_add_title">تقنية جديدة</string>
+    <string name="tech_label">التقنية</string>
+    <string name="tech_comment_hint">تجربتك مع هذه التقنية...</string>
+    <string name="tech_send">إرسال</string>
+    <string name="tech_login_to_comment">سجّل الدخول للتعليق</string>
+    <string name="tech_no_comments">لا تعليقات بعد. شارك تجربتك!</string>
+    <string name="tech_you">أنت</string>
+    <string name="tech_like">إعجاب</string>
+    <string name="cat_title">الفئات</string>
+    <string name="cat_new">فئة جديدة</string>
+    <string name="cat_color">اللون:</string>
+    <string name="cat_all">جميع الفئات:</string>
+    <string name="cat_delete_title">حذف الفئة؟</string>
+    <string name="cat_delete_message">ستُحذف. ستبقى الأحلام بدون فئة.</string>
+    <string name="btn_close">إغلاق</string>
+    <string name="settings_language">لغة التطبيق</string>
+
+    <!-- i18n round 3 -->
+    <string name="dream_title">حلم</string>
+    <string name="dream_no_title">بدون عنوان</string>
+    <string name="dream_label_date">التاريخ</string>
+    <string name="dream_label_time">الوقت</string>
+    <string name="dream_label_category">الفئة</string>
+    <string name="dream_no_desc">لا يوجد وصف</string>
+    <string name="tech_comments">التعليقات (%d)</string>
+    <string name="stats_of_all">من جميع الأحلام</string>
+    <string name="level_1">مبتدئ</string>
+    <string name="level_2">حالم</string>
+    <string name="level_3">مستكشف</string>
+    <string name="level_4">مسافر</string>
+    <string name="level_5">صاحب رؤية</string>
+    <string name="level_6">سيد الأحلام</string>
+    <string name="level_7">معماري الأحلام</string>
+    <string name="level_8">حارس الأحلام</string>
+    <string name="level_9">أسطورة</string>
+    <string name="ach_first_dream_title">الخطوة الأولى</string>
+    <string name="ach_first_location_title">المكان الأول</string>
+    <string name="ach_dreams_5_title">بداية الطريق</string>
+    <string name="ach_dreams_10_title">العشرة</string>
+    <string name="ach_dreams_20_title">العشرون</string>
+    <string name="ach_dreams_25_title">ربع مئة</string>
+    <string name="ach_dreams_50_title">خمسون</string>
+    <string name="ach_dreams_100_title">مئة</string>
+    <string name="ach_dreams_500_title">خمسمئة</string>
+    <string name="ach_dreams_1000_title">أسطورة الأحلام</string>
+    <string name="ach_locations_5_title">مستكشف الأماكن</string>
+    <string name="ach_locations_10_title">خبير خرائط</string>
+    <string name="ach_locations_20_title">حارس الأماكن</string>
+    <string name="ach_locs_in_dream_2_title">بوابة مزدوجة</string>
+    <string name="ach_locs_in_dream_3_title">بوابة ثلاثية</string>
+    <string name="ach_locs_in_dream_5_title">حالم متجول</string>
+    <string name="ach_dreams_in_loc_5_title">المكان المفضل</string>
+    <string name="ach_dreams_in_loc_10_title">الزاوية الأصلية</string>
+    <string name="ach_dreams_in_loc_20_title">موقع دائم</string>
+    <string name="ach_streak_3_title">3 أيام متتالية</string>
+    <string name="ach_streak_7_title">أسبوع الأحلام</string>
+    <string name="ach_streak_14_title">أسبوعان</string>
+    <string name="ach_streak_28_title">الشهر القمري</string>
+    <string name="ach_streak_30_title">شهر الأحلام</string>
+    <string name="ach_streak_100_title">مئة يوم</string>
+    <string name="ach_categories_3_title">تنوع</string>
+    <string name="ach_categories_5_title">جامع</string>
+    <string name="ach_long_dream_title">حلم مفصل</string>
+    <string name="ach_marathon_title">ماراثون</string>
+    <string name="ach_night_owl_title">بومة الليل</string>
+    <string name="ach_early_bird_title">الطير الباكر</string>
+    <string name="ach_night_writer_title">كاتب الليل</string>
+    <string name="ach_all_weekdays_title">كل أيام الأسبوع</string>
+    <string name="ach_nightmare_title">كابوس</string>
+    <string name="ach_comeback_title">العودة</string>
+    <string name="ach_dreamer_week_title">أسبوع نشط</string>
+    <string name="ach_lucky_77_title">محظوظ</string>
+    <string name="ach_ghost_title">شبح</string>
+    <string name="ach_first_dream_desc">سجّل حلمك الأول</string>
+    <string name="ach_first_location_desc">أنشئ موقعك الأول</string>
+    <string name="ach_dreams_5_desc">سجّل 5 أحلام</string>
+    <string name="ach_dreams_10_desc">سجّل 10 أحلام</string>
+    <string name="ach_dreams_20_desc">سجّل 20 حلماً</string>
+    <string name="ach_dreams_25_desc">سجّل 25 حلماً</string>
+    <string name="ach_dreams_50_desc">سجّل 50 حلماً</string>
+    <string name="ach_dreams_100_desc">سجّل 100 حلم</string>
+    <string name="ach_dreams_500_desc">سجّل 500 حلم</string>
+    <string name="ach_dreams_1000_desc">سجّل 1000 حلم</string>
+    <string name="ach_locations_5_desc">أنشئ 5 مواقع</string>
+    <string name="ach_locations_10_desc">أنشئ 10 مواقع</string>
+    <string name="ach_locations_20_desc">أنشئ 20 موقعاً</string>
+    <string name="ach_locs_in_dream_2_desc">اربط موقعين بحلم واحد</string>
+    <string name="ach_locs_in_dream_3_desc">اربط 3 مواقع بحلم واحد</string>
+    <string name="ach_locs_in_dream_5_desc">اربط 5 مواقع بحلم</string>
+    <string name="ach_dreams_in_loc_5_desc">سجّل 5 أحلام في موقع واحد</string>
+    <string name="ach_dreams_in_loc_10_desc">سجّل 10 أحلام في موقع</string>
+    <string name="ach_dreams_in_loc_20_desc">سجّل 20 حلماً في موقع</string>
+    <string name="ach_streak_3_desc">سجّل الأحلام 3 أيام متتالية</string>
+    <string name="ach_streak_7_desc">سجّل الأحلام 7 أيام متتالية</string>
+    <string name="ach_streak_14_desc">14 يوماً متتالياً</string>
+    <string name="ach_streak_28_desc">28 يوماً متتالياً</string>
+    <string name="ach_streak_30_desc">30 يوماً متتالياً</string>
+    <string name="ach_streak_100_desc">100 يوماً متتالياً</string>
+    <string name="ach_categories_3_desc">استخدم 3 فئات</string>
+    <string name="ach_categories_5_desc">استخدم 5 فئات</string>
+    <string name="ach_long_dream_desc">سجّل حلماً أطول من 500 حرف</string>
+    <string name="ach_marathon_desc">سجّل 3 أحلام في يوم واحد</string>
+    <string name="ach_night_owl_desc">سجّل 5 أحلام في يوم</string>
+    <string name="ach_early_bird_desc">سجّل حلماً قبل الساعة 7</string>
+    <string name="ach_night_writer_desc">سجّل حلماً بعد الساعة 11</string>
+    <string name="ach_all_weekdays_desc">حلم في كل يوم من أيام الأسبوع</string>
+    <string name="ach_nightmare_desc">سجّل حلماً بفئة كابوس</string>
+    <string name="ach_comeback_desc">عد بعد استراحة 7+ أيام</string>
+    <string name="ach_dreamer_week_desc">5 من آخر 7 أيام</string>
+    <string name="ach_lucky_77_desc">سجّل 77 حلماً بالضبط</string>
+    <string name="ach_ghost_desc">أنشئ حلماً بدون عنوان</string>
+    <string name="dream_label_locations">المواقع</string>
+    <string name="cat_nightmares">كوابيس</string>
+    <string name="cat_lucid">أحلام واعية</string>
+    <string name="cat_plot">أحلام قصصية</string>
+    <string name="cat_personal">أحلام شخصية</string>
+    <string name="discard_title">تغييرات غير محفوظة</string>
+    <string name="discard_dream_message">لم تحفظ الحلم. هل تريد الخروج بدون حفظ؟</string>
+    <string name="discard_location_message">لم تحفظ الموقع. هل تريد الخروج بدون حفظ؟</string>
+    <string name="discard_confirm">خروج</string>
+    <string name="discard_dismiss">البقاء</string>
+    <string name="pin_forgot_btn">نسيت الرمز</string>
+    <string name="pin_forgot_title">هل نسيت الرمز؟</string>
+    <string name="pin_forgot_message">لإعادة تعيين الرمز، سجّل خروجاً ثم أعد تسجيل الدخول.</string>
+    <string name="pin_forgot_guest_message">في وضع الضيف لا يمكن استرداد الرمز. يمكنك فقط الخروج من وضع الضيف.</string>
+    <string name="pin_forgot_reset">تسجيل الخروج وإعادة تعيين الرمز</string>
+    <string name="pin_forgot_exit">الخروج من وضع الضيف</string>
+    <string name="main_dreams_recorded">مسجّل</string>
+    <string name="auth_welcome">مرحباً</string>
+    <string name="auth_show">إظهار</string>
+    <string name="auth_hide">إخفاء</string>
+    <string name="fab_choose_action">اختر إجراءً</string>
+    <string name="fab_record_dream">تسجيل حلم</string>
+    <string name="fab_add_location">إضافة موقع</string>
+    <string name="onboarding_back">→ رجوع</string>
+    <string name="onboarding_next">التالي →</string>
+    <string name="onboarding_start">ابدأ ✨</string>
+    <string name="onboarding_1_title">ما هي الأحلام الواعية؟</string>
+    <string name="onboarding_1_body">الحلم الواعي هو حالة تنام فيها لكنك تدرك أنك تحلم. في تلك اللحظة يمكنك التحكم فيما يحدث: الطيران، تغيير محيطك، مقابلة من تشاء.\n\nهذا ليس خيالاً — إنه ظاهرة حقيقية يدرسها علماء الأعصاب. نحو 55% من الناس عاشوا حلماً واعياً مرة واحدة على الأقل. مع الممارسة يصبح مهارة عادية.</string>
+    <string name="onboarding_2_title">لماذا تسجّل أحلامك؟</string>
+    <string name="onboarding_2_body">ينسى الدماغ 90% من الحلم خلال أول 10 دقائق بعد الاستيقاظ. مفكرة الأحلام هي أداتك الرئيسية.\n\n• تُدرّب ذاكرة الأحلام: كلما كتبت أكثر تذكّرت أكثر\n• تساعدك على ملاحظة الصور والمواضيع المتكررة\n• تعلّمك التعرف على «علامات» كونك في حلم — مفتاح الوعي\n• مع الوقت ستبدأ برؤية أنماط تؤدي إلى أحلام واعية</string>
+    <string name="onboarding_3_title">الأماكن — خريطة أحلامك</string>
+    <string name="onboarding_3_body">كثير من الناس يعودون مراراً وتكراراً إلى نفس الأماكن في أحلامهم: منزل قديم، مدينة غريبة، غابة، مدرسة.\n\nالأماكن تساعدك على:\n• جمع هذه الأماكن في مكان واحد\n• معرفة عدد مرات زيارتها\n• ملاحظة الأحلام المترابطة وبناء «خريطة أحلامك» الخاصة\n\nعندما تتعرف على مكان مألوف في حلم — هذا محفّز قوي للوعي.</string>
+    <string name="onboarding_4_title">مستعد للبدء؟</string>
+    <string name="onboarding_4_body">كل ما تحتاجه — الاستيقاظ والكتابة فوراً. حتى شظايا، حتى كلمة واحدة.\n\nبعد أسبوع من الإدخالات المنتظمة ستلاحظ أنك تتذكر أكثر. بعد شهر — أولى اللحظات الواعية.\n\nرحلتك نحو الأحلام الواعية تبدأ الآن. 🌙</string>
+    <string name="notif_quote_title">🌙 الأحلام الواعية</string>
+    <string name="notif_reminder_title">حان وقت تسجيل حلمك 🌙</string>
+    <string name="notif_reminder_message">اكتب حلمك بينما الذكريات لا تزال طازجة!</string>
+    <string name="setup_title">تذكير الحلم</string>
+    <string name="setup_subtitle">متى نذكّرك بتسجيل حلمك؟</string>
+    <string name="setup_skip">تخطي</string>
+    <string name="setup_done">تم ✓</string>
+    <string name="support_subtitle">إذا أعجبك التطبيق —\naشتر للمطور قهوة ☕</string>
+    <string name="support_sbp_title">🇷🇺 SBP (نظام الدفع السريع)</string>
+    <string name="support_sbp_hint">امسح رمز QR في تطبيق البنك</string>
+    <string name="support_sbp_copy">📋 نسخ الرقم</string>
+    <string name="support_crypto_title">₿ العملات المشفرة</string>
+    <string name="support_copy_btn">📋 نسخ</string>
+    <string name="support_copied">تم النسخ!</string>
+    <string name="support_thanks">شكراً على دعمك! 🙏\nهذا يحفزنا على تحسين التطبيق.</string>
+    <string name="support_menu_title">اشترِ قهوة ☕</string>
+    <string name="support_menu_subtitle">دعم المطور</string>
+    <string name="support_section">☕ الدعم</string>
+    <string name="auth_title_login">مرحباً بعودتك</string>
+    <string name="auth_title_register">إنشاء حساب</string>
+    <string name="auth_subtitle_login">سجّل دخولك للمتابعة</string>
+    <string name="auth_subtitle_register">ما اسمك؟</string>
+    <string name="auth_name">الاسم</string>
+    <string name="auth_name_error">أدخل اسمك</string>
+    <string name="auth_email_error">أدخل بريداً إلكترونياً صحيحاً</string>
+    <string name="auth_password_error">6 أحرف على الأقل</string>
+    <string name="auth_login_btn">تسجيل الدخول</string>
+    <string name="auth_register_btn">إنشاء حساب</string>
+    <string name="auth_no_account">ليس لديك حساب؟ سجّل</string>
+    <string name="auth_has_account">لديك حساب؟ سجّل دخولك</string>
+    <string name="auth_forgot">نسيت كلمة المرور؟</string>
+    <string name="auth_reset_sent">تم إرسال البريد إلى</string>
+    <string name="auth_wrong_creds">بريد إلكتروني أو كلمة مرور غير صحيحة</string>
+    <string name="auth_loading">يرجى الانتظار...</string>
+    <string name="auth_verify_sent">تحقق من بريدك — أُرسل إلى</string>
+    <string name="auth_google_btn">المتابعة مع Google</string>
+    <string name="auth_guest_btn">المتابعة كضيف</string>
+    <string name="auth_or">أو</string>
+    <string name="auth_not_verified">البريد الإلكتروني غير مُحقق. تحقق من صندوق الوارد وانقر على الرابط</string>
+
+    <string name="settings_delete_account">حذف الحساب</string>
+    <string name="settings_delete_account_desc">حذف الحساب وجميع البيانات المرتبطة به</string>
+    <string name="delete_account_title">هل تريد حذف الحساب؟</string>
+    <string name="delete_account_message">سيؤدي هذا الإجراء إلى حذف حسابك، وأحلامك، والأماكن، ورمز PIN، والتعليقات، والبيانات الأخرى المرتبطة. لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="delete_account_confirm">حذف</string>
+    <string name="delete_account_progress">جارٍ حذف الحساب...</string>
+    <string name="delete_account_error_recent_login">لحذف حسابك، يجب عليك تسجيل الدخول مرة أخرى. سجّل الخروج، ثم سجّل الدخول مجددًا وحاول مرة أخرى.</string>
+    <string name="delete_account_error_generic">تعذر حذف الحساب</string>
+    <string name="deleted_user_name">مستخدم محذوف</string>
+    <string name="unknown_user">مستخدم غير معروف</string>
+    <string name="ok">OK</string>
+    <string name="settings_section_language">🌐 اللغة</string>
+
+
+
+    <string name="dream_auto_title">حلم %1$s %2$s</string>
+</resources>

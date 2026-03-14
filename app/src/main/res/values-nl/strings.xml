@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Droomdagboek</string>
+
+    <!-- Algemeen -->
+    <string name="btn_save">Opslaan</string>
+    <string name="btn_cancel">Annuleren</string>
+    <string name="btn_delete">Verwijderen</string>
+    <string name="btn_edit">Bewerken</string>
+    <string name="btn_back">Terug</string>
+    <string name="btn_add">Toevoegen</string>
+
+    <!-- Hoofdscherm -->
+    <string name="main_title">Droomdagboek</string>
+    <string name="main_dreams_count">%d dromen vastgelegd</string>
+    <string name="main_level">Niv. %1$d · %2$s</string>
+    <string name="main_guest">Gastmodus</string>
+    <string name="main_dreamer">Dromer: %s</string>
+    <string name="nav_dreams">Dromenlijst</string>
+    <string name="nav_diary">Droomdagboek</string>
+    <string name="nav_stats">Statistieken</string>
+    <string name="nav_chart">Grafiek</string>
+    <string name="nav_achievements">Prestaties</string>
+    <string name="nav_locations">Locaties</string>
+    <string name="nav_settings">Instellingen</string>
+    <string name="nav_techniques">Technieken</string>
+    <string name="btn_login">Inloggen</string>
+    <string name="dialog_logout_title">Uitloggen?</string>
+    <string name="dialog_logout_message">Weet je zeker dat je wilt uitloggen? Lokale gegevens blijven op het apparaat staan.</string>
+    <string name="btn_logout">Uitloggen</string>
+    <string name="dialog_add_title">Een droom of locatie toevoegen?</string>
+    <string name="btn_add_dream">Invoer toevoegen</string>
+
+    <!-- Dromenlijst -->
+    <string name="dreams_title">Dromenlijst</string>
+    <string name="dreams_list">Lijst</string>
+    <string name="dreams_months">Maanden</string>
+    <string name="dreams_search">Zoeken</string>
+    <string name="dreams_sort_az">A-Z</string>
+    <string name="dreams_sort_date">Datum</string>
+    <string name="dreams_empty">Nog geen dromen</string>
+    <string name="dreams_empty_hint">Tik op + om je eerste droom toe te voegen</string>
+    <string name="dreams_empty_month">Geen dromen deze maand</string>
+    <string name="dreams_not_found">Niets gevonden</string>
+    <string name="dreams_add">Droom toevoegen</string>
+    <string name="dreams_no_category">Zonder categorie</string>
+    <string name="dreams_all">Alle dromen</string>
+
+    <!-- Maanden -->
+    <string name="month_jan">Januari</string>
+    <string name="month_feb">Februari</string>
+    <string name="month_mar">Maart</string>
+    <string name="month_apr">April</string>
+    <string name="month_may">Mei</string>
+    <string name="month_jun">Juni</string>
+    <string name="month_jul">Juli</string>
+    <string name="month_aug">Augustus</string>
+    <string name="month_sep">September</string>
+    <string name="month_oct">Oktober</string>
+    <string name="month_nov">November</string>
+    <string name="month_dec">December</string>
+
+    <!-- Droom toevoegen/bewerken -->
+    <string name="dream_add_title">Droom toevoegen</string>
+    <string name="dream_edit_title">Droom bewerken</string>
+    <string name="dream_field_name">Droomtitel</string>
+    <string name="dream_field_desc">Droombeschrijving</string>
+    <string name="dream_error_name">Voer een droomtitel in</string>
+    <string name="dream_pick_date">Datum kiezen</string>
+    <string name="dream_pick_locations">Locaties kiezen</string>
+    <string name="dream_locations_hint">Selecteer locaties</string>
+    <string name="dream_locations_selected">%d locatie(s) geselecteerd</string>
+    <string name="dream_manage_categories">Categorieën beheren</string>
+    <string name="dream_save_changes">Wijzigingen opslaan</string>
+    <string name="dialog_delete_dream_title">Droom verwijderen?</string>
+    <string name="dialog_delete_dream_message">"%s" wordt permanent verwijderd.</string>
+
+    <!-- Locaties -->
+    <string name="locations_title">Locaties</string>
+    <string name="locations_total">Totaal: %d</string>
+    <string name="locations_empty">Nog geen locaties</string>
+    <string name="locations_empty_hint">Tik op + om je eerste locatie toe te voegen</string>
+    <string name="locations_add">Locatie toevoegen</string>
+    <string name="locations_sort_popular">Op populariteit</string>
+    <string name="locations_sort_alpha">Alfabetisch</string>
+    <string name="locations_sort_last">Op laatste droom</string>
+    <string name="locations_last_dream">Laatste droom: %s</string>
+    <string name="locations_no_dreams">Nog geen dromen</string>
+    <string name="dialog_delete_location_title">Locatie verwijderen?</string>
+    <string name="dialog_delete_location_message">"%s" wordt verwijderd.</string>
+    <string name="dialog_delete_location_dreams">%1$d %2$s blijven bewaard, maar de koppeling met de locatie wordt verwijderd.</string>
+    <string name="location_add_title">Locatie toevoegen</string>
+    <string name="location_field_name">Locatienaam</string>
+    <string name="location_field_desc">Locatiebeschrijving</string>
+    <string name="location_field_desc_optional">Beschrijving (optioneel)</string>
+    <string name="location_error_name">Voer een naam in</string>
+    <string name="location_edit_title">Bewerking</string>
+    <string name="location_dreams_title">Dromen op deze locatie</string>
+    <string name="location_dreams_empty_title">Nog geen dromen</string>
+    <string name="location_dreams_empty_hint">Koppel een droom aan deze locatie\nbij het aanmaken of bewerken</string>
+    <string name="location_stat_dreams">Dromen</string>
+    <string name="location_stat_first">Eerste droom</string>
+    <string name="location_stat_last">Laatste droom</string>
+
+    <!-- Statistieken -->
+    <string name="stats_title">Statistieken</string>
+    <string name="stats_total">Totaal dromen</string>
+    <string name="stats_streak">Max. reeks</string>
+    <string name="stats_by_category">Per categorie</string>
+    <string name="stats_empty">Statistieken verschijnen\nwanneer je je eerste droom vastlegt</string>
+    <string name="stats_best_day">Beste dag — %1$d %2$s</string>
+
+    <!-- Grafiek -->
+    <string name="chart_title">Activiteitsgrafiek</string>
+    <string name="chart_7days">7 dagen</string>
+    <string name="chart_30days">30 dagen</string>
+    <string name="chart_90days">90 dagen</string>
+    <string name="chart_dreams_by_day">Dromen per dag</string>
+    <string name="chart_active_days">Actieve dagen</string>
+    <string name="chart_total">Totaal dromen</string>
+    <string name="chart_avg">Gem./dag</string>
+    <string name="chart_by_weekday">Per weekdag</string>
+    <string name="chart_by_time">Per tijdstip</string>
+    <string name="chart_time_hint">Wanneer leg je het vaakst dromen vast</string>
+    <string name="chart_morning">Ochtend</string>
+    <string name="chart_day">Middag</string>
+    <string name="chart_evening">Avond</string>
+    <string name="chart_night">Nacht</string>
+    <string name="chart_mon">Ma</string>
+    <string name="chart_tue">Di</string>
+    <string name="chart_wed">Wo</string>
+    <string name="chart_thu">Do</string>
+    <string name="chart_fri">Vr</string>
+    <string name="chart_sat">Za</string>
+    <string name="chart_sun">Zo</string>
+
+    <!-- Prestaties -->
+    <string name="achievements_title">Prestaties</string>
+    <string name="achievements_count">Prestaties %1$d/%2$d</string>
+    <string name="achievements_max_level">Maximaal niveau! 👑</string>
+    <string name="achievements_level">Niveau %d</string>
+    <string name="achievements_next_level">tot %1$s: %2$d</string>
+    <string name="achievements_dreams_count">%d dromen</string>
+
+    <!-- Instellingen -->
+    <string name="settings_title">Instellingen</string>
+    <string name="settings_notifications">🔔 Meldingen</string>
+    <string name="settings_reminder">Herinneringen voor het vastleggen van dromen</string>
+    <string name="settings_reminder_desc">Dagelijkse herinnering om een droom te noteren</string>
+    <string name="settings_notif_time">Meldingstijd</string>
+    <string name="settings_quotes">💬 Citaatmeldingen</string>
+    <string name="settings_quotes_desc">Citaten over lucide dromen om 10:00, 16:00 en 22:00 uur</string>
+    <string name="settings_manage_quotes">Citaten beheren</string>
+    <string name="settings_manage_quotes_desc">Citaten voor meldingen toevoegen of verwijderen</string>
+    <string name="settings_security">🔒 Beveiliging</string>
+    <string name="settings_pin">PIN-beveiliging</string>
+    <string name="settings_pin_enable">Appbeveiliging inschakelen</string>
+    <string name="settings_pin_set">Nieuwe PIN instellen</string>
+    <string name="settings_pin_change">PIN wijzigen</string>
+    <string name="settings_pin_active">App is beveiligd met PIN</string>
+
+    <string name="plural_dreams_one">droom</string>
+    <string name="plural_dreams_few">dromen</string>
+    <string name="plural_dreams_many">dromen</string>
+
+    <!-- Авторизация -->
+    <string name="auth_email">E-mailadres</string>
+    <string name="auth_password">Wachtwoord</string>
+    <string name="auth_forgot_password">Wachtwoord vergeten?</string>
+    <string name="auth_register">Registreren</string>
+    <string name="auth_google">Inloggen met Google</string>
+    <string name="auth_guest">Doorgaan zonder account</string>
+
+    <!-- Техники -->
+    <string name="tech_sort_new">Nieuw</string>
+    <string name="tech_enter_code">Code invoeren</string>
+    <string name="tech_access_code">Toegangscode</string>
+    <string name="tech_source_optional">Bron (optioneel)</string>
+    <string name="tech_source_hint">Boek, website, forum...</string>
+
+    <!-- Цитаты/PIN/Онбординг -->
+    <string name="quotes_field_text">Citaattekst</string>
+    <string name="quotes_field_hint">Voer een motiverend citaat in...</string>
+    <string name="quotes_delete_title">Citaat verwijderen?</string>
+    <string name="quotes_hide_title">Citaat verbergen?</string>
+    <string name="quotes_hide_btn">Verbergen</string>
+    <string name="pin_enter">PIN invoeren</string>
+    <string name="onboarding_skip">Overslaan</string>
+
+    <!-- Новые строки -->
+    <string name="tech_wrong_code">Verkeerde code</string>
+    <string name="tech_conn_error">Verbindingsfout</string>
+    <string name="tech_empty">Nog geen technieken toegevoegd</string>
+    <string name="tech_edit_title">Techniek bewerken</string>
+    <string name="tech_add_title">Nieuwe techniek</string>
+    <string name="tech_label">Techniek</string>
+    <string name="tech_comment_hint">Jouw ervaring met deze techniek...</string>
+    <string name="tech_send">Versturen</string>
+    <string name="tech_login_to_comment">Log in om een reactie te plaatsen</string>
+    <string name="tech_no_comments">Nog geen reacties. Deel je ervaring!</string>
+    <string name="tech_you">Jij</string>
+    <string name="tech_like">Vind ik leuk</string>
+    <string name="cat_title">Categorieën</string>
+    <string name="cat_new">Nieuwe categorie</string>
+    <string name="cat_color">Kleur:</string>
+    <string name="cat_all">Alle categorieën:</string>
+    <string name="cat_delete_title">Categorie verwijderen?</string>
+    <string name="cat_delete_message">wordt verwijderd. Dromen blijven zonder categorie.</string>
+    <string name="btn_close">Sluiten</string>
+    <string name="settings_language">App-taal</string>
+
+    <!-- i18n round 3 -->
+    <string name="dream_title">Droom</string>
+    <string name="dream_no_title">Zonder titel</string>
+    <string name="dream_label_date">Datum</string>
+    <string name="dream_label_time">Tijd</string>
+    <string name="dream_label_category">Categorie</string>
+    <string name="dream_no_desc">Geen beschrijving</string>
+    <string name="tech_comments">Reacties (%d)</string>
+    <string name="stats_of_all">van alle dromen</string>
+    <string name="level_1">Beginner</string>
+    <string name="level_2">Dromer</string>
+    <string name="level_3">Ontdekkingsreiziger</string>
+    <string name="level_4">Reiziger</string>
+    <string name="level_5">Visionair</string>
+    <string name="level_6">Droommeester</string>
+    <string name="level_7">Droomarchitect</string>
+    <string name="level_8">Droomwachter</string>
+    <string name="level_9">Legende</string>
+    <string name="ach_first_dream_title">Eerste stap</string>
+    <string name="ach_first_location_title">Eerste locatie</string>
+    <string name="ach_dreams_5_title">Begin</string>
+    <string name="ach_dreams_10_title">Tien</string>
+    <string name="ach_dreams_20_title">Twintig</string>
+    <string name="ach_dreams_25_title">Kwart</string>
+    <string name="ach_dreams_50_title">Vijftig</string>
+    <string name="ach_dreams_100_title">Honderd</string>
+    <string name="ach_dreams_500_title">Vijfhonderd</string>
+    <string name="ach_dreams_1000_title">Droomlegende</string>
+    <string name="ach_locations_5_title">Plaatsontdekker</string>
+    <string name="ach_locations_10_title">Cartograaf</string>
+    <string name="ach_locations_20_title">Plaatsbewaarder</string>
+    <string name="ach_locs_in_dream_2_title">Dubbel portaal</string>
+    <string name="ach_locs_in_dream_3_title">Drievoudig portaal</string>
+    <string name="ach_locs_in_dream_5_title">Droomzwerver</string>
+    <string name="ach_dreams_in_loc_5_title">Favoriete plek</string>
+    <string name="ach_dreams_in_loc_10_title">Thuishoek</string>
+    <string name="ach_dreams_in_loc_20_title">Vaste locatie</string>
+    <string name="ach_streak_3_title">3 dagen op rij</string>
+    <string name="ach_streak_7_title">Droomweek</string>
+    <string name="ach_streak_14_title">Twee weken</string>
+    <string name="ach_streak_28_title">Maanmaand</string>
+    <string name="ach_streak_30_title">Droommaand</string>
+    <string name="ach_streak_100_title">Honderd dagen</string>
+    <string name="ach_categories_3_title">Variatie</string>
+    <string name="ach_categories_5_title">Verzamelaar</string>
+    <string name="ach_long_dream_title">Gedetailleerde droom</string>
+    <string name="ach_marathon_title">Marathon</string>
+    <string name="ach_night_owl_title">Nachtuil</string>
+    <string name="ach_early_bird_title">Vroege vogel</string>
+    <string name="ach_night_writer_title">Nachtschrijver</string>
+    <string name="ach_all_weekdays_title">Alle weekdagen</string>
+    <string name="ach_nightmare_title">Nachtmerrie</string>
+    <string name="ach_comeback_title">Terugkeer</string>
+    <string name="ach_dreamer_week_title">Actieve week</string>
+    <string name="ach_lucky_77_title">Geluksvogel</string>
+    <string name="ach_ghost_title">Geest</string>
+    <string name="ach_first_dream_desc">Noteer je eerste droom</string>
+    <string name="ach_first_location_desc">Maak je eerste locatie</string>
+    <string name="ach_dreams_5_desc">Noteer 5 dromen</string>
+    <string name="ach_dreams_10_desc">Noteer 10 dromen</string>
+    <string name="ach_dreams_20_desc">Noteer 20 dromen</string>
+    <string name="ach_dreams_25_desc">Noteer 25 dromen</string>
+    <string name="ach_dreams_50_desc">Noteer 50 dromen</string>
+    <string name="ach_dreams_100_desc">Noteer 100 dromen</string>
+    <string name="ach_dreams_500_desc">Noteer 500 dromen</string>
+    <string name="ach_dreams_1000_desc">Noteer 1000 dromen</string>
+    <string name="ach_locations_5_desc">Maak 5 locaties</string>
+    <string name="ach_locations_10_desc">Maak 10 locaties</string>
+    <string name="ach_locations_20_desc">Maak 20 locaties</string>
+    <string name="ach_locs_in_dream_2_desc">Koppel 2 locaties aan een droom</string>
+    <string name="ach_locs_in_dream_3_desc">Koppel 3 locaties aan een droom</string>
+    <string name="ach_locs_in_dream_5_desc">Koppel 5 locaties aan een droom</string>
+    <string name="ach_dreams_in_loc_5_desc">Noteer 5 dromen op één locatie</string>
+    <string name="ach_dreams_in_loc_10_desc">Noteer 10 dromen op één locatie</string>
+    <string name="ach_dreams_in_loc_20_desc">Noteer 20 dromen op één locatie</string>
+    <string name="ach_streak_3_desc">Noteer dromen 3 dagen op rij</string>
+    <string name="ach_streak_7_desc">Noteer dromen 7 dagen op rij</string>
+    <string name="ach_streak_14_desc">14 dagen op rij</string>
+    <string name="ach_streak_28_desc">28 dagen op rij</string>
+    <string name="ach_streak_30_desc">30 dagen op rij</string>
+    <string name="ach_streak_100_desc">100 dagen op rij</string>
+    <string name="ach_categories_3_desc">Gebruik 3 categorieën</string>
+    <string name="ach_categories_5_desc">Gebruik 5 categorieën</string>
+    <string name="ach_long_dream_desc">Noteer een droom langer dan 500 tekens</string>
+    <string name="ach_marathon_desc">Noteer 3 dromen op één dag</string>
+    <string name="ach_night_owl_desc">Noteer 5 dromen op één dag</string>
+    <string name="ach_early_bird_desc">Noteer een droom voor 7 uur</string>
+    <string name="ach_night_writer_desc">Noteer een droom na 23 uur</string>
+    <string name="ach_all_weekdays_desc">Elke dag van de week</string>
+    <string name="ach_nightmare_desc">Noteer in categorie Nachtmerrie</string>
+    <string name="ach_comeback_desc">Keer terug na 7+ dagen pauze</string>
+    <string name="ach_dreamer_week_desc">5 van de laatste 7 dagen</string>
+    <string name="ach_lucky_77_desc">Noteer precies 77 dromen</string>
+    <string name="ach_ghost_desc">Maak een droom zonder titel</string>
+    <string name="dream_label_locations">Locaties</string>
+    <string name="cat_nightmares">Nachtmerries</string>
+    <string name="cat_lucid">Lucide dromen</string>
+    <string name="cat_plot">Verhalende dromen</string>
+    <string name="cat_personal">Persoonlijke dromen</string>
+    <string name="discard_title">Niet-opgeslagen wijzigingen</string>
+    <string name="discard_dream_message">Je hebt de droom niet opgeslagen. Verlaten zonder opslaan?</string>
+    <string name="discard_location_message">Je hebt de locatie niet opgeslagen. Verlaten zonder opslaan?</string>
+    <string name="discard_confirm">Verlaten</string>
+    <string name="discard_dismiss">Blijven</string>
+    <string name="pin_forgot_btn">PIN vergeten</string>
+    <string name="pin_forgot_title">PIN vergeten?</string>
+    <string name="pin_forgot_message">Om uw PIN te resetten, moet u uitloggen en opnieuw inloggen.</string>
+    <string name="pin_forgot_guest_message">In gastmodus kan de PIN niet worden hersteld. U kunt alleen de gastmodus verlaten.</string>
+    <string name="pin_forgot_reset">Uitloggen en PIN resetten</string>
+    <string name="pin_forgot_exit">Gastmodus verlaten</string>
+    <string name="main_dreams_recorded">opgenomen</string>
+    <string name="auth_welcome">Welkom</string>
+    <string name="auth_show">Tonen</string>
+    <string name="auth_hide">Verbergen</string>
+    <string name="fab_choose_action">Kies actie</string>
+    <string name="fab_record_dream">Droom vastleggen</string>
+    <string name="fab_add_location">Locatie toevoegen</string>
+    <string name="onboarding_back">← Terug</string>
+    <string name="onboarding_next">Volgende →</string>
+    <string name="onboarding_start">Beginnen ✨</string>
+    <string name="onboarding_1_title">Wat zijn lucide dromen?</string>
+    <string name="onboarding_1_body">Een lucide droom is een toestand waarbij je slaapt maar weet dat je droomt. Op dat moment kun je sturen wat er gebeurt: vliegen, je omgeving veranderen, iedereen ontmoeten die je wilt.\n\nDit is geen fictie — het is een echt fenomeen dat door neurowetenschappers wordt onderzocht. Ongeveer 55% van de mensen heeft minstens één keer een lucide droom gehad. Met oefening wordt het een gewone vaardigheid.</string>
+    <string name="onboarding_2_title">Waarom dromen opschrijven?</string>
+    <string name="onboarding_2_body">Het brein vergeet 90% van een droom binnen de eerste 10 minuten na het wakker worden. Een droomjournaal is jouw belangrijkste hulpmiddel.\n\n• Traint het droomgeheugen: hoe meer je schrijft, hoe beter je onthoudt\n• Helpt je terugkerende beelden en thema\'s op te merken\n• Leert je de «tekens» te herkennen dat je droomt — de sleutel tot bewustzijn\n• Met de tijd begin je patronen te zien die leiden tot lucide dromen</string>
+    <string name="onboarding_3_title">Locaties — jouw droomkaart</string>
+    <string name="onboarding_3_body">Veel mensen keren in hun dromen keer op keer terug naar dezelfde plekken: een oud huis, een onbekende stad, een bos, een school.\n\nLocaties helpen je:\n• Deze plekken op één plek te verzamelen\n• Te zien hoe vaak je er bent\n• Samenhangende dromen op te merken en jouw eigen «droomkaart» te bouwen\n\nWanneer je in een droom een vertrouwde plek herkent — dat is een krachtige trigger voor bewustzijn.</string>
+    <string name="onboarding_4_title">Klaar om te beginnen?</string>
+    <string name="onboarding_4_body">Alles wat je nodig hebt — wakker worden en meteen schrijven. Zelfs fragmenten, zelfs één woord.\n\nNa een week regelmatige aantekeningen merk je dat je meer onthoudt. Na een maand — de eerste bewuste momenten.\n\nJouw reis naar lucide dromen begint nu. 🌙</string>
+    <string name="notif_quote_title">🌙 Lucide Dromen</string>
+    <string name="notif_reminder_title">Tijd om je droom op te schrijven 🌙</string>
+    <string name="notif_reminder_message">Schrijf je droom op terwijl de herinneringen nog vers zijn!</string>
+    <string name="setup_title">Droom herinnering</string>
+    <string name="setup_subtitle">Hoe laat moeten we je eraan\nherinneren je droom op te schrijven?</string>
+    <string name="setup_skip">Overslaan</string>
+    <string name="setup_done">Klaar ✓</string>
+    <string name="support_subtitle">Als je de app fijn vindt —\ntrakteer de ontwikkelaar op een koffie ☕</string>
+    <string name="support_sbp_title">🇷🇺 SBP (Snel betalingssysteem)</string>
+    <string name="support_sbp_hint">Scan de QR-code in je bankapp</string>
+    <string name="support_sbp_copy">📋 Nummer kopiëren</string>
+    <string name="support_crypto_title">₿ Cryptovaluta</string>
+    <string name="support_copy_btn">📋 Kopiëren</string>
+    <string name="support_copied">Gekopieerd!</string>
+    <string name="support_thanks">Bedankt voor je steun! 🙏\nDit motiveert ons om de app te verbeteren.</string>
+    <string name="support_menu_title">Koffie trakteren ☕</string>
+    <string name="support_menu_subtitle">Ontwikkelaar steunen</string>
+    <string name="support_section">☕ Steun</string>
+    <string name="auth_title_login">Welkom terug</string>
+    <string name="auth_title_register">Account aanmaken</string>
+    <string name="auth_subtitle_login">Log in om door te gaan</string>
+    <string name="auth_subtitle_register">Hoe heet je?</string>
+    <string name="auth_name">Naam</string>
+    <string name="auth_name_error">Voer je naam in</string>
+    <string name="auth_email_error">Voer een geldig e-mailadres in</string>
+    <string name="auth_password_error">Minimaal 6 tekens</string>
+    <string name="auth_login_btn">Inloggen</string>
+    <string name="auth_register_btn">Account aanmaken</string>
+    <string name="auth_no_account">Geen account? Registreren</string>
+    <string name="auth_has_account">Al een account? Inloggen</string>
+    <string name="auth_forgot">Wachtwoord vergeten?</string>
+    <string name="auth_reset_sent">E-mail verzonden naar</string>
+    <string name="auth_wrong_creds">Onjuist e-mailadres of wachtwoord</string>
+    <string name="auth_loading">Even geduld...</string>
+    <string name="auth_verify_sent">Bevestig je e-mail — verzonden naar</string>
+    <string name="auth_google_btn">Doorgaan met Google</string>
+    <string name="auth_guest_btn">Doorgaan als gast</string>
+    <string name="auth_or">of</string>
+    <string name="auth_not_verified">E-mail niet geverifieerd. Controleer je inbox en klik op de link</string>
+
+    <string name="settings_delete_account">Account verwijderen</string>
+    <string name="settings_delete_account_desc">Account en alle bijbehorende gegevens verwijderen</string>
+    <string name="delete_account_title">Account verwijderen?</string>
+    <string name="delete_account_message">Deze actie verwijdert je account, dromen, locaties, pincode, reacties en andere bijbehorende gegevens. Dit kan niet ongedaan worden gemaakt.</string>
+    <string name="delete_account_confirm">Verwijderen</string>
+    <string name="delete_account_progress">Account wordt verwijderd...</string>
+    <string name="delete_account_error_recent_login">Om je account te verwijderen, moet je opnieuw inloggen. Log uit, log opnieuw in en probeer het nogmaals.</string>
+    <string name="delete_account_error_generic">Account kon niet worden verwijderd</string>
+    <string name="deleted_user_name">Verwijderde gebruiker</string>
+    <string name="unknown_user">Onbekende gebruiker</string>
+    <string name="ok">OK</string>
+    <string name="settings_section_language">🌐 Taal</string>
+
+
+
+    <string name="dream_auto_title">Droom %1$s %2$s</string>
+</resources>

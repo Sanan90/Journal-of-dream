@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">梦境日记</string>
+
+    <!-- 通用 -->
+    <string name="btn_save">保存</string>
+    <string name="btn_cancel">取消</string>
+    <string name="btn_delete">删除</string>
+    <string name="btn_edit">编辑</string>
+    <string name="btn_back">返回</string>
+    <string name="btn_add">添加</string>
+
+    <!-- 主界面 -->
+    <string name="main_title">梦境日记</string>
+    <string name="main_dreams_count">已记录 %d 个梦</string>
+    <string name="main_level">等级 %1$d · %2$s</string>
+    <string name="main_guest">访客模式</string>
+    <string name="main_dreamer">梦想家：%s</string>
+    <string name="nav_dreams">梦境列表</string>
+    <string name="nav_diary">梦境日记</string>
+    <string name="nav_stats">统计</string>
+    <string name="nav_chart">图表</string>
+    <string name="nav_achievements">成就</string>
+    <string name="nav_locations">地点</string>
+    <string name="nav_settings">设置</string>
+    <string name="nav_techniques">技巧</string>
+    <string name="btn_login">登录</string>
+    <string name="dialog_logout_title">退出账户？</string>
+    <string name="dialog_logout_message">确定要退出吗？本地数据将保留在设备上。</string>
+    <string name="btn_logout">退出</string>
+    <string name="dialog_add_title">添加梦境或地点？</string>
+    <string name="btn_add_dream">添加记录</string>
+
+    <!-- 梦境列表 -->
+    <string name="dreams_title">梦境列表</string>
+    <string name="dreams_list">列表</string>
+    <string name="dreams_months">月份</string>
+    <string name="dreams_search">搜索</string>
+    <string name="dreams_sort_az">A-Z</string>
+    <string name="dreams_sort_date">日期</string>
+    <string name="dreams_empty">还没有梦境记录</string>
+    <string name="dreams_empty_hint">点击 + 添加第一个梦境</string>
+    <string name="dreams_empty_month">本月没有梦境记录</string>
+    <string name="dreams_not_found">未找到结果</string>
+    <string name="dreams_add">添加梦境</string>
+    <string name="dreams_no_category">无分类</string>
+    <string name="dreams_all">全部梦境</string>
+
+    <!-- 月份 -->
+    <string name="month_jan">一月</string>
+    <string name="month_feb">二月</string>
+    <string name="month_mar">三月</string>
+    <string name="month_apr">四月</string>
+    <string name="month_may">五月</string>
+    <string name="month_jun">六月</string>
+    <string name="month_jul">七月</string>
+    <string name="month_aug">八月</string>
+    <string name="month_sep">九月</string>
+    <string name="month_oct">十月</string>
+    <string name="month_nov">十一月</string>
+    <string name="month_dec">十二月</string>
+
+    <!-- 添加/编辑梦境 -->
+    <string name="dream_add_title">添加梦境</string>
+    <string name="dream_edit_title">编辑梦境</string>
+    <string name="dream_field_name">梦境标题</string>
+    <string name="dream_field_desc">梦境描述</string>
+    <string name="dream_error_name">请输入梦境标题</string>
+    <string name="dream_pick_date">选择日期</string>
+    <string name="dream_pick_locations">选择地点</string>
+    <string name="dream_locations_hint">选择地点</string>
+    <string name="dream_locations_selected">已选择 %d 个地点</string>
+    <string name="dream_manage_categories">管理分类</string>
+    <string name="dream_save_changes">保存更改</string>
+    <string name="dialog_delete_dream_title">删除梦境？</string>
+    <string name="dialog_delete_dream_message">《%s》将被删除。此操作无法撤销。</string>
+
+    <!-- 地点 -->
+    <string name="locations_title">地点</string>
+    <string name="locations_total">共计：%d</string>
+    <string name="locations_empty">还没有地点</string>
+    <string name="locations_empty_hint">点击 + 添加第一个地点</string>
+    <string name="locations_add">添加地点</string>
+    <string name="locations_sort_popular">按热度</string>
+    <string name="locations_sort_alpha">按字母</string>
+    <string name="locations_sort_last">按最近梦境</string>
+    <string name="locations_last_dream">最近梦境：%s</string>
+    <string name="locations_no_dreams">还没有梦境</string>
+    <string name="dialog_delete_location_title">删除地点？</string>
+    <string name="dialog_delete_location_message">《%s》将被删除。</string>
+    <string name="dialog_delete_location_dreams">%1$d 个%2$s将保留，但与地点的关联将被移除。</string>
+    <string name="location_add_title">添加地点</string>
+    <string name="location_field_name">地点名称</string>
+    <string name="location_field_desc">地点描述</string>
+    <string name="location_field_desc_optional">描述（可选）</string>
+    <string name="location_error_name">请输入名称</string>
+    <string name="location_edit_title">编辑</string>
+    <string name="location_dreams_title">该地点的梦境</string>
+    <string name="location_dreams_empty_title">还没有梦境</string>
+    <string name="location_dreams_empty_hint">在创建或编辑梦境时\n将其与此地点关联</string>
+    <string name="location_stat_dreams">梦境数</string>
+    <string name="location_stat_first">第一个梦</string>
+    <string name="location_stat_last">最近的梦</string>
+
+    <!-- 统计 -->
+    <string name="stats_title">统计</string>
+    <string name="stats_total">总梦境数</string>
+    <string name="stats_streak">最长连续</string>
+    <string name="stats_by_category">按分类</string>
+    <string name="stats_empty">记录第一个梦境后\n统计数据将在此显示</string>
+    <string name="stats_best_day">最佳日期 — %1$d 个%2$s</string>
+
+    <!-- 图表 -->
+    <string name="chart_title">活动图表</string>
+    <string name="chart_7days">7天</string>
+    <string name="chart_30days">30天</string>
+    <string name="chart_90days">90天</string>
+    <string name="chart_dreams_by_day">每日梦境</string>
+    <string name="chart_active_days">活跃天数</string>
+    <string name="chart_total">总梦境数</string>
+    <string name="chart_avg">日均</string>
+    <string name="chart_by_weekday">按星期</string>
+    <string name="chart_by_time">按时段</string>
+    <string name="chart_time_hint">你最常在何时记录梦境</string>
+    <string name="chart_morning">早晨</string>
+    <string name="chart_day">下午</string>
+    <string name="chart_evening">晚上</string>
+    <string name="chart_night">深夜</string>
+    <string name="chart_mon">周一</string>
+    <string name="chart_tue">周二</string>
+    <string name="chart_wed">周三</string>
+    <string name="chart_thu">周四</string>
+    <string name="chart_fri">周五</string>
+    <string name="chart_sat">周六</string>
+    <string name="chart_sun">周日</string>
+
+    <!-- 成就 -->
+    <string name="achievements_title">成就</string>
+    <string name="achievements_count">成就 %1$d/%2$d</string>
+    <string name="achievements_max_level">最高等级！👑</string>
+    <string name="achievements_level">等级 %d</string>
+    <string name="achievements_next_level">距 %1$s：%2$d</string>
+    <string name="achievements_dreams_count">%d 个梦</string>
+
+    <!-- 设置 -->
+    <string name="settings_title">设置</string>
+    <string name="settings_notifications">🔔 通知</string>
+    <string name="settings_reminder">梦境记录提醒</string>
+    <string name="settings_reminder_desc">每日记录梦境的提醒</string>
+    <string name="settings_notif_time">通知时间</string>
+    <string name="settings_quotes">💬 引言通知</string>
+    <string name="settings_quotes_desc">清醒梦引言将在 10:00、16:00 和 22:00 推送</string>
+    <string name="settings_manage_quotes">管理引言</string>
+    <string name="settings_manage_quotes_desc">添加或删除通知引言</string>
+    <string name="settings_security">🔒 安全</string>
+    <string name="settings_pin">PIN 保护</string>
+    <string name="settings_pin_enable">启用应用保护</string>
+    <string name="settings_pin_set">设置新 PIN</string>
+    <string name="settings_pin_change">更改 PIN</string>
+    <string name="settings_pin_active">应用已受 PIN 保护</string>
+
+    <!-- 复数形式（中文不区分） -->
+    <string name="plural_dreams_one">个梦</string>
+    <string name="plural_dreams_few">个梦</string>
+    <string name="plural_dreams_many">个梦</string>
+
+    <!-- Авторизация -->
+    <string name="auth_email">电子邮件</string>
+    <string name="auth_password">密码</string>
+    <string name="auth_forgot_password">忘记密码？</string>
+    <string name="auth_register">注册</string>
+    <string name="auth_google">使用Google登录</string>
+    <string name="auth_guest">无账号继续</string>
+
+    <!-- Техники -->
+    <string name="tech_sort_new">最新</string>
+    <string name="tech_enter_code">输入代码</string>
+    <string name="tech_access_code">访问代码</string>
+    <string name="tech_source_optional">来源（可选）</string>
+    <string name="tech_source_hint">书籍、网站、论坛...</string>
+
+    <!-- Цитаты/PIN/Онбординг -->
+    <string name="quotes_field_text">引用文字</string>
+    <string name="quotes_field_hint">输入励志引言...</string>
+    <string name="quotes_delete_title">删除引言？</string>
+    <string name="quotes_hide_title">隐藏引言？</string>
+    <string name="quotes_hide_btn">隐藏</string>
+    <string name="pin_enter">输入PIN</string>
+    <string name="onboarding_skip">跳过</string>
+
+    <!-- Новые строки -->
+    <string name="tech_wrong_code">错误代码</string>
+    <string name="tech_conn_error">连接错误</string>
+    <string name="tech_empty">尚未添加技巧</string>
+    <string name="tech_edit_title">编辑技巧</string>
+    <string name="tech_add_title">新技巧</string>
+    <string name="tech_label">技巧</string>
+    <string name="tech_comment_hint">分享您使用此技巧的体验...</string>
+    <string name="tech_send">发送</string>
+    <string name="tech_login_to_comment">登录后留言</string>
+    <string name="tech_no_comments">暂无评论。分享您的体验！</string>
+    <string name="tech_you">你</string>
+    <string name="tech_like">点赞</string>
+    <string name="cat_title">分类</string>
+    <string name="cat_new">新分类</string>
+    <string name="cat_color">颜色：</string>
+    <string name="cat_all">所有分类：</string>
+    <string name="cat_delete_title">删除分类？</string>
+    <string name="cat_delete_message">将被删除。梦境将保留但失去分类。</string>
+    <string name="btn_close">关闭</string>
+    <string name="settings_language">应用语言</string>
+
+    <!-- i18n round 3 -->
+    <string name="dream_title">梦</string>
+    <string name="dream_no_title">无标题</string>
+    <string name="dream_label_date">日期</string>
+    <string name="dream_label_time">时间</string>
+    <string name="dream_label_category">分类</string>
+    <string name="dream_no_desc">暂无描述</string>
+    <string name="tech_comments">评论 (%d)</string>
+    <string name="stats_of_all">占总梦境</string>
+    <string name="level_1">初学者</string>
+    <string name="level_2">梦想者</string>
+    <string name="level_3">探索者</string>
+    <string name="level_4">旅行者</string>
+    <string name="level_5">有远见者</string>
+    <string name="level_6">梦境大师</string>
+    <string name="level_7">梦境设计师</string>
+    <string name="level_8">梦境守护者</string>
+    <string name="level_9">传说</string>
+    <string name="ach_first_dream_title">第一步</string>
+    <string name="ach_first_location_title">第一个地点</string>
+    <string name="ach_dreams_5_title">旅途开始</string>
+    <string name="ach_dreams_10_title">十</string>
+    <string name="ach_dreams_20_title">二十</string>
+    <string name="ach_dreams_25_title">四分之一</string>
+    <string name="ach_dreams_50_title">五十</string>
+    <string name="ach_dreams_100_title">百</string>
+    <string name="ach_dreams_500_title">五百</string>
+    <string name="ach_dreams_1000_title">梦境传说</string>
+    <string name="ach_locations_5_title">地点探索者</string>
+    <string name="ach_locations_10_title">制图师</string>
+    <string name="ach_locations_20_title">地点守护者</string>
+    <string name="ach_locs_in_dream_2_title">双重传送门</string>
+    <string name="ach_locs_in_dream_3_title">三重传送门</string>
+    <string name="ach_locs_in_dream_5_title">梦境流浪者</string>
+    <string name="ach_dreams_in_loc_5_title">最爱的地方</string>
+    <string name="ach_dreams_in_loc_10_title">温馨角落</string>
+    <string name="ach_dreams_in_loc_20_title">固定地点</string>
+    <string name="ach_streak_3_title">连续3天</string>
+    <string name="ach_streak_7_title">梦境周</string>
+    <string name="ach_streak_14_title">两周</string>
+    <string name="ach_streak_28_title">农历月</string>
+    <string name="ach_streak_30_title">梦境月</string>
+    <string name="ach_streak_100_title">一百天</string>
+    <string name="ach_categories_3_title">多样性</string>
+    <string name="ach_categories_5_title">收藏家</string>
+    <string name="ach_long_dream_title">详细的梦</string>
+    <string name="ach_marathon_title">马拉松</string>
+    <string name="ach_night_owl_title">夜猫子</string>
+    <string name="ach_early_bird_title">早起的鸟</string>
+    <string name="ach_night_writer_title">夜间书写者</string>
+    <string name="ach_all_weekdays_title">全周</string>
+    <string name="ach_nightmare_title">噩梦</string>
+    <string name="ach_comeback_title">回归</string>
+    <string name="ach_dreamer_week_title">活跃的一周</string>
+    <string name="ach_lucky_77_title">幸运儿</string>
+    <string name="ach_ghost_title">幽灵</string>
+    <string name="ach_first_dream_desc">记录你的第一个梦</string>
+    <string name="ach_first_location_desc">创建第一个地点</string>
+    <string name="ach_dreams_5_desc">记录5个梦</string>
+    <string name="ach_dreams_10_desc">记录10个梦</string>
+    <string name="ach_dreams_20_desc">记录20个梦</string>
+    <string name="ach_dreams_25_desc">记录25个梦</string>
+    <string name="ach_dreams_50_desc">记录50个梦</string>
+    <string name="ach_dreams_100_desc">记录100个梦</string>
+    <string name="ach_dreams_500_desc">记录500个梦</string>
+    <string name="ach_dreams_1000_desc">记录1000个梦</string>
+    <string name="ach_locations_5_desc">创建5个地点</string>
+    <string name="ach_locations_10_desc">创建10个地点</string>
+    <string name="ach_locations_20_desc">创建20个地点</string>
+    <string name="ach_locs_in_dream_2_desc">将2个地点链接到一个梦</string>
+    <string name="ach_locs_in_dream_3_desc">将3个地点链接到一个梦</string>
+    <string name="ach_locs_in_dream_5_desc">将5个地点链接到一个梦</string>
+    <string name="ach_dreams_in_loc_5_desc">在一个地点记录5个梦</string>
+    <string name="ach_dreams_in_loc_10_desc">在一个地点记录10个梦</string>
+    <string name="ach_dreams_in_loc_20_desc">在一个地点记录20个梦</string>
+    <string name="ach_streak_3_desc">连续3天记录梦境</string>
+    <string name="ach_streak_7_desc">连续7天记录梦境</string>
+    <string name="ach_streak_14_desc">连续14天</string>
+    <string name="ach_streak_28_desc">连续28天</string>
+    <string name="ach_streak_30_desc">连续30天</string>
+    <string name="ach_streak_100_desc">连续100天</string>
+    <string name="ach_categories_3_desc">使用3个不同分类</string>
+    <string name="ach_categories_5_desc">使用5个不同分类</string>
+    <string name="ach_long_dream_desc">记录超过500字的梦</string>
+    <string name="ach_marathon_desc">一天记录3个梦</string>
+    <string name="ach_night_owl_desc">一天记录5个梦</string>
+    <string name="ach_early_bird_desc">早上7点前记录梦境</string>
+    <string name="ach_night_writer_desc">晚上11点后记录梦境</string>
+    <string name="ach_all_weekdays_desc">每周每天都记录梦境</string>
+    <string name="ach_nightmare_desc">在噩梦分类记录梦境</string>
+    <string name="ach_comeback_desc">休息7天以上后回归</string>
+    <string name="ach_dreamer_week_desc">最近7天中5天记录梦境</string>
+    <string name="ach_lucky_77_desc">记录恰好77个梦</string>
+    <string name="ach_ghost_desc">创建无标题梦境</string>
+    <string name="dream_label_locations">地点</string>
+    <string name="cat_nightmares">噩梦</string>
+    <string name="cat_lucid">清醒梦</string>
+    <string name="cat_plot">故事梦</string>
+    <string name="cat_personal">个人梦境</string>
+    <string name="discard_title">未保存的更改</string>
+    <string name="discard_dream_message">您没有保存梦境。是否不保存退出？</string>
+    <string name="discard_location_message">您没有保存地点。是否不保存退出？</string>
+    <string name="discard_confirm">退出</string>
+    <string name="discard_dismiss">返回</string>
+    <string name="pin_forgot_btn">忘记PIN</string>
+    <string name="pin_forgot_title">忘记PIN了吗？</string>
+    <string name="pin_forgot_message">要重置PIN，请退出登录后重新登录。</string>
+    <string name="pin_forgot_guest_message">在访客模式下无法恢复PIN。只能退出访客模式。</string>
+    <string name="pin_forgot_reset">退出并重置PIN</string>
+    <string name="pin_forgot_exit">退出访客模式</string>
+    <string name="main_dreams_recorded">已记录</string>
+    <string name="auth_welcome">欢迎</string>
+    <string name="auth_show">显示</string>
+    <string name="auth_hide">隐藏</string>
+    <string name="fab_choose_action">选择操作</string>
+    <string name="fab_record_dream">记录梦境</string>
+    <string name="fab_add_location">添加地点</string>
+    <string name="onboarding_back">← 返回</string>
+    <string name="onboarding_next">下一步 →</string>
+    <string name="onboarding_start">开始 ✨</string>
+    <string name="onboarding_1_title">什么是清醒梦？</string>
+    <string name="onboarding_1_body">清醒梦是一种你睡着但知道自己在做梦的状态。在那一刻，你可以控制发生的事情：飞翔、改变环境、与任何人相遇。\n\n这不是幻想——这是神经科学家研究的真实现象。大约55%的人至少经历过一次清醒梦。通过练习，这会成为一种普通技能。</string>
+    <string name="onboarding_2_title">为什么要记录梦境？</string>
+    <string name="onboarding_2_body">大脑在醒来后的最初10分钟内会忘记90%的梦。梦境日记是你的主要工具。\n\n• 训练梦境记忆：写得越多，记得越多\n• 帮助注意到重复出现的图像和主题\n• 教你识别做梦的「信号」——清醒的关键\n• 随着时间推移，你会开始看到通向清醒梦的规律</string>
+    <string name="onboarding_3_title">地点——你的梦境地图</string>
+    <string name="onboarding_3_body">许多人在梦中一次又一次地回到同样的地方：一所老房子、一个陌生的城市、一片森林、一所学校。\n\n地点功能帮助你：\n• 把这些地方集中在一个地方\n• 查看你去那里的频率\n• 注意相关的梦境，构建你自己的「梦境地图」\n\n当你在梦中认出一个熟悉的地方时——这是自觉的强大触发器。</string>
+    <string name="onboarding_4_title">准备好开始了吗？</string>
+    <string name="onboarding_4_body">你需要做的就是——醒来立刻写下来。哪怕是片段，哪怕只有一个词。\n\n坚持记录一周后，你会发现自己记住了更多。一个月后——第一批清醒的时刻。\n\n你通往清醒梦的旅程就从现在开始。🌙</string>
+    <string name="notif_quote_title">🌙 清醒梦</string>
+    <string name="notif_reminder_title">是时候记录你的梦了 🌙</string>
+    <string name="notif_reminder_message">趁记忆还新鲜，写下你的梦！</string>
+    <string name="setup_title">梦境提醒</string>
+    <string name="setup_subtitle">几点提醒你记录梦境？</string>
+    <string name="setup_skip">跳过</string>
+    <string name="setup_done">完成 ✓</string>
+    <string name="support_subtitle">如果你喜欢这款应用 —\n请开发者喝杯咖啡吧 ☕</string>
+    <string name="support_sbp_title">🇷🇺 SBP（快速支付系统）</string>
+    <string name="support_sbp_hint">在银行应用中扫描二维码</string>
+    <string name="support_sbp_copy">📋 复制号码</string>
+    <string name="support_crypto_title">₿ 加密货币</string>
+    <string name="support_copy_btn">📋 复制</string>
+    <string name="support_copied">已复制！</string>
+    <string name="support_thanks">感谢您的支持！🙏\n这激励我们不断改进应用。</string>
+    <string name="support_menu_title">请喝咖啡 ☕</string>
+    <string name="support_menu_subtitle">支持开发者</string>
+    <string name="support_section">☕ 支持</string>
+    <string name="auth_title_login">欢迎回来</string>
+    <string name="auth_title_register">创建账户</string>
+    <string name="auth_subtitle_login">登录以继续</string>
+    <string name="auth_subtitle_register">你叫什么名字？</string>
+    <string name="auth_name">姓名</string>
+    <string name="auth_name_error">请输入您的姓名</string>
+    <string name="auth_email_error">请输入有效的电子邮件</string>
+    <string name="auth_password_error">至少6个字符</string>
+    <string name="auth_login_btn">登录</string>
+    <string name="auth_register_btn">创建账户</string>
+    <string name="auth_no_account">没有账户？注册</string>
+    <string name="auth_has_account">已有账户？登录</string>
+    <string name="auth_forgot">忘记密码？</string>
+    <string name="auth_reset_sent">邮件已发送至</string>
+    <string name="auth_wrong_creds">邮箱或密码错误</string>
+    <string name="auth_loading">请稍候...</string>
+    <string name="auth_verify_sent">请验证您的邮箱 — 已发送至</string>
+    <string name="auth_google_btn">通过Google继续</string>
+    <string name="auth_guest_btn">以游客身份继续</string>
+    <string name="auth_or">或</string>
+    <string name="auth_not_verified">邮箱未验证。请检查收件箱并点击确认链接</string>
+
+    <string name="settings_delete_account">删除账户</string>
+    <string name="settings_delete_account_desc">删除账户及所有相关数据</string>
+    <string name="delete_account_title">删除账户？</string>
+    <string name="delete_account_message">此操作将删除您的账户、梦境、地点、PIN、评论以及其他相关数据。此操作无法撤销。</string>
+    <string name="delete_account_confirm">删除</string>
+    <string name="delete_account_progress">正在删除账户...</string>
+    <string name="delete_account_error_recent_login">要删除账户，您需要重新登录应用。请先退出，再重新登录后重试。</string>
+    <string name="delete_account_error_generic">无法删除账户</string>
+    <string name="deleted_user_name">已删除用户</string>
+    <string name="unknown_user">未知用户</string>
+    <string name="ok">OK</string>
+    <string name="settings_section_language">🌐 语言</string>
+
+
+
+    <string name="dream_auto_title">%2$s%1$s日之梦</string>
+</resources>
