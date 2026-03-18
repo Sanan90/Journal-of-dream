@@ -1,6 +1,7 @@
 package com.dreamjournal.journalofdream
 
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -10,7 +11,13 @@ import androidx.lifecycle.lifecycleScope
 import com.dreamjournal.journalofdream.R
 import kotlinx.coroutines.launch
 
+import com.dreamjournal.journalofdream.util.LocaleHelper
+
 class SplashActivity : ComponentActivity() {
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.applyLanguage(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)

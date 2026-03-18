@@ -14,8 +14,8 @@ android {
         applicationId = "com.dreamjournal.journalofdream"
         minSdk = 24
         targetSdk = 35
-        versionCode = 4
-        versionName = "1.0.4"
+        versionCode = 6
+        versionName = "1.0.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -50,6 +50,12 @@ android {
 
     packaging {
         resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 }
 
