@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 /**
  * Модель сна. Первичный ключ – localId.
  * ownerUid указывает, какому пользователю (или "guest") принадлежит сон.
- * locationIds игнорируется Room, но используется для хранения связей в Firestore.
+ * locationIds и characterIds игнорируются Room, но используются для хранения связей в Firestore.
  * time — время записи сна в формате "HH:mm" (например "07:30").
  * Для старых записей без времени — пустая строка.
  */
@@ -22,5 +22,7 @@ data class Dream(
     var time: String = "",   // "HH:mm" — время записи сна
     var category: String = "",
     @Ignore
-    var locationIds: List<Int> = emptyList()
+    var locationIds: List<Int> = emptyList(),
+    @Ignore
+    var characterIds: List<Int> = emptyList()
 )

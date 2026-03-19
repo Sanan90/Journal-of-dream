@@ -3,6 +3,7 @@ package com.dreamjournal.journalofdream.model
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
+import com.dreamjournal.journalofdream.model.DreamCharacter
 
 /**
  * "Сон с локациями" (одна сторона связи).
@@ -22,5 +23,15 @@ data class DreamWithLocations(
             entityColumn = "locationId"  // поле во DreamLocationCrossRef, указывающее на Location
         )
     )
-    val locations: List<Location>
+    val locations: List<Location>,
+    @Relation(
+        parentColumn = "localId",
+        entityColumn = "id",
+        associateBy = Junction(
+            DreamCharacterCrossRef::class,
+            parentColumn = "dreamId",
+            entityColumn = "characterId"
+        )
+    )
+    val characters: List<DreamCharacter>
 )

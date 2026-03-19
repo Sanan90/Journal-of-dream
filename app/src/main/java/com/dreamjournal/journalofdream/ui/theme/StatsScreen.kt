@@ -24,6 +24,8 @@ import androidx.navigation.NavHostController
 import com.dreamjournal.journalofdream.model.Dream
 import com.dreamjournal.journalofdream.ui.common.BackgroundScreen
 import com.dreamjournal.journalofdream.viewmodel.DreamViewModel
+import com.dreamjournal.journalofdream.viewmodel.LocationViewModel
+import com.dreamjournal.journalofdream.viewmodel.CharacterViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -98,11 +100,17 @@ fun formatDateForStats(dateStr: String): String {
 @Composable
 fun StatsScreen(
     navController: NavHostController,
-    dreamViewModel: DreamViewModel
+    dreamViewModel: DreamViewModel,
+    locationViewModel: LocationViewModel,
+    characterViewModel: CharacterViewModel
 ) {
     val dreams by dreamViewModel.dreams.observeAsState(emptyList())
     val noCategoryLabel = stringResource(R.string.dreams_no_category)
     val stats = remember(dreams) { computeStats(dreams, noCategoryLabel) }
+    val locationsWithDreams by locationViewModel.getAllLocationsWithDreams().observeAsState(emptyList())
+    val charactersWithDreams by characterViewModel.getAllCharactersWithDreams().observeAsState(emptyList())
+    val topLocations = remember(locationsWithDreams) { locationsWithDreams.sortedByDescending { it.dreams.size }.take(3) }
+    val topCharacters = remember(charactersWithDreams) { charactersWithDreams.sortedByDescending { it.dreams.size }.take(3) }
     val pluralOne = stringResource(R.string.plural_dreams_one)
     val pluralFew = stringResource(R.string.plural_dreams_few)
     val pluralMany = stringResource(R.string.plural_dreams_many)
@@ -183,6 +191,44 @@ fun StatsScreen(
                                 emoji = "🏆",
                                 value = formatDateForStats(date),
                                 label = stringResource(R.string.stats_best_day, count, pluralDreams(count, pluralOne, pluralFew, pluralMany))
+                            )
+                        }
+                    }
+
+                    if (topLocations.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = stringResource(R.string.stats_top_locations),
+                                color = Color.White,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+                        items(topLocations, key = { it.location.id }) { item ->
+                            CategoryStatRow(
+                                category = "📍 ${item.location.name}",
+                                count = item.dreams.size,
+                                total = stats.total
+                            )
+                        }
+                    }
+
+                    if (topCharacters.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = stringResource(R.string.stats_top_characters),
+                                color = Color.White,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+                        items(topCharacters, key = { it.character.id }) { item ->
+                            CategoryStatRow(
+                                category = "👤 ${item.character.name}",
+                                count = item.dreams.size,
+                                total = stats.total
                             )
                         }
                     }

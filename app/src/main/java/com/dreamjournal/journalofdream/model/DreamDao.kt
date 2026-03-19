@@ -3,6 +3,7 @@ package com.dreamjournal.journalofdream.database
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.dreamjournal.journalofdream.model.Dream
+import com.dreamjournal.journalofdream.model.DreamCharacterCrossRef
 import com.dreamjournal.journalofdream.model.DreamLocationCrossRef
 import com.dreamjournal.journalofdream.model.DreamWithLocations
 
@@ -24,8 +25,14 @@ interface DreamDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDreamLocationCrossRef(ref: DreamLocationCrossRef)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDreamCharacterCrossRef(ref: DreamCharacterCrossRef)
+
     @Query("DELETE FROM dream_location_cross_ref WHERE dreamId = :dreamId")
     suspend fun deleteDreamLocationCrossRefs(dreamId: Int)
+
+    @Query("DELETE FROM dream_character_cross_ref WHERE dreamId = :dreamId")
+    suspend fun deleteDreamCharacterCrossRefs(dreamId: Int)
 
     // Получение всех снов для заданного владельца (обновляется в реальном времени)
     @Query("SELECT * FROM dreams WHERE ownerUid = :ownerUid ORDER BY date DESC")
@@ -47,6 +54,9 @@ interface DreamDao {
     // Получение всех ID локаций, связанных с данным сном (разово)
     @Query("SELECT locationId FROM dream_location_cross_ref WHERE dreamId = :dreamId")
     suspend fun getLocationIdsForDream(dreamId: Int): List<Int>
+
+    @Query("SELECT characterId FROM dream_character_cross_ref WHERE dreamId = :dreamId")
+    suspend fun getCharacterIdsForDream(dreamId: Int): List<Int>
 
     @Query("""
     SELECT d.* FROM dreams d

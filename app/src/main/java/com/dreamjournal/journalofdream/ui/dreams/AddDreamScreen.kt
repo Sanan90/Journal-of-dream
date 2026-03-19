@@ -41,6 +41,7 @@ import com.dreamjournal.journalofdream.ui.dreams.CategoryManagerDialog
 import com.dreamjournal.journalofdream.viewmodel.CategoryViewModel
 import com.dreamjournal.journalofdream.viewmodel.DreamViewModel
 import com.dreamjournal.journalofdream.viewmodel.LocationViewModel
+import com.dreamjournal.journalofdream.viewmodel.CharacterViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -84,7 +85,8 @@ fun formatDateForTitle(date: String, context: android.content.Context): String {
 fun AddDreamScreen(
     navController: NavHostController,
     dreamViewModel: DreamViewModel = viewModel(),
-    locationViewModel: LocationViewModel = viewModel()
+    locationViewModel: LocationViewModel = viewModel(),
+    characterViewModel: CharacterViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -160,11 +162,14 @@ fun AddDreamScreen(
     }
 
     var isLocationDialogOpen by remember { mutableStateOf(false) }
+    var isCharacterDialogOpen by remember { mutableStateOf(false) }
     val selectedLocationIds = remember { mutableStateListOf<Int>() }
+    val selectedCharacterIds = remember { mutableStateListOf<Int>() }
 
     val categoryViewModel: CategoryViewModel = viewModel()
     val categories by categoryViewModel.allCategories.observeAsState(listOf())
     val allLocations by locationViewModel.locations.observeAsState(emptyList())
+    val allCharacters by characterViewModel.characters.observeAsState(emptyList())
 
     Scaffold(
         topBar = {
@@ -416,6 +421,60 @@ fun AddDreamScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Button(
+                        onClick = { isCharacterDialogOpen = true },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                    ) {
+                        Text(
+                            text = if (selectedCharacterIds.isEmpty())
+                                stringResource(R.string.dream_pick_characters)
+                            else
+                                stringResource(R.string.dream_characters_selected, selectedCharacterIds.size),
+                            color = Color.White
+                        )
+                    }
+
+                    if (isCharacterDialogOpen) {
+                        AlertDialog(
+                            onDismissRequest = { isCharacterDialogOpen = false },
+                            title = { Text(stringResource(R.string.dream_pick_characters)) },
+                            text = {
+                                LazyColumn {
+                                    items(allCharacters) { character ->
+                                        val isSelected = selectedCharacterIds.contains(character.id)
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .clickable {
+                                                    if (isSelected) selectedCharacterIds.remove(character.id)
+                                                    else selectedCharacterIds.add(character.id)
+                                                }
+                                                .padding(8.dp)
+                                        ) {
+                                            Checkbox(
+                                                checked = isSelected,
+                                                onCheckedChange = {
+                                                    if (isSelected) selectedCharacterIds.remove(character.id)
+                                                    else selectedCharacterIds.add(character.id)
+                                                }
+                                            )
+                                            Text(text = character.name)
+                                        }
+                                    }
+                                }
+                            },
+                            confirmButton = {
+                                TextButton(onClick = { isCharacterDialogOpen = false }) {
+                                    Text(stringResource(R.string.ok))
+                                }
+                            }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
                         onClick = {
                             val finalTitle = if (title.isBlank())
                                 formatDateForTitle(selectedDate, context)
@@ -429,7 +488,7 @@ fun AddDreamScreen(
                                 time = selectedTime,
                                 category = selectedCategory?.name ?: context.getString(R.string.dreams_no_category)
                             )
-                            dreamViewModel.addDream(dream, selectedLocationIds.toList())
+                            dreamViewModel.addDream(dream, selectedLocationIds.toList(), selectedCharacterIds.toList())
                             navController.popBackStack()
                         },
                         modifier = Modifier.align(Alignment.End),

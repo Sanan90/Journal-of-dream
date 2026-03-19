@@ -43,6 +43,7 @@ import com.dreamjournal.journalofdream.R
 import com.dreamjournal.journalofdream.ui.common.BackgroundScreen
 import com.dreamjournal.journalofdream.viewmodel.DreamViewModel
 import com.dreamjournal.journalofdream.viewmodel.LocationViewModel
+import com.dreamjournal.journalofdream.viewmodel.CharacterViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -53,6 +54,7 @@ import com.google.firebase.auth.UserProfileChangeRequest
 fun AuthScreen(
     dreamViewModel: DreamViewModel = viewModel(),
     locationViewModel: LocationViewModel = viewModel(),
+    characterViewModel: CharacterViewModel = viewModel(),
     onAuthSuccess: () -> Unit,
     onSkipAuth: () -> Unit
 ) {
@@ -116,6 +118,7 @@ fun AuthScreen(
                     prefs.edit().putBoolean("has_auth_history", true).apply()
                     auth.currentUser?.let {
                         locationViewModel.onUserLogin(it)
+                        characterViewModel.onUserLogin(it)
                         dreamViewModel.onUserLogin()
                     }
                     onAuthSuccess()
@@ -353,6 +356,7 @@ fun AuthScreen(
                                                     prefs.edit().putBoolean("has_auth_history", true).apply()
                                                     user?.let {
                                                         locationViewModel.onUserLogin(it)
+                                                        characterViewModel.onUserLogin(it)
                                                         dreamViewModel.onUserLogin()
                                                     }
                                                     onAuthSuccess()

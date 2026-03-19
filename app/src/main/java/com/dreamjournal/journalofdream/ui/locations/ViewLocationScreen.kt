@@ -348,7 +348,7 @@ fun ViewLocationScreen(
 
 // Плитка со статистикой
 @Composable
-private fun StatChip(modifier: Modifier = Modifier, label: String, value: String) {
+fun StatChip(modifier: Modifier = Modifier, label: String, value: String) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(14.dp),

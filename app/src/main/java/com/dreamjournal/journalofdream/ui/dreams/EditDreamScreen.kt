@@ -38,6 +38,7 @@ import com.dreamjournal.journalofdream.ui.dreams.CategoryManagerDialog
 import com.dreamjournal.journalofdream.viewmodel.CategoryViewModel
 import com.dreamjournal.journalofdream.viewmodel.DreamViewModel
 import com.dreamjournal.journalofdream.viewmodel.LocationViewModel
+import com.dreamjournal.journalofdream.viewmodel.CharacterViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,6 +47,7 @@ fun EditDreamScreen(
     dreamId: String,
     dreamViewModel: DreamViewModel = viewModel(),
     locationViewModel: LocationViewModel = viewModel(),
+    characterViewModel: CharacterViewModel = viewModel(),
     categoryViewModel: CategoryViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -55,6 +57,7 @@ fun EditDreamScreen(
     val dreamWithLocationsState by dreamWithLocationsLD.observeAsState()
 
     val allLocations by locationViewModel.locations.observeAsState(emptyList())
+    val allCharacters by characterViewModel.characters.observeAsState(emptyList())
     val categories by categoryViewModel.allCategories.observeAsState(emptyList())
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -107,7 +110,9 @@ fun EditDreamScreen(
         }
 
         var isLocationDialogOpen by remember { mutableStateOf(false) }
+        var isCharacterDialogOpen by remember { mutableStateOf(false) }
         val selectedLocationIds = remember { mutableStateListOf<Int>() }
+        val selectedCharacterIds = remember { mutableStateListOf<Int>() }
 
         var selectedTime by remember { mutableStateOf(dream.time.ifBlank { getCurrentTime() }) }
         var showTimePicker by remember { mutableStateOf(false) }
@@ -132,6 +137,8 @@ fun EditDreamScreen(
         LaunchedEffect(dreamWithLocs) {
             selectedLocationIds.clear()
             selectedLocationIds.addAll(dreamWithLocs.locations.map { it.id })
+            selectedCharacterIds.clear()
+            selectedCharacterIds.addAll(dreamWithLocs.characters.map { it.id })
         }
 
         Scaffold(
@@ -321,6 +328,48 @@ fun EditDreamScreen(
                             )
                         }
 
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Button(
+                            onClick = { isCharacterDialogOpen = true },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                        ) {
+                            Text(
+                                text = if (selectedCharacterIds.isEmpty())
+                                    stringResource(R.string.dream_pick_characters)
+                                else
+                                    stringResource(R.string.dream_characters_selected, selectedCharacterIds.size),
+                                color = Color.White
+                            )
+                        }
+
+                        if (isCharacterDialogOpen) {
+                            AlertDialog(
+                                onDismissRequest = { isCharacterDialogOpen = false },
+                                title = { Text(stringResource(R.string.dream_pick_characters)) },
+                                text = {
+                                    LazyColumn {
+                                        items(allCharacters) { character ->
+                                            val isSelected = selectedCharacterIds.contains(character.id)
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                    if (isSelected) selectedCharacterIds.remove(character.id) else selectedCharacterIds.add(character.id)
+                                                }.padding(8.dp)
+                                            ) {
+                                                Checkbox(checked = isSelected, onCheckedChange = {
+                                                    if (isSelected) selectedCharacterIds.remove(character.id) else selectedCharacterIds.add(character.id)
+                                                })
+                                                Text(character.name)
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { isCharacterDialogOpen = false }) { Text(stringResource(R.string.ok)) } }
+                            )
+                        }
+
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Row(
@@ -364,7 +413,7 @@ fun EditDreamScreen(
                                     time = selectedTime,
                                     category = selectedCategory?.name ?: context.getString(R.string.dreams_no_category)
                                 )
-                                dreamViewModel.updateDream(updatedDream, selectedLocationIds.toList())
+                                dreamViewModel.updateDream(updatedDream, selectedLocationIds.toList(), selectedCharacterIds.toList())
                                 keyboardController?.hide()
                                 navController.popBackStack()
                             },

@@ -10,8 +10,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.dreamjournal.journalofdream.ui.dreams.*
 import com.dreamjournal.journalofdream.ui.locations.*
+import com.dreamjournal.journalofdream.ui.characters.*
 import com.dreamjournal.journalofdream.viewmodel.DreamViewModel
 import com.dreamjournal.journalofdream.viewmodel.LocationViewModel
+import com.dreamjournal.journalofdream.viewmodel.CharacterViewModel
 import com.dreamjournal.journalofdream.viewmodel.CategoryViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dreamjournal.journalofdream.ui.auth.AuthScreen
@@ -28,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.dreamjournal.journalofdream.R
 import com.dreamjournal.journalofdream.ui.theme.DreamsScreen
 import com.dreamjournal.journalofdream.ui.theme.LocationListScreen
+import com.dreamjournal.journalofdream.ui.theme.CharacterListScreen
 import com.dreamjournal.journalofdream.ui.theme.MainScreen
 import com.dreamjournal.journalofdream.ui.theme.AchievementsScreen
 import com.dreamjournal.journalofdream.ui.theme.ChartScreen
@@ -110,6 +113,7 @@ fun JournalOfDreamApp() {
         // Инициализируем ViewModel-ы (живут на уровне Activity)
         val dreamViewModel: DreamViewModel = viewModel()
         val locationViewModel: LocationViewModel = viewModel()
+        val characterViewModel: CharacterViewModel = viewModel()
         val categoryViewModel: CategoryViewModel = viewModel()
         val techniqueViewModel: TechniqueViewModel = viewModel()
 
@@ -172,6 +176,7 @@ fun JournalOfDreamApp() {
                 AuthScreen(
                     dreamViewModel = dreamViewModel,
                     locationViewModel = locationViewModel,
+                    characterViewModel = characterViewModel,
                     onAuthSuccess = {
                         currentUser.value = auth.currentUser
                         skipAuth.value = false
@@ -206,6 +211,7 @@ fun JournalOfDreamApp() {
                             dreamViewModel.onUserLogout()
                             // 2. То же делаем для LocationViewModel (ИСПРАВЛЕНО: добавлено для немедленного обновления списка локаций)
                             locationViewModel.onUserLogout()
+                            characterViewModel.onUserLogout()
                             // 3. Выходим из аккаунта FirebaseAuth и Google (если было)
                             googleSignInClient.signOut()
                             auth.signOut()
@@ -292,6 +298,31 @@ fun JournalOfDreamApp() {
                 }
             }
 
+            composable("characters") {
+                CharacterListScreen(
+                    navController = navController,
+                    characterViewModel = characterViewModel
+                )
+            }
+
+            composable("addCharacter") {
+                AddCharacterScreen(
+                    navController = navController,
+                    characterViewModel = characterViewModel
+                )
+            }
+
+            composable("viewCharacter/{characterId}") { backStackEntry ->
+                val characterId = backStackEntry.arguments?.getString("characterId")?.toIntOrNull()
+                if (characterId != null) {
+                    ViewCharacterScreen(
+                        navController = navController,
+                        characterId = characterId,
+                        characterViewModel = characterViewModel
+                    )
+                }
+            }
+
             // Экран техник осознанных сновидений
             composable("techniques") {
                 TechniquesScreen(
@@ -335,7 +366,9 @@ fun JournalOfDreamApp() {
             composable("stats") {
                 StatsScreen(
                     navController = navController,
-                    dreamViewModel = dreamViewModel
+                    dreamViewModel = dreamViewModel,
+                    locationViewModel = locationViewModel,
+                    characterViewModel = characterViewModel
                 )
             }
         }

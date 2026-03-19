@@ -8,7 +8,9 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.dreamjournal.journalofdream.model.Dream
 import com.dreamjournal.journalofdream.model.Location
+import com.dreamjournal.journalofdream.model.DreamCharacter
 import com.dreamjournal.journalofdream.model.DreamLocationCrossRef
+import com.dreamjournal.journalofdream.model.DreamCharacterCrossRef
 import com.dreamjournal.journalofdream.model.Category
 import com.dreamjournal.journalofdream.model.CategoryDao
 
@@ -105,21 +107,35 @@ val MIGRATION_5_6 = object : Migration(5, 6) {
     }
 }
 
+val MIGRATION_6_7 = object : Migration(6, 7) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS `characters` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ownerUid` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL)"
+        )
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS `dream_character_cross_ref` (`dreamId` INTEGER NOT NULL, `characterId` INTEGER NOT NULL, PRIMARY KEY(`dreamId`, `characterId`), FOREIGN KEY(`dreamId`) REFERENCES `dreams`(`localId`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`characterId`) REFERENCES `characters`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )"
+        )
+    }
+}
+
 @Database(
     entities = [
         Dream::class,
         Location::class,
+        DreamCharacter::class,
         DreamLocationCrossRef::class,
+        DreamCharacterCrossRef::class,
         Category::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun dreamDao(): DreamDao
     abstract fun locationDao(): LocationDao
-    abstract fun categoryDao(): CategoryDao  // <- Вот метод для CategoryDao
+    abstract fun characterDao(): CharacterDao
+    abstract fun categoryDao(): CategoryDao
 
     companion object {
         @Volatile
@@ -132,7 +148,14 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "dream_database"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                    .addMigrations(
+                        MIGRATION_1_2,
+                        MIGRATION_2_3,
+                        MIGRATION_3_4,
+                        MIGRATION_4_5,
+                        MIGRATION_5_6,
+                        MIGRATION_6_7
+                    )
                     .build()
                 INSTANCE = instance
                 instance

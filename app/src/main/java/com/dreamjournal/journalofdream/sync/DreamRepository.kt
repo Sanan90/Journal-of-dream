@@ -3,6 +3,7 @@ package com.dreamjournal.journalofdream.sync
 import android.util.Log
 import com.dreamjournal.journalofdream.database.AppDatabase
 import com.dreamjournal.journalofdream.model.Dream
+import com.dreamjournal.journalofdream.model.DreamCharacterCrossRef
 import com.dreamjournal.journalofdream.model.DreamLocationCrossRef
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
@@ -49,10 +50,12 @@ class DreamRepository(
                                     val localDream = remoteDream.copy(
                                         localId = dreamId,
                                         ownerUid = userId,
-                                        locationIds = emptyList()
+                                        locationIds = emptyList(),
+                                        characterIds = emptyList()
                                     )
                                     db.dreamDao().insert(localDream)
                                     db.dreamDao().deleteDreamLocationCrossRefs(dreamId)
+                                    db.dreamDao().deleteDreamCharacterCrossRefs(dreamId)
                                     for (locId in remoteDream.locationIds) {
                                         // Привязываем только если локация реально существует.
                                         // Если локация удалена — пропускаем, чтобы не создавать призрак без названия.
@@ -61,11 +64,18 @@ class DreamRepository(
                                             db.dreamDao().insertDreamLocationCrossRef(DreamLocationCrossRef(dreamId, locId))
                                         }
                                     }
+                                    for (characterId in remoteDream.characterIds) {
+                                        val characterExists = db.characterDao().getCharacterByIdOnce(characterId, userId)
+                                        if (characterExists != null) {
+                                            db.dreamDao().insertDreamCharacterCrossRef(DreamCharacterCrossRef(dreamId, characterId))
+                                        }
+                                    }
                                 }
                             }
                             DocumentChange.Type.REMOVED -> {
                                 if (dreamId != null) {
                                     db.dreamDao().deleteDreamLocationCrossRefs(dreamId)
+                                    db.dreamDao().deleteDreamCharacterCrossRefs(dreamId)
                                     db.dreamDao().getDreamByIdOnce(dreamId, userId)?.let { localDream ->
                                         db.dreamDao().delete(localDream)
                                     }
@@ -83,7 +93,7 @@ class DreamRepository(
         listenerRegistration = null
     }
 
-    suspend fun upsertDream(dream: Dream, locationIds: List<Int>): Result<Unit> {
+    suspend fun upsertDream(dream: Dream, locationIds: List<Int>, characterIds: List<Int>): Result<Unit> {
         val dreamDao = db.dreamDao()
         var newDream = dream
         if (newDream.localId == 0) {
@@ -96,10 +106,14 @@ class DreamRepository(
         for (locId in locationIds) {
             dreamDao.insertDreamLocationCrossRef(DreamLocationCrossRef(newDream.localId, locId))
         }
+        dreamDao.deleteDreamCharacterCrossRefs(newDream.localId)
+        for (characterId in characterIds) {
+            dreamDao.insertDreamCharacterCrossRef(DreamCharacterCrossRef(newDream.localId, characterId))
+        }
         // Синхронизация с Firestore
         auth.currentUser?.uid?.let { userId ->
             try {
-                val firestoreDream = newDream.copy(ownerUid = userId, locationIds = locationIds)
+                val firestoreDream = newDream.copy(ownerUid = userId, locationIds = locationIds, characterIds = characterIds)
                 remoteDb.collection("users")
                     .document(userId)
                     .collection("dreams")
@@ -117,6 +131,7 @@ class DreamRepository(
 
     suspend fun deleteDream(dream: Dream): Result<Unit> {
         db.dreamDao().deleteDreamLocationCrossRefs(dream.localId)
+        db.dreamDao().deleteDreamCharacterCrossRefs(dream.localId)
         db.dreamDao().delete(dream)
         auth.currentUser?.uid?.let { userId ->
             try {
@@ -142,16 +157,21 @@ class DreamRepository(
             val migratedDream = guestDream.copy(ownerUid = userUid)
             dreamDao.insert(migratedDream)
             val locationIds = dreamDao.getLocationIdsForDream(guestDream.localId)
+            val characterIds = dreamDao.getCharacterIdsForDream(guestDream.localId)
             dreamDao.deleteDreamLocationCrossRefs(migratedDream.localId)
+            dreamDao.deleteDreamCharacterCrossRefs(migratedDream.localId)
             for (locId in locationIds) {
                 dreamDao.insertDreamLocationCrossRef(DreamLocationCrossRef(migratedDream.localId, locId))
+            }
+            for (characterId in characterIds) {
+                dreamDao.insertDreamCharacterCrossRef(DreamCharacterCrossRef(migratedDream.localId, characterId))
             }
             try {
                 remoteDb.collection("users")
                     .document(userUid)
                     .collection("dreams")
                     .document(migratedDream.localId.toString())
-                    .set(migratedDream.copy(ownerUid = userUid, locationIds = locationIds))
+                    .set(migratedDream.copy(ownerUid = userUid, locationIds = locationIds, characterIds = characterIds))
                     .await()
             } catch (e: Exception) {
                 Log.e("DreamRepository", "migrateGuestRecordsToUser: ошибка загрузки сна", e)

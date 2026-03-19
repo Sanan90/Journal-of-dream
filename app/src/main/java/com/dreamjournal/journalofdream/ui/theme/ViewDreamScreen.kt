@@ -161,6 +161,33 @@ fun ViewDreamScreen(
                             }
                         }
 
+
+                        if (dwl.characters.isNotEmpty()) {
+                            Card(
+                                shape = RoundedCornerShape(16.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color.Black.copy(alpha = 0.25f)
+                                )
+                            ) {
+                                Column(modifier = Modifier.padding(16.dp)) {
+                                    Text(
+                                        text = "👤 " + stringResource(R.string.dream_label_characters),
+                                        color = Color.White.copy(alpha = 0.7f),
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    dwl.characters.forEach { character ->
+                                        Text(
+                                            text = "• ${character.name}",
+                                            color = Color.White,
+                                            fontSize = 15.sp
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
                         // Текст сна
                         Card(
                             shape = RoundedCornerShape(16.dp),

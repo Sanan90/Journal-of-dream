@@ -423,7 +423,7 @@ fun LocationCard(
 }
 
 // Правильное склонение слова "сон"
-private fun dreamWord(count: Int, one: String, few: String, many: String): String {
+fun dreamWord(count: Int, one: String, few: String, many: String): String {
     val lastTwo = count % 100
     val lastOne = count % 10
     return when {

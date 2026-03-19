@@ -319,6 +319,36 @@ fun MainScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                Button(
+                    onClick = { navController.navigate("characters") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(110.dp)
+                        .shadow(50.dp, shape = RoundedCornerShape(24.dp)),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                brush = Brush.horizontalGradient(
+                                    colors = listOf(
+                                        Color(0xFF6D4C41).copy(alpha = 0.5f),
+                                        Color(0xFF8D6E63).copy(alpha = 0.5f)
+                                    )
+                                ),
+                                shape = RoundedCornerShape(16.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(stringResource(R.string.nav_characters), color = Color.White, fontSize = 18.sp)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 // Дополнительная кнопка (например, "Техники")
                 Button(
                     onClick = {
@@ -464,6 +494,10 @@ fun MainScreen(
                         },
                         onLocationSelected = {
                             navController.navigate("addLocation")
+                            showDialog = false
+                        },
+                        onCharacterSelected = {
+                            navController.navigate("addCharacter")
                             showDialog = false
                         }
                     )

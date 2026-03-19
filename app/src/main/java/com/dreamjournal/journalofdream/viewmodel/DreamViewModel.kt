@@ -52,11 +52,11 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * Добавить новый сон вместе с выбранными локациями.
      */
-    fun addDream(dream: Dream, locationIds: List<Int>) {
+    fun addDream(dream: Dream, locationIds: List<Int>, characterIds: List<Int>) {
         val uid = auth.currentUser?.uid ?: "guest"
         val finalDream = dream.copy(ownerUid = uid)
         viewModelScope.launch {
-            val result = repository.upsertDream(finalDream, locationIds)
+            val result = repository.upsertDream(finalDream, locationIds, characterIds)
             if (result.isFailure) {
                 _syncError.postValue("Сон сохранён локально, но не синхронизирован — нет подключения к сети")
             } else {
@@ -66,11 +66,11 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateDream(updatedDream: Dream, locationIds: List<Int>) {
+    fun updateDream(updatedDream: Dream, locationIds: List<Int>, characterIds: List<Int>) {
         val uid = auth.currentUser?.uid ?: "guest"
         val finalDream = updatedDream.copy(ownerUid = uid)
         viewModelScope.launch {
-            val result = repository.upsertDream(finalDream, locationIds)
+            val result = repository.upsertDream(finalDream, locationIds, characterIds)
             if (result.isFailure) {
                 _syncError.postValue("Изменения сохранены локально, но не синхронизированы — нет подключения к сети")
             }

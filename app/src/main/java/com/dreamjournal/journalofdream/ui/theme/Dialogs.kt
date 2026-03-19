@@ -13,7 +13,8 @@ import com.dreamjournal.journalofdream.R
 fun ChooseActionDialog(
     onDismiss: () -> Unit,
     onDreamSelected: () -> Unit,
-    onLocationSelected: () -> Unit
+    onLocationSelected: () -> Unit,
+    onCharacterSelected: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -32,6 +33,13 @@ fun ChooseActionDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(stringResource(R.string.fab_add_location))
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = onCharacterSelected,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.fab_add_character))
                 }
             }
         },
