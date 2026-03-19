@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import com.dreamjournal.journalofdream.R
 import com.dreamjournal.journalofdream.ReminderReceiver
 import com.dreamjournal.journalofdream.QuoteReceiver
+import com.dreamjournal.journalofdream.RealityCheckReceiver
 import java.util.Calendar
 
 const val CHANNEL_ID = "dream_channel_id"
@@ -26,6 +27,8 @@ const val ALARM_REQUEST_CODE = 456
 const val ALARM_REQUEST_CODE_QUOTE_10 = 457
 const val ALARM_REQUEST_CODE_QUOTE_16 = 458
 const val ALARM_REQUEST_CODE_QUOTE_22 = 459
+const val ALARM_REQUEST_CODE_REALITY = 460
+const val NOTIFICATION_ID_REALITY = 125
 
 fun createNotificationChannel(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -142,6 +145,90 @@ fun scheduleAlarmByRequestCode(context: Context, hour: Int, minute: Int, request
     scheduleAlarm(context, hour, minute, requestCode, QuoteReceiver::class.java)
 }
 
+fun scheduleRealityCheck(context: Context) {
+    val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+    val enabled = prefs.getBoolean("reality_check_enabled", false)
+    if (!enabled) {
+        cancelRealityCheck(context)
+        return
+    }
+
+    val intervalMinutes = prefs.getInt("reality_check_interval_minutes", 60)
+    val startHour = prefs.getInt("reality_check_start_hour", 8)
+    val startMinute = prefs.getInt("reality_check_start_minute", 0)
+    val endHour = prefs.getInt("reality_check_end_hour", 22)
+    val endMinute = prefs.getInt("reality_check_end_minute", 0)
+
+    val triggerAtMillis = computeNextRealityCheckTriggerMillis(
+        intervalMinutes = intervalMinutes,
+        startHour = startHour,
+        startMinute = startMinute,
+        endHour = endHour,
+        endMinute = endMinute
+    )
+
+    scheduleAlarmAtMillis(
+        context = context,
+        triggerAtMillis = triggerAtMillis,
+        requestCode = ALARM_REQUEST_CODE_REALITY,
+        receiverClass = RealityCheckReceiver::class.java
+    )
+}
+
+fun cancelRealityCheck(context: Context) {
+    cancelAlarm(context, ALARM_REQUEST_CODE_REALITY, RealityCheckReceiver::class.java)
+}
+
+private fun computeNextRealityCheckTriggerMillis(
+    intervalMinutes: Int,
+    startHour: Int,
+    startMinute: Int,
+    endHour: Int,
+    endMinute: Int,
+    nowMillis: Long = System.currentTimeMillis()
+): Long {
+    val now = Calendar.getInstance().apply { timeInMillis = nowMillis }
+    val startToday = Calendar.getInstance().apply {
+        timeInMillis = nowMillis
+        set(Calendar.HOUR_OF_DAY, startHour)
+        set(Calendar.MINUTE, startMinute)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }
+    val endToday = Calendar.getInstance().apply {
+        timeInMillis = nowMillis
+        set(Calendar.HOUR_OF_DAY, endHour)
+        set(Calendar.MINUTE, endMinute)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }
+
+    if (now.timeInMillis <= startToday.timeInMillis) return startToday.timeInMillis
+
+    if (now.timeInMillis >= endToday.timeInMillis) {
+        return Calendar.getInstance().apply {
+            timeInMillis = startToday.timeInMillis
+            add(Calendar.DAY_OF_MONTH, 1)
+        }.timeInMillis
+    }
+
+    val minutesSinceStart = ((now.timeInMillis - startToday.timeInMillis) / 60000L).toInt()
+    val nextStep = (minutesSinceStart / intervalMinutes) + 1
+    val nextTime = Calendar.getInstance().apply {
+        timeInMillis = startToday.timeInMillis
+        add(Calendar.MINUTE, nextStep * intervalMinutes)
+    }
+
+    return if (nextTime.timeInMillis > endToday.timeInMillis) {
+        Calendar.getInstance().apply {
+            timeInMillis = startToday.timeInMillis
+            add(Calendar.DAY_OF_MONTH, 1)
+        }.timeInMillis
+    } else {
+        nextTime.timeInMillis
+    }
+}
+
 private fun <T> scheduleAlarm(
     context: Context,
     hour: Int,
@@ -206,6 +293,45 @@ private fun <T> scheduleAlarm(
                 calendar.timeInMillis,
                 pendingIntent
             )
+        }
+    }
+}
+
+private fun <T> scheduleAlarmAtMillis(
+    context: Context,
+    triggerAtMillis: Long,
+    requestCode: Int,
+    receiverClass: Class<T>
+) {
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val intent = Intent(context, receiverClass).apply {
+        putExtra("request_code", requestCode)
+    }
+
+    val pendingIntent = PendingIntent.getBroadcast(
+        context,
+        requestCode,
+        intent,
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    )
+
+    val canScheduleExact = canUseExactAlarms(context)
+    Log.d(
+        "NotificationHelper",
+        "Планируем alarm requestCode=$requestCode receiver=${receiverClass.simpleName} at=${java.util.Date(triggerAtMillis)} exact=$canScheduleExact"
+    )
+
+    if (canScheduleExact) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+        } else {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+        }
+    } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
         }
     }
 }

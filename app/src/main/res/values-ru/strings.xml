@@ -447,4 +447,17 @@
     <string name="dream_label_characters">Образы сна</string>
     <string name="stats_top_locations">Частые локации</string>
     <string name="stats_top_characters">Частые образы</string>
+
+    <string name="btn_ok">ОК</string>
+    <string name="character_dreams_title">Сны с этим образом</string>
+    <string name="settings_reality_check">🌀 Проверка реальности</string>
+    <string name="settings_reality_check_desc">Регулярные напоминания днём для привычки осознанности.</string>
+    <string name="settings_reality_interval">Интервал проверки реальности</string>
+    <string name="settings_reality_from">С какого времени</string>
+    <string name="settings_reality_to">До какого времени</string>
+    <string name="reality_interval_30m">Каждые 30 минут</string>
+    <string name="reality_interval_1h">Каждый 1 час</string>
+    <string name="reality_interval_2h">Каждые 2 часа</string>
+    <string name="notif_reality_title">Проверка реальности</string>
+    <string name="notif_reality_message">Сделай проверку реальности прямо сейчас.</string>
 </resources>

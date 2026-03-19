@@ -443,4 +443,17 @@
     <string name="dream_label_characters">Yuxu obrazları</string>
     <string name="stats_top_locations">Tez-tez görünən məkanlar</string>
     <string name="stats_top_characters">Tez-tez görünən obrazlar</string>
+
+    <string name="btn_ok">OK</string>
+    <string name="character_dreams_title">Bu obrazla olan yuxular</string>
+    <string name="settings_reality_check">🌀 Reallıq yoxlaması</string>
+    <string name="settings_reality_check_desc">Şüurluluq vərdişi üçün gündüz müntəzəm xatırlatmalar.</string>
+    <string name="settings_reality_interval">Reallıq yoxlaması intervalı</string>
+    <string name="settings_reality_from">Başlama vaxtı</string>
+    <string name="settings_reality_to">Bitmə vaxtı</string>
+    <string name="reality_interval_30m">Hər 30 dəqiqədən bir</string>
+    <string name="reality_interval_1h">Hər 1 saatdan bir</string>
+    <string name="reality_interval_2h">Hər 2 saatdan bir</string>
+    <string name="notif_reality_title">Reallıq yoxlaması</string>
+    <string name="notif_reality_message">İndi reallıq yoxlaması et.</string>
 </resources>

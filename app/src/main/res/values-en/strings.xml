@@ -446,4 +446,17 @@
     <string name="dream_label_characters">Dream figures</string>
     <string name="stats_top_locations">Frequent locations</string>
     <string name="stats_top_characters">Frequent figures</string>
+
+    <string name="btn_ok">OK</string>
+    <string name="character_dreams_title">Dreams with this figure</string>
+    <string name="settings_reality_check">🌀 Reality check</string>
+    <string name="settings_reality_check_desc">Regular daytime reminders to build the habit of awareness.</string>
+    <string name="settings_reality_interval">Reality check interval</string>
+    <string name="settings_reality_from">Start time</string>
+    <string name="settings_reality_to">End time</string>
+    <string name="reality_interval_30m">Every 30 minutes</string>
+    <string name="reality_interval_1h">Every 1 hour</string>
+    <string name="reality_interval_2h">Every 2 hours</string>
+    <string name="notif_reality_title">Reality check</string>
+    <string name="notif_reality_message">Do a reality check right now.</string>
 </resources>

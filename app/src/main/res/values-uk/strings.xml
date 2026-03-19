@@ -449,4 +449,17 @@
     <string name="dream_label_characters">Образи сну</string>
     <string name="stats_top_locations">Часті локації</string>
     <string name="stats_top_characters">Часті образи</string>
+
+    <string name="btn_ok">OK</string>
+    <string name="character_dreams_title">Сни з цим образом</string>
+    <string name="settings_reality_check">🌀 Перевірка реальності</string>
+    <string name="settings_reality_check_desc">Регулярні денні нагадування для звички усвідомленості.</string>
+    <string name="settings_reality_interval">Інтервал перевірки реальності</string>
+    <string name="settings_reality_from">З якого часу</string>
+    <string name="settings_reality_to">До якого часу</string>
+    <string name="reality_interval_30m">Кожні 30 хвилин</string>
+    <string name="reality_interval_1h">Щогодини</string>
+    <string name="reality_interval_2h">Кожні 2 години</string>
+    <string name="notif_reality_title">Перевірка реальності</string>
+    <string name="notif_reality_message">Зроби перевірку реальності прямо зараз.</string>
 </resources>

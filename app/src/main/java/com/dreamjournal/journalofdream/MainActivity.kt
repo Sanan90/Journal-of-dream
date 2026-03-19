@@ -19,6 +19,7 @@ import com.dreamjournal.journalofdream.util.areNotificationsAllowed
 import com.dreamjournal.journalofdream.util.createNotificationChannel
 import com.dreamjournal.journalofdream.util.scheduleDailyReminder
 import com.dreamjournal.journalofdream.util.scheduleQuoteAlarms
+import com.dreamjournal.journalofdream.util.scheduleRealityCheck
 
 class MainActivity : FragmentActivity() {
 
@@ -67,6 +68,7 @@ class MainActivity : FragmentActivity() {
 
         val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
         val quotesEnabled = prefs.getBoolean("motivational_quotes", true)
+        val realityEnabled = prefs.getBoolean("reality_check_enabled", false)
         val notificationsAllowed = areNotificationsAllowed(this)
 
         if (notificationsEnabled && notificationsAllowed &&
@@ -82,6 +84,10 @@ class MainActivity : FragmentActivity() {
         if (quotesEnabled && notificationsAllowed) {
             scheduleQuoteAlarms(this)
         }
+
+        if (realityEnabled && notificationsAllowed) {
+            scheduleRealityCheck(this)
+        }
     }
 
     private fun rescheduleIfExactAlarmGranted() {
@@ -93,6 +99,7 @@ class MainActivity : FragmentActivity() {
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
         val quotesEnabled = prefs.getBoolean("motivational_quotes", true)
+        val realityEnabled = prefs.getBoolean("reality_check_enabled", false)
         val notificationsAllowed = areNotificationsAllowed(this)
 
         if (notificationsEnabled && notificationsAllowed &&
@@ -107,6 +114,10 @@ class MainActivity : FragmentActivity() {
 
         if (quotesEnabled && notificationsAllowed) {
             scheduleQuoteAlarms(this)
+        }
+
+        if (realityEnabled && notificationsAllowed) {
+            scheduleRealityCheck(this)
         }
     }
 }

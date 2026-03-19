@@ -51,6 +51,11 @@
             android:enabled="true"
             android:exported="false" />
 
+        <receiver
+            android:name=".RealityCheckReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
         <!-- Ресивер для перепланирования после перезагрузки -->
         <receiver
             android:name=".BootReceiver"

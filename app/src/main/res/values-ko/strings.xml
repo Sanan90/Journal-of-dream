@@ -442,4 +442,17 @@
     <string name="dream_label_characters">꿈속 존재</string>
     <string name="stats_top_locations">자주 나오는 장소</string>
     <string name="stats_top_characters">자주 나오는 존재</string>
+
+    <string name="btn_ok">확인</string>
+    <string name="character_dreams_title">이 이미지가 등장한 꿈</string>
+    <string name="settings_reality_check">🌀 현실 점검</string>
+    <string name="settings_reality_check_desc">자각의 습관을 만들기 위한 주간 규칙적인 알림입니다.</string>
+    <string name="settings_reality_interval">현실 점검 간격</string>
+    <string name="settings_reality_from">시작 시간</string>
+    <string name="settings_reality_to">종료 시간</string>
+    <string name="reality_interval_30m">30분마다</string>
+    <string name="reality_interval_1h">1시간마다</string>
+    <string name="reality_interval_2h">2시간마다</string>
+    <string name="notif_reality_title">현실 점검</string>
+    <string name="notif_reality_message">지금 바로 현실 점검을 하세요.</string>
 </resources>

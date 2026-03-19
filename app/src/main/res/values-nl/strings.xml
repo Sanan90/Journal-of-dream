@@ -442,4 +442,17 @@
     <string name="dream_label_characters">Droomfiguren</string>
     <string name="stats_top_locations">Vaak voorkomende plaatsen</string>
     <string name="stats_top_characters">Vaak voorkomende figuren</string>
+
+    <string name="btn_ok">OK</string>
+    <string name="character_dreams_title">Dromen met deze figuur</string>
+    <string name="settings_reality_check">🌀 Werkelijkheidscontrole</string>
+    <string name="settings_reality_check_desc">Regelmatige herinneringen overdag om de gewoonte van bewustzijn op te bouwen.</string>
+    <string name="settings_reality_interval">Interval voor werkelijkheidscontrole</string>
+    <string name="settings_reality_from">Vanaf</string>
+    <string name="settings_reality_to">Tot</string>
+    <string name="reality_interval_30m">Elke 30 minuten</string>
+    <string name="reality_interval_1h">Elke 1 uur</string>
+    <string name="reality_interval_2h">Elke 2 uur</string>
+    <string name="notif_reality_title">Werkelijkheidscontrole</string>
+    <string name="notif_reality_message">Doe nu een werkelijkheidscontrole.</string>
 </resources>

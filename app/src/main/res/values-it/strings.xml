@@ -443,4 +443,17 @@
     <string name="dream_label_characters">Figure del sogno</string>
     <string name="stats_top_locations">Luoghi frequenti</string>
     <string name="stats_top_characters">Figure frequenti</string>
+
+    <string name="btn_ok">OK</string>
+    <string name="character_dreams_title">Sogni con questa figura</string>
+    <string name="settings_reality_check">🌀 Controllo della realtà</string>
+    <string name="settings_reality_check_desc">Promemoria regolari durante il giorno per creare l’abitudine alla consapevolezza.</string>
+    <string name="settings_reality_interval">Intervallo del controllo della realtà</string>
+    <string name="settings_reality_from">Dalle</string>
+    <string name="settings_reality_to">Alle</string>
+    <string name="reality_interval_30m">Ogni 30 minuti</string>
+    <string name="reality_interval_1h">Ogni 1 ora</string>
+    <string name="reality_interval_2h">Ogni 2 ore</string>
+    <string name="notif_reality_title">Controllo della realtà</string>
+    <string name="notif_reality_message">Fai un controllo della realtà adesso.</string>
 </resources>

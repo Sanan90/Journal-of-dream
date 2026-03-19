@@ -6,6 +6,7 @@ import android.content.Intent
 import android.util.Log
 import com.dreamjournal.journalofdream.util.scheduleDailyReminder
 import com.dreamjournal.journalofdream.util.scheduleQuoteAlarms
+import com.dreamjournal.journalofdream.util.scheduleRealityCheck
 
 /**
  * Ресивер, который срабатывает после перезагрузки устройства.
@@ -31,6 +32,12 @@ class BootReceiver : BroadcastReceiver() {
             if (quotesEnabled) {
                 scheduleQuoteAlarms(context)
                 Log.d("BootReceiver", "Цитаты перепланированы после системного события")
+            }
+
+            val realityEnabled = prefs.getBoolean("reality_check_enabled", false)
+            if (realityEnabled) {
+                scheduleRealityCheck(context)
+                Log.d("BootReceiver", "Проверка реальности перепланирована после системного события")
             }
         }
     }

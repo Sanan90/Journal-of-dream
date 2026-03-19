@@ -443,4 +443,17 @@
     <string name="dream_label_characters">梦中形象</string>
     <string name="stats_top_locations">常见地点</string>
     <string name="stats_top_characters">常见形象</string>
+
+    <string name="btn_ok">确定</string>
+    <string name="character_dreams_title">包含这个形象的梦</string>
+    <string name="settings_reality_check">🌀 现实检查</string>
+    <string name="settings_reality_check_desc">白天的定期提醒，帮助养成觉察习惯。</string>
+    <string name="settings_reality_interval">现实检查间隔</string>
+    <string name="settings_reality_from">开始时间</string>
+    <string name="settings_reality_to">结束时间</string>
+    <string name="reality_interval_30m">每30分钟</string>
+    <string name="reality_interval_1h">每1小时</string>
+    <string name="reality_interval_2h">每2小时</string>
+    <string name="notif_reality_title">现实检查</string>
+    <string name="notif_reality_message">现在就做一次现实检查。</string>
 </resources>

@@ -175,7 +175,7 @@ fun ViewCharacterScreen(
 
                         item {
                             Text(
-                                text = if (dreamCount > 0) stringResource(R.string.location_dreams_title) else stringResource(R.string.characters_empty_hint),
+                                text = if (dreamCount > 0) stringResource(R.string.character_dreams_title) else stringResource(R.string.characters_empty_hint),
                                 color = Color.White,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 16.sp,

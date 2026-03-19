@@ -442,4 +442,17 @@
     <string name="dream_label_characters">Traumfiguren</string>
     <string name="stats_top_locations">Häufige Orte</string>
     <string name="stats_top_characters">Häufige Figuren</string>
+
+    <string name="btn_ok">OK</string>
+    <string name="character_dreams_title">Träume mit diesem Traumbild</string>
+    <string name="settings_reality_check">🌀 Realitätscheck</string>
+    <string name="settings_reality_check_desc">Regelmäßige Erinnerungen am Tag, um die Gewohnheit der Achtsamkeit aufzubauen.</string>
+    <string name="settings_reality_interval">Intervall für Realitätschecks</string>
+    <string name="settings_reality_from">Von</string>
+    <string name="settings_reality_to">Bis</string>
+    <string name="reality_interval_30m">Alle 30 Minuten</string>
+    <string name="reality_interval_1h">Jede 1 Stunde</string>
+    <string name="reality_interval_2h">Alle 2 Stunden</string>
+    <string name="notif_reality_title">Realitätscheck</string>
+    <string name="notif_reality_message">Mach jetzt einen Realitätscheck.</string>
 </resources>

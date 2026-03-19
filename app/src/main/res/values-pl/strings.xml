@@ -442,4 +442,17 @@
     <string name="dream_label_characters">Postacie ze snów</string>
     <string name="stats_top_locations">Częste miejsca</string>
     <string name="stats_top_characters">Częste postacie</string>
+
+    <string name="btn_ok">OK</string>
+    <string name="character_dreams_title">Sny z tym obrazem</string>
+    <string name="settings_reality_check">🌀 Sprawdzenie rzeczywistości</string>
+    <string name="settings_reality_check_desc">Regularne przypomnienia w ciągu dnia, aby wyrobić nawyk uważności.</string>
+    <string name="settings_reality_interval">Interwał sprawdzania rzeczywistości</string>
+    <string name="settings_reality_from">Od której godziny</string>
+    <string name="settings_reality_to">Do której godziny</string>
+    <string name="reality_interval_30m">Co 30 minut</string>
+    <string name="reality_interval_1h">Co 1 godzinę</string>
+    <string name="reality_interval_2h">Co 2 godziny</string>
+    <string name="notif_reality_title">Sprawdzenie rzeczywistości</string>
+    <string name="notif_reality_message">Zrób teraz sprawdzenie rzeczywistości.</string>
 </resources>

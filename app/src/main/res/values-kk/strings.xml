@@ -449,4 +449,17 @@
     <string name="dream_label_characters">Түс бейнелері</string>
     <string name="stats_top_locations">Жиі кездесетін орындар</string>
     <string name="stats_top_characters">Жиі кездесетін бейнелер</string>
+
+    <string name="btn_ok">Жарайды</string>
+    <string name="character_dreams_title">Осы бейнемен байланысты түстер</string>
+    <string name="settings_reality_check">🌀 Шынайылықты тексеру</string>
+    <string name="settings_reality_check_desc">Саналы болу әдетін қалыптастыру үшін күндізгі тұрақты ескертулер.</string>
+    <string name="settings_reality_interval">Шынайылықты тексеру аралығы</string>
+    <string name="settings_reality_from">Басталу уақыты</string>
+    <string name="settings_reality_to">Аяқталу уақыты</string>
+    <string name="reality_interval_30m">Әр 30 минут сайын</string>
+    <string name="reality_interval_1h">Әр 1 сағат сайын</string>
+    <string name="reality_interval_2h">Әр 2 сағат сайын</string>
+    <string name="notif_reality_title">Шынайылықты тексеру</string>
+    <string name="notif_reality_message">Дәл қазір шынайылықты тексер.</string>
 </resources>

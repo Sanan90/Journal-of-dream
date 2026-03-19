@@ -442,4 +442,17 @@
     <string name="dream_label_characters">Figuras do sonho</string>
     <string name="stats_top_locations">Locais frequentes</string>
     <string name="stats_top_characters">Figuras frequentes</string>
+
+    <string name="btn_ok">OK</string>
+    <string name="character_dreams_title">Sonhos com esta figura</string>
+    <string name="settings_reality_check">🌀 Verificação da realidade</string>
+    <string name="settings_reality_check_desc">Lembretes regulares durante o dia para criar o hábito da consciência.</string>
+    <string name="settings_reality_interval">Intervalo da verificação da realidade</string>
+    <string name="settings_reality_from">A partir de</string>
+    <string name="settings_reality_to">Até</string>
+    <string name="reality_interval_30m">A cada 30 minutos</string>
+    <string name="reality_interval_1h">A cada 1 hora</string>
+    <string name="reality_interval_2h">A cada 2 horas</string>
+    <string name="notif_reality_title">Verificação da realidade</string>
+    <string name="notif_reality_message">Faça uma verificação da realidade agora mesmo.</string>
 </resources>

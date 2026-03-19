@@ -442,4 +442,17 @@
     <string name="dream_label_characters">夢の存在</string>
     <string name="stats_top_locations">よく出る場所</string>
     <string name="stats_top_characters">よく出る存在</string>
+
+    <string name="btn_ok">OK</string>
+    <string name="character_dreams_title">このイメージが出てくる夢</string>
+    <string name="settings_reality_check">🌀 現実確認</string>
+    <string name="settings_reality_check_desc">気づきの習慣を身につけるための日中の定期的なリマインダー。</string>
+    <string name="settings_reality_interval">現実確認の間隔</string>
+    <string name="settings_reality_from">開始時間</string>
+    <string name="settings_reality_to">終了時間</string>
+    <string name="reality_interval_30m">30分ごと</string>
+    <string name="reality_interval_1h">1時間ごと</string>
+    <string name="reality_interval_2h">2時間ごと</string>
+    <string name="notif_reality_title">現実確認</string>
+    <string name="notif_reality_message">今すぐ現実確認をしましょう。</string>
 </resources>

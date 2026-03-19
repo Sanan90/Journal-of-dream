@@ -51,12 +51,15 @@ import com.dreamjournal.journalofdream.util.openExactAlarmSettings
 
 import android.app.Activity
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.ui.window.DialogProperties
 import com.dreamjournal.journalofdream.util.deleteCurrentUserAccountAndData
 import kotlinx.coroutines.launch
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.dreamjournal.journalofdream.util.cancelDailyReminder
+import com.dreamjournal.journalofdream.util.cancelRealityCheck
+import com.dreamjournal.journalofdream.util.scheduleRealityCheck
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +73,13 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
     var motivationalQuotes by remember { mutableStateOf(prefs.getBoolean("motivational_quotes", true)) }
     var notificationsAllowed by remember { mutableStateOf<Boolean>(areNotificationsAllowed(context)) }
     var exactAlarmsAvailable by remember { mutableStateOf<Boolean>(canUseExactAlarms(context)) }
+    var realityCheckEnabled by remember { mutableStateOf(prefs.getBoolean("reality_check_enabled", false)) }
+    var realityIntervalMinutes by remember { mutableStateOf(prefs.getInt("reality_check_interval_minutes", 60)) }
+    var realityStartHour by remember { mutableStateOf(prefs.getInt("reality_check_start_hour", 8)) }
+    var realityStartMinute by remember { mutableStateOf(prefs.getInt("reality_check_start_minute", 0)) }
+    var realityEndHour by remember { mutableStateOf(prefs.getInt("reality_check_end_hour", 22)) }
+    var realityEndMinute by remember { mutableStateOf(prefs.getInt("reality_check_end_minute", 0)) }
+    var showRealityIntervalDialog by remember { mutableStateOf(false) }
 
     // PIN состояние — вынесено наверх чтобы показывать поверх всего экрана
     var pinEnabled by remember { mutableStateOf(isPinEnabled(context)) }
@@ -225,6 +235,88 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                         } else {
                             cancelQuoteAlarms(context)
                         }
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                SettingsToggleRow(
+                    icon = Icons.Default.AccessTime,
+                    title = stringResource(R.string.settings_reality_check),
+                    subtitle = stringResource(R.string.settings_reality_check_desc),
+                    checked = realityCheckEnabled,
+                    onCheckedChange = { enabled ->
+                        realityCheckEnabled = enabled
+                        prefs.edit().putBoolean("reality_check_enabled", enabled).apply()
+                        if (enabled) {
+                            scheduleRealityCheck(context)
+                        } else {
+                            cancelRealityCheck(context)
+                        }
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                SettingsClickRow(
+                    icon = Icons.Default.AccessTime,
+                    title = stringResource(R.string.settings_reality_interval),
+                    subtitle = when (realityIntervalMinutes) {
+                        30 -> stringResource(R.string.reality_interval_30m)
+                        120 -> stringResource(R.string.reality_interval_2h)
+                        else -> stringResource(R.string.reality_interval_1h)
+                    },
+                    enabled = realityCheckEnabled,
+                    onClick = { showRealityIntervalDialog = true }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                SettingsClickRow(
+                    icon = Icons.Default.DateRange,
+                    title = stringResource(R.string.settings_reality_from),
+                    subtitle = String.format("%02d:%02d", realityStartHour, realityStartMinute),
+                    enabled = realityCheckEnabled,
+                    onClick = {
+                        TimePickerDialog(
+                            context,
+                            { _, hour, minute ->
+                                realityStartHour = hour
+                                realityStartMinute = minute
+                                prefs.edit().putInt("reality_check_start_hour", hour)
+                                    .putInt("reality_check_start_minute", minute)
+                                    .apply()
+                                if (realityCheckEnabled) scheduleRealityCheck(context)
+                            },
+                            realityStartHour,
+                            realityStartMinute,
+                            true
+                        ).show()
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                SettingsClickRow(
+                    icon = Icons.Default.DateRange,
+                    title = stringResource(R.string.settings_reality_to),
+                    subtitle = String.format("%02d:%02d", realityEndHour, realityEndMinute),
+                    enabled = realityCheckEnabled,
+                    onClick = {
+                        TimePickerDialog(
+                            context,
+                            { _, hour, minute ->
+                                realityEndHour = hour
+                                realityEndMinute = minute
+                                prefs.edit().putInt("reality_check_end_hour", hour)
+                                    .putInt("reality_check_end_minute", minute)
+                                    .apply()
+                                if (realityCheckEnabled) scheduleRealityCheck(context)
+                            },
+                            realityEndHour,
+                            realityEndMinute,
+                            true
+                        ).show()
                     }
                 )
 
@@ -497,6 +589,53 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
             )
         )
     }
+    if (showRealityIntervalDialog) {
+        AlertDialog(
+            onDismissRequest = { showRealityIntervalDialog = false },
+            title = { Text(stringResource(R.string.settings_reality_interval)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf(30, 60, 120).forEach { value ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    realityIntervalMinutes = value
+                                    prefs.edit().putInt("reality_check_interval_minutes", value).apply()
+                                    if (realityCheckEnabled) scheduleRealityCheck(context)
+                                    showRealityIntervalDialog = false
+                                }
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = realityIntervalMinutes == value,
+                                onClick = {
+                                    realityIntervalMinutes = value
+                                    prefs.edit().putInt("reality_check_interval_minutes", value).apply()
+                                    if (realityCheckEnabled) scheduleRealityCheck(context)
+                                    showRealityIntervalDialog = false
+                                }
+                            )
+                            Text(
+                                text = when (value) {
+                                    30 -> stringResource(R.string.reality_interval_30m)
+                                    120 -> stringResource(R.string.reality_interval_2h)
+                                    else -> stringResource(R.string.reality_interval_1h)
+                                }
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showRealityIntervalDialog = false }) {
+                    Text(stringResource(R.string.btn_ok))
+                }
+            }
+        )
+    }
+
     deleteAccountError?.let { errorText ->
         AlertDialog(
             onDismissRequest = { deleteAccountError = null },

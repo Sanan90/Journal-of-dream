@@ -442,4 +442,17 @@
     <string name="dream_label_characters">Rüya figürleri</string>
     <string name="stats_top_locations">Sık görülen mekânlar</string>
     <string name="stats_top_characters">Sık görülen figürler</string>
+
+    <string name="btn_ok">Tamam</string>
+    <string name="character_dreams_title">Bu figürle ilgili rüyalar</string>
+    <string name="settings_reality_check">🌀 Gerçeklik kontrolü</string>
+    <string name="settings_reality_check_desc">Farkındalık alışkanlığı için gün içinde düzenli hatırlatmalar.</string>
+    <string name="settings_reality_interval">Gerçeklik kontrolü aralığı</string>
+    <string name="settings_reality_from">Başlangıç saati</string>
+    <string name="settings_reality_to">Bitiş saati</string>
+    <string name="reality_interval_30m">Her 30 dakikada bir</string>
+    <string name="reality_interval_1h">Her 1 saatte bir</string>
+    <string name="reality_interval_2h">Her 2 saatte bir</string>
+    <string name="notif_reality_title">Gerçeklik kontrolü</string>
+    <string name="notif_reality_message">Şimdi bir gerçeklik kontrolü yap.</string>
 </resources>

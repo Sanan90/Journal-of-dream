@@ -442,4 +442,17 @@
     <string name="dream_label_characters">صور الحلم</string>
     <string name="stats_top_locations">الأماكن المتكررة</string>
     <string name="stats_top_characters">الصور المتكررة</string>
+
+    <string name="btn_ok">حسنًا</string>
+    <string name="character_dreams_title">أحلام مع هذه الصورة</string>
+    <string name="settings_reality_check">🌀 فحص الواقع</string>
+    <string name="settings_reality_check_desc">تذكيرات منتظمة خلال النهار لبناء عادة الوعي.</string>
+    <string name="settings_reality_interval">الفاصل الزمني لفحص الواقع</string>
+    <string name="settings_reality_from">من أي وقت</string>
+    <string name="settings_reality_to">حتى أي وقت</string>
+    <string name="reality_interval_30m">كل 30 دقيقة</string>
+    <string name="reality_interval_1h">كل ساعة</string>
+    <string name="reality_interval_2h">كل ساعتين</string>
+    <string name="notif_reality_title">فحص الواقع</string>
+    <string name="notif_reality_message">قم بإجراء فحص الواقع الآن.</string>
 </resources>

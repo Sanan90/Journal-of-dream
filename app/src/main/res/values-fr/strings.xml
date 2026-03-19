@@ -442,4 +442,17 @@
     <string name="dream_label_characters">Figures de rêve</string>
     <string name="stats_top_locations">Lieux fréquents</string>
     <string name="stats_top_characters">Figures fréquentes</string>
+
+    <string name="btn_ok">OK</string>
+    <string name="character_dreams_title">Rêves avec cette figure</string>
+    <string name="settings_reality_check">🌀 Vérification de la réalité</string>
+    <string name="settings_reality_check_desc">Rappels réguliers dans la journée pour développer l’habitude de la lucidité.</string>
+    <string name="settings_reality_interval">Intervalle de vérification de la réalité</string>
+    <string name="settings_reality_from">À partir de</string>
+    <string name="settings_reality_to">Jusqu’à</string>
+    <string name="reality_interval_30m">Toutes les 30 minutes</string>
+    <string name="reality_interval_1h">Toutes les 1 heure</string>
+    <string name="reality_interval_2h">Toutes les 2 heures</string>
+    <string name="notif_reality_title">Vérification de la réalité</string>
+    <string name="notif_reality_message">Fais une vérification de la réalité maintenant.</string>
 </resources>
