@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import com.dreamjournal.journalofdream.ui.JournalOfDreamApp
 import com.dreamjournal.journalofdream.ui.theme.AppTheme
 import com.dreamjournal.journalofdream.util.LocaleHelper
+import com.dreamjournal.journalofdream.util.areNotificationsAllowed
 import com.dreamjournal.journalofdream.util.createNotificationChannel
 import com.dreamjournal.journalofdream.util.scheduleDailyReminder
 import com.dreamjournal.journalofdream.util.scheduleQuoteAlarms
@@ -66,8 +67,9 @@ class MainActivity : FragmentActivity() {
 
         val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
         val quotesEnabled = prefs.getBoolean("motivational_quotes", true)
+        val notificationsAllowed = areNotificationsAllowed(this)
 
-        if (notificationsEnabled &&
+        if (notificationsEnabled && notificationsAllowed &&
             prefs.contains("notification_hour") &&
             prefs.contains("notification_minute")
         ) {
@@ -77,7 +79,7 @@ class MainActivity : FragmentActivity() {
             Log.d("MainActivity", "Уведомление восстановлено на $hour:$minute")
         }
 
-        if (quotesEnabled) {
+        if (quotesEnabled && notificationsAllowed) {
             scheduleQuoteAlarms(this)
         }
     }
@@ -91,8 +93,9 @@ class MainActivity : FragmentActivity() {
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
         val quotesEnabled = prefs.getBoolean("motivational_quotes", true)
+        val notificationsAllowed = areNotificationsAllowed(this)
 
-        if (notificationsEnabled &&
+        if (notificationsEnabled && notificationsAllowed &&
             prefs.contains("notification_hour") &&
             prefs.contains("notification_minute")
         ) {
@@ -102,7 +105,7 @@ class MainActivity : FragmentActivity() {
             Log.d("MainActivity", "Точный alarm перепланирован на $hour:$minute")
         }
 
-        if (quotesEnabled) {
+        if (quotesEnabled && notificationsAllowed) {
             scheduleQuoteAlarms(this)
         }
     }

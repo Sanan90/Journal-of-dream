@@ -17,20 +17,30 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class QuoteReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val pendingResult = goAsync()
+        val appContext = context.applicationContext
+        val prefs = appContext.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val quotesEnabled = prefs.getBoolean("motivational_quotes", true)
-        if (!quotesEnabled) return
+        if (!quotesEnabled) {
+            pendingResult.finish()
+            return
+        }
 
         val requestCode = intent.getIntExtra("request_code", -1)
         val hour = when (requestCode) {
             ALARM_REQUEST_CODE_QUOTE_10 -> 10
             ALARM_REQUEST_CODE_QUOTE_16 -> 16
             ALARM_REQUEST_CODE_QUOTE_22 -> 22
-            else -> return
+            else -> {
+                pendingResult.finish()
+                return
+            }
         }
 
+        scheduleAlarmByRequestCode(appContext, hour, 0, requestCode)
+
         // Применяем язык приложения к контексту
-        val localizedContext = LocaleHelper.applyLanguage(context)
+        val localizedContext = LocaleHelper.applyLanguage(appContext)
         val notifTitle = localizedContext.getString(R.string.notif_quote_title)
 
         // Пробуем загрузить цитату из Firestore
@@ -44,26 +54,25 @@ class QuoteReceiver : BroadcastReceiver() {
                 val quote = if (firestoreQuotes.isNotEmpty()) firestoreQuotes.random()
                             else getRandomQuote(localizedContext)
                 showNotification(
-                    context,
+                    appContext,
                     title = notifTitle,
                     message = quote,
                     notificationId = NOTIFICATION_ID_QUOTE
                 )
                 Log.d("QuoteReceiver", "Цитата отправлена: $quote")
+                pendingResult.finish()
             }
             .addOnFailureListener {
                 // Нет сети — используем встроенные цитаты на языке приложения
                 val quote = getRandomQuote(localizedContext)
                 showNotification(
-                    context,
+                    appContext,
                     title = notifTitle,
                     message = quote,
                     notificationId = NOTIFICATION_ID_QUOTE
                 )
                 Log.d("QuoteReceiver", "Fallback цитата: $quote")
+                pendingResult.finish()
             }
-
-        // Перепланируем на следующий день
-        scheduleAlarmByRequestCode(context, hour, 0, requestCode)
     }
 }

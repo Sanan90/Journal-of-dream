@@ -415,4 +415,7 @@
     <string name="btn_not_now">Nie teraz</string>
 
     <string name="btn_enable">Włącz</string>
+    <string name="notifications_permission_notice">Allow notifications in system settings, otherwise reminders and quotes will not be shown.</string>
+    <string name="notifications_open_settings">Open notification settings</string>
+    <string name="exact_alarm_open_settings">Open exact alarm settings</string>
 </resources>

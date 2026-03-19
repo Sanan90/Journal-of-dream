@@ -23,15 +23,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dreamjournal.journalofdream.R
 import com.dreamjournal.journalofdream.ui.common.BackgroundScreen
+import com.dreamjournal.journalofdream.util.areNotificationsAllowed
+import com.dreamjournal.journalofdream.util.canUseExactAlarms
+import com.dreamjournal.journalofdream.util.openAppNotificationSettings
+import com.dreamjournal.journalofdream.util.openExactAlarmSettings
 import com.dreamjournal.journalofdream.util.scheduleDailyReminder
 import com.dreamjournal.journalofdream.util.scheduleQuoteAlarms
-import com.dreamjournal.journalofdream.util.canUseExactAlarms
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationSetupScreen(onDone: () -> Unit) {
     val context = LocalContext.current
-    val exactAlarmsAvailable = remember { canUseExactAlarms(context) }
+    var exactAlarmsAvailable by remember { mutableStateOf(canUseExactAlarms(context)) }
+    var notificationsAllowed by remember { mutableStateOf(areNotificationsAllowed(context)) }
 
     // TimeInput — компактный ввод ЧЧ:ММ, не занимает весь экран
     val timePickerState = rememberTimePickerState(
@@ -39,6 +43,11 @@ fun NotificationSetupScreen(onDone: () -> Unit) {
         initialMinute = 0,
         is24Hour = true
     )
+
+    LaunchedEffect(Unit) {
+        notificationsAllowed = areNotificationsAllowed(context)
+        exactAlarmsAvailable = canUseExactAlarms(context)
+    }
 
     // Пульсирующий glow как в онбординге
     val infiniteTransition = rememberInfiniteTransition(label = "glow")
@@ -128,6 +137,29 @@ fun NotificationSetupScreen(onDone: () -> Unit) {
                 lineHeight = 22.sp
             )
 
+            if (!notificationsAllowed) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = stringResource(R.string.notifications_permission_notice),
+                    fontSize = 13.sp,
+                    color = Color.White.copy(alpha = 0.7f),
+                    textAlign = TextAlign.Center,
+                    lineHeight = 18.sp
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedButton(
+                    onClick = {
+                        openAppNotificationSettings(context)
+                        notificationsAllowed = areNotificationsAllowed(context)
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.2f)),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                ) {
+                    Text(stringResource(R.string.notifications_open_settings))
+                }
+            }
+
             if (!exactAlarmsAvailable) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
@@ -137,6 +169,18 @@ fun NotificationSetupScreen(onDone: () -> Unit) {
                     textAlign = TextAlign.Center,
                     lineHeight = 18.sp
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedButton(
+                    onClick = {
+                        openExactAlarmSettings(context)
+                        exactAlarmsAvailable = canUseExactAlarms(context)
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.2f)),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                ) {
+                    Text(stringResource(R.string.exact_alarm_open_settings))
+                }
             }
 
             Spacer(modifier = Modifier.height(32.dp))

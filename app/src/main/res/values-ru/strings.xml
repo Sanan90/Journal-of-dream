@@ -420,4 +420,7 @@
     <string name="btn_not_now">Не сейчас</string>
 
     <string name="btn_enable">Включить</string>
+    <string name="notifications_permission_notice">Разреши уведомления в системных настройках, иначе напоминания и цитаты не будут показываться.</string>
+    <string name="notifications_open_settings">Открыть настройки уведомлений</string>
+    <string name="exact_alarm_open_settings">Открыть настройки точных будильников</string>
 </resources>

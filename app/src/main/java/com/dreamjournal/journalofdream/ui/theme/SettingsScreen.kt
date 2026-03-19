@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -42,8 +43,11 @@ import androidx.navigation.NavHostController
 import com.dreamjournal.journalofdream.ui.common.BackgroundScreen
 import com.dreamjournal.journalofdream.util.cancelQuoteAlarms
 import com.dreamjournal.journalofdream.util.scheduleDailyReminder
-import com.dreamjournal.journalofdream.util.cancelDailyReminder
 import com.dreamjournal.journalofdream.util.scheduleQuoteAlarms
+import com.dreamjournal.journalofdream.util.areNotificationsAllowed
+import com.dreamjournal.journalofdream.util.canUseExactAlarms
+import com.dreamjournal.journalofdream.util.openAppNotificationSettings
+import com.dreamjournal.journalofdream.util.openExactAlarmSettings
 
 import android.app.Activity
 import androidx.compose.material.icons.filled.Warning
@@ -64,6 +68,8 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
     var notificationMinute by remember { mutableStateOf(prefs.getInt("notification_minute", 0)) }
     var notificationsEnabled by remember { mutableStateOf(prefs.getBoolean("notifications_enabled", true)) }
     var motivationalQuotes by remember { mutableStateOf(prefs.getBoolean("motivational_quotes", true)) }
+    var notificationsAllowed by remember { mutableStateOf<Boolean>(areNotificationsAllowed(context)) }
+    var exactAlarmsAvailable by remember { mutableStateOf<Boolean>(canUseExactAlarms(context)) }
 
     // PIN состояние — вынесено наверх чтобы показывать поверх всего экрана
     var pinEnabled by remember { mutableStateOf(isPinEnabled(context)) }
@@ -130,6 +136,31 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                 // Секция уведомлений
                     SettingsSectionTitle(stringResource(R.string.settings_notifications))
 
+                    if (!notificationsAllowed) {
+                        SettingsClickRow(
+                            icon = Icons.Default.Settings,
+                            title = stringResource(R.string.notifications_permission_notice),
+                            subtitle = stringResource(R.string.notifications_open_settings),
+                            onClick = {
+                                openAppNotificationSettings(context)
+                                notificationsAllowed = areNotificationsAllowed(context)
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+
+                    if (!exactAlarmsAvailable) {
+                        SettingsClickRow(
+                            icon = Icons.Default.Notifications,
+                            title = stringResource(R.string.setup_exact_alarm_notice),
+                            subtitle = stringResource(R.string.exact_alarm_open_settings),
+                            onClick = {
+                                openExactAlarmSettings(context)
+                                exactAlarmsAvailable = canUseExactAlarms(context)
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
 
                     // Включить/выключить уведомления
                     SettingsToggleRow(

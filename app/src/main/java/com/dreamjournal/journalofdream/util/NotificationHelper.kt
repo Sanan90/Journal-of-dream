@@ -6,10 +6,14 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.dreamjournal.journalofdream.R
 import com.dreamjournal.journalofdream.ReminderReceiver
 import com.dreamjournal.journalofdream.QuoteReceiver
@@ -38,18 +42,52 @@ fun createNotificationChannel(context: Context) {
     }
 }
 
+fun areNotificationsAllowed(context: Context): Boolean {
+    val manager = NotificationManagerCompat.from(context)
+    val channelEnabled = manager.areNotificationsEnabled()
+    val runtimeGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+    } else true
+    return channelEnabled && runtimeGranted
+}
+
+fun openAppNotificationSettings(context: Context) {
+    val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    context.startActivity(intent)
+}
+
+fun openExactAlarmSettings(context: Context) {
+    val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+            data = Uri.parse("package:${context.packageName}")
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+    } else {
+        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.parse("package:${context.packageName}")
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+    }
+    context.startActivity(intent)
+}
+
 fun showNotification(
     context: Context,
     title: String,
     message: String,
     notificationId: Int = NOTIFICATION_ID_REMINDER
 ) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        val check = context.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
-        if (check != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-            Log.d("NotificationHelper", "Нет разрешения POST_NOTIFICATIONS")
-            return
-        }
+    createNotificationChannel(context)
+
+    if (!areNotificationsAllowed(context)) {
+        Log.d("NotificationHelper", "Уведомления системно запрещены или не выдано разрешение")
+        return
     }
 
     val launchIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
@@ -136,6 +174,10 @@ private fun <T> scheduleAlarm(
     }
 
     val canScheduleExact = canUseExactAlarms(context)
+    Log.d(
+        "NotificationHelper",
+        "Планируем alarm requestCode=$requestCode receiver=${receiverClass.simpleName} at=${calendar.time} exact=$canScheduleExact"
+    )
 
     if (canScheduleExact) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -181,4 +223,5 @@ private fun <T> cancelAlarm(context: Context, requestCode: Int, receiverClass: C
 
     alarmManager.cancel(pendingIntent)
     pendingIntent.cancel()
+    Log.d("NotificationHelper", "Отменён alarm requestCode=$requestCode receiver=${receiverClass.simpleName}")
 }

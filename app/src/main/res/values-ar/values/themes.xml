@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!-- Основная тема приложения -->
+    <style name="Theme.JournalOfDream" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Устанавливаем фоновый цвет окна (замените на ваш цвет или изображение) -->
+    </style>
+
+
+</resources>
