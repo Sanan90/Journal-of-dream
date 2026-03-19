@@ -73,6 +73,38 @@ val MIGRATION_4_5 = object : Migration(4, 5) {
     }
 }
 
+val MIGRATION_5_6 = object : Migration(5, 6) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("PRAGMA foreign_keys=OFF")
+
+        database.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `dreams_new` (
+                `localId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                `ownerUid` TEXT NOT NULL,
+                `title` TEXT NOT NULL,
+                `content` TEXT NOT NULL,
+                `date` TEXT NOT NULL,
+                `time` TEXT NOT NULL,
+                `category` TEXT NOT NULL
+            )
+            """.trimIndent()
+        )
+
+        database.execSQL(
+            """
+            INSERT INTO `dreams_new` (`localId`, `ownerUid`, `title`, `content`, `date`, `time`, `category`)
+            SELECT `localId`, `ownerUid`, `title`, `content`, `date`, `time`, `category`
+            FROM `dreams`
+            """.trimIndent()
+        )
+
+        database.execSQL("DROP TABLE `dreams`")
+        database.execSQL("ALTER TABLE `dreams_new` RENAME TO `dreams`")
+        database.execSQL("PRAGMA foreign_keys=ON")
+    }
+}
+
 @Database(
     entities = [
         Dream::class,
@@ -80,7 +112,7 @@ val MIGRATION_4_5 = object : Migration(4, 5) {
         DreamLocationCrossRef::class,
         Category::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -100,7 +132,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "dream_database"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                     .build()
                 INSTANCE = instance
                 instance
