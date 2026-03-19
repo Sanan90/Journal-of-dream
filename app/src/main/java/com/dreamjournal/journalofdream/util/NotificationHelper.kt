@@ -27,10 +27,10 @@ fun createNotificationChannel(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "Dream Channel",
+            context.getString(R.string.notification_channel_name),
             NotificationManager.IMPORTANCE_DEFAULT
         ).apply {
-            description = "Уведомления для напоминаний о записи сна"
+            description = context.getString(R.string.notification_channel_description)
         }
 
         val manager = context.getSystemService(NotificationManager::class.java)
@@ -73,6 +73,11 @@ fun showNotification(
         .build()
 
     NotificationManagerCompat.from(context).notify(notificationId, notification)
+}
+
+fun canUseExactAlarms(context: Context): Boolean {
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) alarmManager.canScheduleExactAlarms() else true
 }
 
 fun scheduleDailyReminder(context: Context, hour: Int, minute: Int) {
@@ -130,11 +135,7 @@ private fun <T> scheduleAlarm(
         }
     }
 
-    val canScheduleExact = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        alarmManager.canScheduleExactAlarms()
-    } else {
-        true
-    }
+    val canScheduleExact = canUseExactAlarms(context)
 
     if (canScheduleExact) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

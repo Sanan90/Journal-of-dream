@@ -400,4 +400,26 @@
 
 
     <string name="dream_auto_title">%1$s %2$s арманы</string>
+    <string name="biometric_prompt_subtitle">Кіру үшін биометрияны пайдаланыңыз</string>
+    <string name="biometric_prompt_title">Journal of Dream қолданбасына кіру</string>
+    <string name="notification_channel_description">Түсті жазуды еске салатын хабарландырулар</string>
+    <string name="notification_channel_name">Түстер арнасы</string>
+    <string name="pin_create">PIN-код жасаңыз</string>
+    <string name="pin_enter_title">PIN-кодты енгізіңіз</string>
+    <string name="pin_error_invalid">PIN-код қате</string>
+    <string name="pin_error_mismatch">PIN-кодтар сәйкес келмейді</string>
+    <string name="pin_repeat">PIN-кодты қайта енгізіңіз</string>
+    <string name="setup_exact_alarm_notice">Кейбір құрылғыларда дәл дабылдар өшірулі болса, жүйе еске салу уақытын кешіктіруі мүмкін.</string>
+    <string name="speech_prompt_tell_dream">Түсііңізді айтып беріңіз...</string>
+    <string name="technique_delete_title">Техниканы жою керек пе?</string>
+    <string name="technique_delete_message">«%s» біржола жойылады.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">Биометрияны пайдалану</string>
+    <string name="settings_biometric_desc">Қолданбаны саусақ ізімен немесе бет танумен ашу</string>
+    <string name="settings_biometric_unavailable">Бұл құрылғыда биометрия қолжетімсіз</string>
+    <string name="biometric_enable_title">Биометрияны қосу керек пе?</string>
+    <string name="biometric_enable_message">Қолданбаға жылдам кіру үшін саусақ ізі немесе бет тануды пайдалансын ба?</string>
+    <string name="btn_not_now">Қазір емес</string>
+
+    <string name="btn_enable">Қосу</string>
 </resources>

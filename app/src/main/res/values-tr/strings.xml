@@ -393,4 +393,26 @@
 
 
     <string name="dream_auto_title">%1$s %2$s Rüyası</string>
+    <string name="biometric_prompt_subtitle">Giriş yapmak için biyometriyi kullanın</string>
+    <string name="biometric_prompt_title">Journal of Dream uygulamasına giriş</string>
+    <string name="notification_channel_description">Rüyanızı kaydetmenizi hatırlatan bildirimler</string>
+    <string name="notification_channel_name">Rüya kanalı</string>
+    <string name="pin_create">PIN oluşturun</string>
+    <string name="pin_enter_title">PIN girin</string>
+    <string name="pin_error_invalid">Hatalı PIN</string>
+    <string name="pin_error_mismatch">PIN eşleşmiyor</string>
+    <string name="pin_repeat">PIN’i tekrar girin</string>
+    <string name="setup_exact_alarm_notice">Bazı cihazlarda kesin alarmlar kapalıysa sistem hatırlatmaları geciktirebilir.</string>
+    <string name="speech_prompt_tell_dream">Rüyanı anlat...</string>
+    <string name="technique_delete_title">Teknik silinsin mi?</string>
+    <string name="technique_delete_message">“%s” kalıcı olarak silinecek.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">Biyometri kullan</string>
+    <string name="settings_biometric_desc">Uygulamanın kilidini parmak izi veya yüz tanıma ile aç</string>
+    <string name="settings_biometric_unavailable">Bu cihazda biyometri kullanılamıyor</string>
+    <string name="biometric_enable_title">Biyometri etkinleştirilsin mi?</string>
+    <string name="biometric_enable_message">Uygulamanın kilidini daha hızlı açmak için parmak izi veya yüz tanıma kullanılsın mı?</string>
+    <string name="btn_not_now">Şimdi değil</string>
+
+    <string name="btn_enable">Etkinleştir</string>
 </resources>

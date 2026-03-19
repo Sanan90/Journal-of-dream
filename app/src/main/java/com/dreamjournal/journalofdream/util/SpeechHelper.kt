@@ -6,6 +6,8 @@ import android.speech.RecognizerIntent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import com.dreamjournal.journalofdream.R
 import java.util.Locale
 
 /**
@@ -15,6 +17,7 @@ import java.util.Locale
  */
 @Composable
 fun rememberSpeechLauncher(onResult: (String) -> Unit): () -> Unit {
+    val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -30,7 +33,7 @@ fun rememberSpeechLauncher(onResult: (String) -> Unit): () -> Unit {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-            putExtra(RecognizerIntent.EXTRA_PROMPT, "Расскажите свой сон...")
+            putExtra(RecognizerIntent.EXTRA_PROMPT, context.getString(R.string.speech_prompt_tell_dream))
             putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
         }
         launcher.launch(intent)

@@ -393,4 +393,26 @@
 
 
     <string name="dream_auto_title">Rêve du %1$s %2$s</string>
+    <string name="biometric_prompt_subtitle">Utilisez la biométrie pour vous connecter</string>
+    <string name="biometric_prompt_title">Connexion à Journal of Dream</string>
+    <string name="notification_channel_description">Notifications pour vous rappeler d’enregistrer votre rêve</string>
+    <string name="notification_channel_name">Canal des rêves</string>
+    <string name="pin_create">Créez un code PIN</string>
+    <string name="pin_enter_title">Entrez le code PIN</string>
+    <string name="pin_error_invalid">Code PIN incorrect</string>
+    <string name="pin_error_mismatch">Les codes PIN ne correspondent pas</string>
+    <string name="pin_repeat">Répétez le code PIN</string>
+    <string name="setup_exact_alarm_notice">Sur certains appareils, le système peut retarder les rappels si les alarmes exactes sont désactivées.</string>
+    <string name="speech_prompt_tell_dream">Racontez votre rêve...</string>
+    <string name="technique_delete_title">Supprimer la technique ?</string>
+    <string name="technique_delete_message">« %s » sera supprimé définitivement.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">Utiliser la biométrie</string>
+    <string name="settings_biometric_desc">Déverrouiller l’application avec l’empreinte ou la reconnaissance faciale</string>
+    <string name="settings_biometric_unavailable">La biométrie n’est pas disponible sur cet appareil</string>
+    <string name="biometric_enable_title">Activer la biométrie ?</string>
+    <string name="biometric_enable_message">Utiliser l’empreinte digitale ou la reconnaissance faciale pour déverrouiller l’application plus rapidement ?</string>
+    <string name="btn_not_now">Pas maintenant</string>
+
+    <string name="btn_enable">Activer</string>
 </resources>

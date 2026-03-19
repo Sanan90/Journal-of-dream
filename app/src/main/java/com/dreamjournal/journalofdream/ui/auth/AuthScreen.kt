@@ -110,7 +110,7 @@ fun AuthScreen(
             val account = task.getResult(Exception::class.java)
             val credential = GoogleAuthProvider.getCredential(account.idToken, null)
             isLoading = true
-            auth.signInWithCredential(credential).addOnCompleteListener(activity!!) { res ->
+            auth.signInWithCredential(credential).addOnCompleteListener { res ->
                 isLoading = false
                 if (res.isSuccessful) {
                     prefs.edit().putBoolean("has_auth_history", true).apply()
@@ -303,7 +303,7 @@ fun AuthScreen(
                             if (isRegisterMode) {
                                 // Регистрация
                                 auth.createUserWithEmailAndPassword(email.trim(), password)
-                                    .addOnCompleteListener(activity!!) { res ->
+                                    .addOnCompleteListener { res ->
                                         if (res.isSuccessful) {
                                             // Сохраняем имя — ждём завершения перед переходом
                                             val profileUpdate = UserProfileChangeRequest.Builder()
@@ -314,7 +314,6 @@ fun AuthScreen(
                                                     auth.currentUser?.sendEmailVerification()
                                                         ?.addOnCompleteListener { verifyTask ->
                                                             isLoading = false
-
                                                             if (verifyTask.isSuccessful) {
                                                                 prefs.edit().putBoolean("has_auth_history", true).apply()
                                                                 isRegisterMode = false
@@ -324,12 +323,10 @@ fun AuthScreen(
                                                             } else {
                                                                 errorMessage = verifyTask.exception?.message ?: "Failed to send verification email"
                                                             }
+                                                        } ?: run {
+                                                            isLoading = false
+                                                            errorMessage = "Failed to send verification email"
                                                         }
-                                                    isLoading = false
-                                                    isRegisterMode = false
-                                                    password = ""
-                                                    successMessage = "$strVerifySent ${email.trim()}"
-                                                    auth.signOut()
                                                 }
                                         } else {
                                             isLoading = false
@@ -339,7 +336,7 @@ fun AuthScreen(
                             } else {
                                 // Вход
                                 auth.signInWithEmailAndPassword(email.trim(), password)
-                                    .addOnCompleteListener(activity!!) { res ->
+                                    .addOnCompleteListener { res ->
                                         if (res.isSuccessful) {
                                             // Перезагружаем профиль чтобы isEmailVerified был актуальным
                                             auth.currentUser?.reload()?.addOnCompleteListener {

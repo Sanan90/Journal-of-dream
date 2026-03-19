@@ -25,7 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import com.dreamjournal.journalofdream.ui.common.BackgroundScreen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -38,10 +37,50 @@ private fun hashPin(pin: String): String {
     return bytes.joinToString("") { "%02x".format(it) }
 }
 
+private const val SECURITY_PREFS = "security_prefs"
+private const val LEGACY_PIN_HASH_CACHE = "pin_hash_cache"
+private const val LEGACY_PIN_HASH = "pin_hash"
+private const val LEGACY_PIN_ENABLED = "pin_enabled"
+
+private fun currentSecurityOwner(): String {
+    val user = FirebaseAuth.getInstance().currentUser
+    return when {
+        user == null -> "guest"
+        user.isAnonymous -> "guest"
+        else -> user.uid
+    }
+}
+
+private fun pinHashCacheKey(owner: String) = "pin_hash_cache_$owner"
+private fun pinHashLegacyOwnerKey(owner: String) = "pin_hash_$owner"
+private fun pinEnabledKey(owner: String) = "pin_enabled_$owner"
+private fun biometricEnabledKey(owner: String) = "biometric_enabled_$owner"
+
+private fun prefs(context: Context) =
+    context.getSharedPreferences(SECURITY_PREFS, Context.MODE_PRIVATE)
+
+private fun migrateLegacyPinIfNeeded(context: Context, owner: String) {
+    val prefs = prefs(context)
+    if (prefs.contains(pinHashCacheKey(owner)) || prefs.contains(pinHashLegacyOwnerKey(owner))) return
+
+    val legacyHash = prefs.getString(LEGACY_PIN_HASH_CACHE, null) ?: prefs.getString(LEGACY_PIN_HASH, null)
+    val legacyEnabled = prefs.getBoolean(LEGACY_PIN_ENABLED, false)
+
+    if (legacyHash != null) {
+        prefs.edit()
+            .putString(pinHashCacheKey(owner), legacyHash)
+            .putBoolean(pinEnabledKey(owner), legacyEnabled)
+            .remove(LEGACY_PIN_HASH_CACHE)
+            .remove(LEGACY_PIN_HASH)
+            .remove(LEGACY_PIN_ENABLED)
+            .apply()
+    }
+}
+
 // Ключ документа в Firestore: users/{uid}/settings/pin
 // Для гостей — fallback в SharedPreferences
 private fun getPinDocRef() =
-    FirebaseAuth.getInstance().currentUser?.uid?.let { uid ->
+    FirebaseAuth.getInstance().currentUser?.takeIf { !it.isAnonymous }?.uid?.let { uid ->
         FirebaseFirestore.getInstance()
             .collection("users").document(uid)
             .collection("settings").document("pin")
@@ -49,73 +88,95 @@ private fun getPinDocRef() =
 
 // Сохранить PIN в Firestore (или SharedPreferences для гостя)
 fun savePinHash(context: Context, pin: String) {
+    val owner = currentSecurityOwner()
+    val prefs = prefs(context)
     val hash = hashPin(pin)
     val docRef = getPinDocRef()
     if (docRef != null) {
-        // Авторизованный пользователь — в Firestore
         docRef.set(mapOf("hash" to hash, "enabled" to true))
     } else {
-        // Гость — локально
-        context.getSharedPreferences("security_prefs", Context.MODE_PRIVATE)
-            .edit().putString("pin_hash", hash).apply()
+        prefs.edit().putString(pinHashLegacyOwnerKey(owner), hash).apply()
     }
-    // Всегда сохраняем флаг локально для быстрой проверки при запуске
-    context.getSharedPreferences("security_prefs", Context.MODE_PRIVATE)
-        .edit().putString("pin_hash_cache", hash).putBoolean("pin_enabled", true).apply()
+
+    prefs.edit()
+        .putString(pinHashCacheKey(owner), hash)
+        .putBoolean(pinEnabledKey(owner), true)
+        .apply()
 }
 
 // Проверить PIN — сначала по кэшу, всегда быстро
 fun checkPin(context: Context, pin: String): Boolean {
+    val owner = currentSecurityOwner()
+    migrateLegacyPinIfNeeded(context, owner)
+    val prefs = prefs(context)
     val hash = hashPin(pin)
-    val cached = context.getSharedPreferences("security_prefs", Context.MODE_PRIVATE)
-        .getString("pin_hash_cache", null)
-        ?: context.getSharedPreferences("security_prefs", Context.MODE_PRIVATE)
-            .getString("pin_hash", null) // совместимость со старым форматом
+    val cached = prefs.getString(pinHashCacheKey(owner), null)
+        ?: prefs.getString(pinHashLegacyOwnerKey(owner), null)
     return hash == cached
 }
 
-fun hasPin(context: Context): Boolean =
-    context.getSharedPreferences("security_prefs", Context.MODE_PRIVATE)
-        .contains("pin_hash_cache") ||
-    context.getSharedPreferences("security_prefs", Context.MODE_PRIVATE)
-        .contains("pin_hash")
+fun hasPin(context: Context): Boolean {
+    val owner = currentSecurityOwner()
+    migrateLegacyPinIfNeeded(context, owner)
+    val prefs = prefs(context)
+    return prefs.contains(pinHashCacheKey(owner)) || prefs.contains(pinHashLegacyOwnerKey(owner))
+}
 
 fun removePin(context: Context) {
-    context.getSharedPreferences("security_prefs", Context.MODE_PRIVATE)
+    val owner = currentSecurityOwner()
+    prefs(context)
         .edit()
-        .remove("pin_hash_cache")
-        .remove("pin_hash")
-        .putBoolean("pin_enabled", false)
+        .remove(pinHashCacheKey(owner))
+        .remove(pinHashLegacyOwnerKey(owner))
+        .remove(pinEnabledKey(owner))
+        .remove(biometricEnabledKey(owner))
         .apply()
-    // Удаляем из Firestore
     getPinDocRef()?.delete()
 }
 
-fun isPinEnabled(context: Context): Boolean =
-    context.getSharedPreferences("security_prefs", Context.MODE_PRIVATE)
-        .getBoolean("pin_enabled", false)
+fun isPinEnabled(context: Context): Boolean {
+    val owner = currentSecurityOwner()
+    migrateLegacyPinIfNeeded(context, owner)
+    return prefs(context).getBoolean(pinEnabledKey(owner), false)
+}
 
 fun setPinEnabled(context: Context, enabled: Boolean) {
-    context.getSharedPreferences("security_prefs", Context.MODE_PRIVATE)
-        .edit().putBoolean("pin_enabled", enabled).apply()
+    val owner = currentSecurityOwner()
+    prefs(context)
+        .edit().putBoolean(pinEnabledKey(owner), enabled).apply()
     if (!enabled) {
+        setBiometricEnabled(context, false)
         getPinDocRef()?.update("enabled", false)
     }
 }
 
+fun isBiometricEnabledForCurrentUser(context: Context): Boolean {
+    val owner = currentSecurityOwner()
+    return prefs(context).getBoolean(biometricEnabledKey(owner), false)
+}
+
+fun setBiometricEnabled(context: Context, enabled: Boolean) {
+    val owner = currentSecurityOwner()
+    prefs(context).edit().putBoolean(biometricEnabledKey(owner), enabled).apply()
+}
+
 // Синхронизировать PIN из Firestore в локальный кэш (вызывать при логине)
 suspend fun syncPinFromFirestore(context: Context) {
+    val owner = currentSecurityOwner()
     try {
-        val doc = getPinDocRef()?.get()?.await() ?: return
+        val doc = getPinDocRef()?.get()?.await() ?: run {
+            migrateLegacyPinIfNeeded(context, owner)
+            return
+        }
         val hash = doc.getString("hash") ?: return
         val enabled = doc.getBoolean("enabled") ?: false
-        context.getSharedPreferences("security_prefs", Context.MODE_PRIVATE)
+        prefs(context)
             .edit()
-            .putString("pin_hash_cache", hash)
-            .putBoolean("pin_enabled", enabled)
+            .putString(pinHashCacheKey(owner), hash)
+            .putBoolean(pinEnabledKey(owner), enabled)
             .apply()
     } catch (e: Exception) {
-        // Нет сети — работаем с кэшем
+        migrateLegacyPinIfNeeded(context, owner)
     }
 }
 
@@ -126,7 +187,7 @@ fun isBiometricAvailable(context: Context): Boolean {
 }
 
 fun showBiometricPrompt(context: Context, onSuccess: () -> Unit) {
-    val activity = context as? FragmentActivity ?: return
+    val activity = context as? androidx.fragment.app.FragmentActivity ?: return
     val executor = ContextCompat.getMainExecutor(context)
     val prompt = BiometricPrompt(
         activity, executor,
@@ -138,8 +199,8 @@ fun showBiometricPrompt(context: Context, onSuccess: () -> Unit) {
     )
     prompt.authenticate(
         BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Вход в Journal of Dream")
-            .setSubtitle("Используйте биометрию для входа")
+            .setTitle(context.getString(R.string.biometric_prompt_title))
+            .setSubtitle(context.getString(R.string.biometric_prompt_subtitle))
             .setNegativeButtonText(context.getString(R.string.pin_enter))
             .build()
     )
@@ -162,8 +223,39 @@ fun PinScreen(
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var shake by remember { mutableStateOf(false) }
     var showForgotDialog by remember { mutableStateOf(false) }
+    var showBiometricOptInDialog by remember { mutableStateOf(false) }
 
     val pinLength = 4
+
+    if (showBiometricOptInDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                setBiometricEnabled(context, false)
+                showBiometricOptInDialog = false
+                onSuccess()
+            },
+            title = { Text(stringResource(R.string.biometric_enable_title)) },
+            text = { Text(stringResource(R.string.biometric_enable_message)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    setBiometricEnabled(context, true)
+                    showBiometricOptInDialog = false
+                    onSuccess()
+                }) {
+                    Text(stringResource(R.string.btn_enable))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    setBiometricEnabled(context, false)
+                    showBiometricOptInDialog = false
+                    onSuccess()
+                }) {
+                    Text(stringResource(R.string.btn_not_now))
+                }
+            }
+        )
+    }
 
     // Диалог сброса PIN
     if (showForgotDialog) {
@@ -209,7 +301,7 @@ fun PinScreen(
     )
 
     LaunchedEffect(Unit) {
-        if (mode == PinMode.ENTER && isBiometricAvailable(context)) {
+        if (mode == PinMode.ENTER && isBiometricEnabledForCurrentUser(context) && isBiometricAvailable(context)) {
             showBiometricPrompt(context, onSuccess)
         }
     }
@@ -225,7 +317,7 @@ fun PinScreen(
                     if (checkPin(context, enteredPin)) {
                         onSuccess()
                     } else {
-                        errorMessage = "Неверный PIN"
+                        errorMessage = context.getString(R.string.pin_error_invalid)
                         shake = true
                         enteredPin = ""
                     }
@@ -239,9 +331,14 @@ fun PinScreen(
                         if (enteredPin == confirmPin) {
                             savePinHash(context, enteredPin)
                             setPinEnabled(context, true)
-                            onSuccess()
+                            if (isBiometricAvailable(context)) {
+                                showBiometricOptInDialog = true
+                            } else {
+                                setBiometricEnabled(context, false)
+                                onSuccess()
+                            }
                         } else {
-                            errorMessage = "PIN не совпадает"
+                            errorMessage = context.getString(R.string.pin_error_mismatch)
                             shake = true
                             enteredPin = ""
                             isConfirming = false
@@ -263,9 +360,9 @@ fun PinScreen(
         ) {
             Text(
                 text = when {
-                    mode == PinMode.SET && !isConfirming -> "Создайте PIN-код"
-                    mode == PinMode.SET && isConfirming -> "Повторите PIN-код"
-                    else -> "Введите PIN-код"
+                    mode == PinMode.SET && !isConfirming -> stringResource(R.string.pin_create)
+                    mode == PinMode.SET && isConfirming -> stringResource(R.string.pin_repeat)
+                    else -> stringResource(R.string.pin_enter_title)
                 },
                 color = Color.White,
                 fontSize = 24.sp,
@@ -318,7 +415,7 @@ fun PinScreen(
                         row.forEach { key ->
                             when (key) {
                                 "bio" -> {
-                                    if (mode == PinMode.ENTER && isBiometricAvailable(context)) {
+                                    if (mode == PinMode.ENTER && isBiometricEnabledForCurrentUser(context) && isBiometricAvailable(context)) {
                                         PinKey(onClick = { showBiometricPrompt(context, onSuccess) }) {
                                             Text("👆", fontSize = 26.sp)
                                         }

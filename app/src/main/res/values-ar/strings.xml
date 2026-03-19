@@ -393,4 +393,26 @@
 
 
     <string name="dream_auto_title">حلم %1$s %2$s</string>
+    <string name="biometric_prompt_subtitle">استخدم القياسات الحيوية لتسجيل الدخول</string>
+    <string name="biometric_prompt_title">تسجيل الدخول إلى Journal of Dream</string>
+    <string name="notification_channel_description">إشعارات لتذكيرك بتسجيل الحلم</string>
+    <string name="notification_channel_name">قناة الأحلام</string>
+    <string name="pin_create">أنشئ رمز PIN</string>
+    <string name="pin_enter_title">أدخل رمز PIN</string>
+    <string name="pin_error_invalid">رمز PIN غير صحيح</string>
+    <string name="pin_error_mismatch">رمزا PIN غير متطابقين</string>
+    <string name="pin_repeat">أعد إدخال رمز PIN</string>
+    <string name="setup_exact_alarm_notice">في بعض الأجهزة قد يؤخر النظام التذكيرات إذا كانت التنبيهات الدقيقة معطلة.</string>
+    <string name="speech_prompt_tell_dream">أخبرني عن حلمك...</string>
+    <string name="technique_delete_title">هل تريد حذف التقنية؟</string>
+    <string name="technique_delete_message">سيتم حذف «%s» نهائيًا.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">استخدام القياسات الحيوية</string>
+    <string name="settings_biometric_desc">افتح التطبيق ببصمة الإصبع أو التعرّف على الوجه</string>
+    <string name="settings_biometric_unavailable">القياسات الحيوية غير متاحة على هذا الجهاز</string>
+    <string name="biometric_enable_title">تفعيل القياسات الحيوية؟</string>
+    <string name="biometric_enable_message">هل تريد استخدام بصمة الإصبع أو التعرّف على الوجه لفتح التطبيق بسرعة أكبر؟</string>
+    <string name="btn_not_now">ليس الآن</string>
+
+    <string name="btn_enable">تفعيل</string>
 </resources>

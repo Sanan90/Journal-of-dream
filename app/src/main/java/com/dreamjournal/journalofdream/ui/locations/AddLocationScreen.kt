@@ -109,7 +109,7 @@ fun AddLocationScreen(
 
                 if (showError) {
                     Text(
-                        text = "Введите название локации",
+                        text = stringResource(R.string.location_error_name),
                         color = Color.Red,
                         fontSize = 12.sp,
                         modifier = Modifier

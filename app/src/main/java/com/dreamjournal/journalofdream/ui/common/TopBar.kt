@@ -15,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.dreamjournal.journalofdream.R
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
@@ -32,14 +34,14 @@ fun TopBar(navController: NavHostController, onSaveClick: () -> Unit) {
             onClick = { navController.popBackStack() },
             modifier = Modifier.size(48.dp) // Увеличиваем размер иконки
         ) {
-            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Назад", tint = Color.White, modifier = Modifier.size(36.dp)) // Иконка увеличена до 36dp
+            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(R.string.btn_back), tint = Color.White, modifier = Modifier.size(36.dp)) // Иконка увеличена до 36dp
         }
 
         IconButton(
             onClick = onSaveClick,
             modifier = Modifier.size(48.dp) // Увеличиваем размер иконки
         ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "Сохранить", tint = Color.White, modifier = Modifier.size(36.dp)) // Иконка увеличена до 36dp
+            Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.btn_save), tint = Color.White, modifier = Modifier.size(36.dp)) // Иконка увеличена до 36dp
         }
     }
 }

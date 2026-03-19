@@ -393,4 +393,26 @@
 
 
     <string name="dream_auto_title">Droom %1$s %2$s</string>
+    <string name="biometric_prompt_subtitle">Gebruik biometrie om in te loggen</string>
+    <string name="biometric_prompt_title">Inloggen bij Journal of Dream</string>
+    <string name="notification_channel_description">Meldingen om je eraan te herinneren je droom op te schrijven</string>
+    <string name="notification_channel_name">Droomkanaal</string>
+    <string name="pin_create">Maak een pincode aan</string>
+    <string name="pin_enter_title">Voer je pincode in</string>
+    <string name="pin_error_invalid">Onjuiste pincode</string>
+    <string name="pin_error_mismatch">Pincodes komen niet overeen</string>
+    <string name="pin_repeat">Voer de pincode opnieuw in</string>
+    <string name="setup_exact_alarm_notice">Op sommige apparaten kan het systeem herinneringen vertragen als exacte alarmen zijn uitgeschakeld.</string>
+    <string name="speech_prompt_tell_dream">Vertel over je droom...</string>
+    <string name="technique_delete_title">Techniek verwijderen?</string>
+    <string name="technique_delete_message">“%s” wordt permanent verwijderd.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">Biometrie gebruiken</string>
+    <string name="settings_biometric_desc">Ontgrendel de app met vingerafdruk of gezichtsherkenning</string>
+    <string name="settings_biometric_unavailable">Biometrie is niet beschikbaar op dit apparaat</string>
+    <string name="biometric_enable_title">Biometrie inschakelen?</string>
+    <string name="biometric_enable_message">Wil je de app sneller ontgrendelen met vingerafdruk of gezichtsherkenning?</string>
+    <string name="btn_not_now">Nu niet</string>
+
+    <string name="btn_enable">Inschakelen</string>
 </resources>

@@ -64,7 +64,7 @@ fun DreamListItem(
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             title = { Text(stringResource(R.string.dialog_delete_dream_title)) },
-            text = { Text("\"${dream.title}\" будет удалён. Это действие нельзя отменить.") },
+            text = { Text(stringResource(R.string.dialog_delete_dream_message, dream.title)) },
             confirmButton = {
                 TextButton(onClick = {
                     showDeleteDialog = false

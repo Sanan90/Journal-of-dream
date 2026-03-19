@@ -407,7 +407,7 @@ fun AddDreamScreen(
                             },
                             confirmButton = {
                                 TextButton(onClick = { isLocationDialogOpen = false }) {
-                                    Text("OK")
+                                    Text(stringResource(R.string.ok))
                                 }
                             }
                         )

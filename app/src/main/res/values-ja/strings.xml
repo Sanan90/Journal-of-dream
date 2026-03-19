@@ -393,4 +393,26 @@
 
 
     <string name="dream_auto_title">%2$s%1$s日の夢</string>
+    <string name="biometric_prompt_subtitle">ログインに生体認証を使用します</string>
+    <string name="biometric_prompt_title">Journal of Dream にログイン</string>
+    <string name="notification_channel_description">夢を記録するためのリマインダー通知</string>
+    <string name="notification_channel_name">夢チャンネル</string>
+    <string name="pin_create">PINコードを作成</string>
+    <string name="pin_enter_title">PINコードを入力</string>
+    <string name="pin_error_invalid">PINコードが正しくありません</string>
+    <string name="pin_error_mismatch">PINコードが一致しません</string>
+    <string name="pin_repeat">PINコードを再入力</string>
+    <string name="setup_exact_alarm_notice">一部の端末では、正確なアラームが無効だとリマインダーが遅れる場合があります。</string>
+    <string name="speech_prompt_tell_dream">夢について話してください…</string>
+    <string name="technique_delete_title">テクニックを削除しますか？</string>
+    <string name="technique_delete_message">「%s」は完全に削除されます。</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">生体認証を使用</string>
+    <string name="settings_biometric_desc">指紋認証または顔認証でアプリを解除します</string>
+    <string name="settings_biometric_unavailable">この端末では生体認証を利用できません</string>
+    <string name="biometric_enable_title">生体認証を有効にしますか？</string>
+    <string name="biometric_enable_message">指紋認証または顔認証でアプリをすばやく解除しますか？</string>
+    <string name="btn_not_now">今はしない</string>
+
+    <string name="btn_enable">有効にする</string>
 </resources>

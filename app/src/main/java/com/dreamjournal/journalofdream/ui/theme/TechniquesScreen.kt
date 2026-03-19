@@ -154,8 +154,8 @@ fun TechniquesScreen(
     if (deletingTechnique != null) {
         AlertDialog(
             onDismissRequest = { deletingTechnique = null },
-            title = { Text(stringResource(R.string.btn_delete) + " технику?") },
-            text = { Text("«${deletingTechnique!!.localizedName(LocalContext.current.resources.configuration.locales[0].language)}» будет удалена навсегда.") },
+            title = { Text(stringResource(R.string.technique_delete_title)) },
+            text = { Text(stringResource(R.string.technique_delete_message, deletingTechnique!!.localizedName(LocalContext.current.resources.configuration.locales[0].language))) },
             confirmButton = {
                 TextButton(onClick = {
                     viewModel.deleteTechnique(deletingTechnique!!.id)

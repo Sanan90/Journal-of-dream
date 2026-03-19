@@ -394,4 +394,26 @@
 
 
     <string name="dream_auto_title">%2$s%1$s日之梦</string>
+    <string name="biometric_prompt_subtitle">使用生物识别登录</string>
+    <string name="biometric_prompt_title">登录 Journal of Dream</string>
+    <string name="notification_channel_description">提醒你记录梦境的通知</string>
+    <string name="notification_channel_name">梦境频道</string>
+    <string name="pin_create">创建 PIN 码</string>
+    <string name="pin_enter_title">输入 PIN 码</string>
+    <string name="pin_error_invalid">PIN 码错误</string>
+    <string name="pin_error_mismatch">PIN 码不一致</string>
+    <string name="pin_repeat">再次输入 PIN 码</string>
+    <string name="setup_exact_alarm_notice">在某些设备上，如果关闭了精确闹钟，系统可能会延迟提醒。</string>
+    <string name="speech_prompt_tell_dream">说说你的梦吧...</string>
+    <string name="technique_delete_title">删除技巧？</string>
+    <string name="technique_delete_message">“%s”将被永久删除。</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">使用生物识别</string>
+    <string name="settings_biometric_desc">通过指纹或面容识别解锁应用</string>
+    <string name="settings_biometric_unavailable">此设备不支持生物识别</string>
+    <string name="biometric_enable_title">启用生物识别吗？</string>
+    <string name="biometric_enable_message">要使用指纹或面容识别更快解锁应用吗？</string>
+    <string name="btn_not_now">暂不</string>
+
+    <string name="btn_enable">启用</string>
 </resources>

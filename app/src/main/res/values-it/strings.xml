@@ -394,4 +394,26 @@
 
 
     <string name="dream_auto_title">Sogno del %1$s %2$s</string>
+    <string name="biometric_prompt_subtitle">Usa la biometria per accedere</string>
+    <string name="biometric_prompt_title">Accesso a Journal of Dream</string>
+    <string name="notification_channel_description">Notifiche per ricordarti di registrare il sogno</string>
+    <string name="notification_channel_name">Canale dei sogni</string>
+    <string name="pin_create">Crea un PIN</string>
+    <string name="pin_enter_title">Inserisci il PIN</string>
+    <string name="pin_error_invalid">PIN non valido</string>
+    <string name="pin_error_mismatch">I PIN non coincidono</string>
+    <string name="pin_repeat">Ripeti il PIN</string>
+    <string name="setup_exact_alarm_notice">Su alcuni dispositivi il sistema può ritardare i promemoria se gli allarmi esatti sono disattivati.</string>
+    <string name="speech_prompt_tell_dream">Raccontami il tuo sogno...</string>
+    <string name="technique_delete_title">Eliminare la tecnica?</string>
+    <string name="technique_delete_message">“%s” verrà eliminata definitivamente.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">Usa la biometria</string>
+    <string name="settings_biometric_desc">Sblocca l’app con impronta digitale o riconoscimento facciale</string>
+    <string name="settings_biometric_unavailable">La biometria non è disponibile su questo dispositivo</string>
+    <string name="biometric_enable_title">Abilitare la biometria?</string>
+    <string name="biometric_enable_message">Vuoi usare impronta digitale o riconoscimento facciale per sbloccare l’app più velocemente?</string>
+    <string name="btn_not_now">Non ora</string>
+
+    <string name="btn_enable">Attiva</string>
 </resources>

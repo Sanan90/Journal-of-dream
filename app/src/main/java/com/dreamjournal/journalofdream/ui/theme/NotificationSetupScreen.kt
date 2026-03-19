@@ -24,11 +24,14 @@ import androidx.compose.ui.unit.sp
 import com.dreamjournal.journalofdream.R
 import com.dreamjournal.journalofdream.ui.common.BackgroundScreen
 import com.dreamjournal.journalofdream.util.scheduleDailyReminder
+import com.dreamjournal.journalofdream.util.scheduleQuoteAlarms
+import com.dreamjournal.journalofdream.util.canUseExactAlarms
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationSetupScreen(onDone: () -> Unit) {
     val context = LocalContext.current
+    val exactAlarmsAvailable = remember { canUseExactAlarms(context) }
 
     // TimeInput — компактный ввод ЧЧ:ММ, не занимает весь экран
     val timePickerState = rememberTimePickerState(
@@ -125,6 +128,17 @@ fun NotificationSetupScreen(onDone: () -> Unit) {
                 lineHeight = 22.sp
             )
 
+            if (!exactAlarmsAvailable) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = stringResource(R.string.setup_exact_alarm_notice),
+                    fontSize = 13.sp,
+                    color = Color.White.copy(alpha = 0.55f),
+                    textAlign = TextAlign.Center,
+                    lineHeight = 18.sp
+                )
+            }
+
             Spacer(modifier = Modifier.height(32.dp))
 
             // TimeInput — компактный ввод ЧЧ:ММ без циферблата
@@ -167,8 +181,14 @@ fun NotificationSetupScreen(onDone: () -> Unit) {
                     onClick = {
                         // Пропустить — сохраняем 8:00 по умолчанию
                         context.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
-                            .edit().putInt("notification_hour", 8).putInt("notification_minute", 0).apply()
+                            .edit()
+                            .putInt("notification_hour", 8)
+                            .putInt("notification_minute", 0)
+                            .putBoolean("notifications_enabled", true)
+                            .putBoolean("motivational_quotes", true)
+                            .apply()
                         scheduleDailyReminder(context, 8, 0)
+                        scheduleQuoteAlarms(context)
                         onDone()
                     },
                     modifier = Modifier.weight(1f).height(52.dp),
@@ -185,8 +205,11 @@ fun NotificationSetupScreen(onDone: () -> Unit) {
                             .edit()
                             .putInt("notification_hour", timePickerState.hour)
                             .putInt("notification_minute", timePickerState.minute)
+                            .putBoolean("notifications_enabled", true)
+                            .putBoolean("motivational_quotes", true)
                             .apply()
                         scheduleDailyReminder(context, timePickerState.hour, timePickerState.minute)
+                        scheduleQuoteAlarms(context)
                         onDone()
                     },
                     modifier = Modifier.weight(1f).height(52.dp),

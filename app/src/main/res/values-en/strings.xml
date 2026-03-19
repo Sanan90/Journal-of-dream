@@ -394,4 +394,29 @@
 
 
     <string name="dream_auto_title">Dream %1$s %2$s</string>
+
+    <string name="pin_create">Create a PIN</string>
+    <string name="pin_repeat">Repeat the PIN</string>
+    <string name="pin_enter_title">Enter PIN</string>
+    <string name="pin_error_invalid">Incorrect PIN</string>
+    <string name="pin_error_mismatch">PINs do not match</string>
+    <string name="biometric_prompt_title">Sign in to Journal of Dream</string>
+    <string name="biometric_prompt_subtitle">Use biometrics to unlock the app</string>
+    <string name="speech_prompt_tell_dream">Tell me about your dream...</string>
+    <string name="notification_channel_name">Dream Channel</string>
+    <string name="notification_channel_description">Notifications for dream reminders</string>
+
+    <string name="technique_delete_title">Delete technique?</string>
+    <string name="technique_delete_message">“%s” will be permanently deleted.</string>
+
+    <string name="setup_exact_alarm_notice">On some devices the system may delay reminders if exact alarms are disabled.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">Use biometrics</string>
+    <string name="settings_biometric_desc">Unlock the app with fingerprint or face recognition</string>
+    <string name="settings_biometric_unavailable">Biometrics are not available on this device</string>
+    <string name="biometric_enable_title">Enable biometrics?</string>
+    <string name="biometric_enable_message">Use fingerprint or face recognition to unlock the app faster?</string>
+    <string name="btn_not_now">Not now</string>
+
+    <string name="btn_enable">Enable</string>
 </resources>

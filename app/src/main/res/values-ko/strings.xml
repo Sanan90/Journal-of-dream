@@ -393,4 +393,26 @@
 
 
     <string name="dream_auto_title">%2$s %1$s일 꿈</string>
+    <string name="biometric_prompt_subtitle">로그인하려면 생체 인증을 사용하세요</string>
+    <string name="biometric_prompt_title">Journal of Dream 로그인</string>
+    <string name="notification_channel_description">꿈 기록을 알려주는 알림</string>
+    <string name="notification_channel_name">꿈 채널</string>
+    <string name="pin_create">PIN 만들기</string>
+    <string name="pin_enter_title">PIN 입력</string>
+    <string name="pin_error_invalid">잘못된 PIN입니다</string>
+    <string name="pin_error_mismatch">PIN이 일치하지 않습니다</string>
+    <string name="pin_repeat">PIN을 다시 입력하세요</string>
+    <string name="setup_exact_alarm_notice">일부 기기에서는 정확한 알람이 꺼져 있으면 시스템이 알림 시간을 늦출 수 있습니다.</string>
+    <string name="speech_prompt_tell_dream">당신의 꿈을 들려주세요...</string>
+    <string name="technique_delete_title">기법을 삭제할까요?</string>
+    <string name="technique_delete_message">“%s” 항목이 영구적으로 삭제됩니다.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">생체 인증 사용</string>
+    <string name="settings_biometric_desc">지문 또는 얼굴 인식으로 앱 잠금을 해제합니다</string>
+    <string name="settings_biometric_unavailable">이 기기에서는 생체 인증을 사용할 수 없습니다</string>
+    <string name="biometric_enable_title">생체 인증을 사용할까요?</string>
+    <string name="biometric_enable_message">지문 또는 얼굴 인식으로 앱을 더 빠르게 잠금 해제하시겠습니까?</string>
+    <string name="btn_not_now">지금은 안 함</string>
+
+    <string name="btn_enable">사용</string>
 </resources>

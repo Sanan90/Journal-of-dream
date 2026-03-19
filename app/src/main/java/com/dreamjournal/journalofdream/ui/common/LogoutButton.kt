@@ -4,6 +4,8 @@ package com.dreamjournal.journalofdream.ui.common
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
+import com.dreamjournal.journalofdream.R
 import androidx.compose.runtime.Composable
 import com.google.firebase.auth.FirebaseAuth
 
@@ -14,6 +16,6 @@ fun LogoutButton(onLogout: () -> Unit) {
         auth.signOut()
         onLogout()
     }) {
-        Text("Выйти")
+        Text(stringResource(R.string.btn_logout))
     }
 }

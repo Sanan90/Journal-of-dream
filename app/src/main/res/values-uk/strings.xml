@@ -400,4 +400,26 @@
 
 
     <string name="dream_auto_title">Сон %1$s %2$s</string>
+    <string name="biometric_prompt_subtitle">Використайте біометрію для входу</string>
+    <string name="biometric_prompt_title">Вхід до Journal of Dream</string>
+    <string name="notification_channel_description">Сповіщення-нагадування про запис сну</string>
+    <string name="notification_channel_name">Канал снів</string>
+    <string name="pin_create">Створіть PIN-код</string>
+    <string name="pin_enter_title">Введіть PIN-код</string>
+    <string name="pin_error_invalid">Неправильний PIN-код</string>
+    <string name="pin_error_mismatch">PIN-коди не збігаються</string>
+    <string name="pin_repeat">Повторіть PIN-код</string>
+    <string name="setup_exact_alarm_notice">На деяких пристроях система може затримувати нагадування, якщо точні будильники вимкнені.</string>
+    <string name="speech_prompt_tell_dream">Розкажіть свій сон...</string>
+    <string name="technique_delete_title">Видалити техніку?</string>
+    <string name="technique_delete_message">«%s» буде видалено назавжди.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">Використовувати біометрію</string>
+    <string name="settings_biometric_desc">Розблоковувати застосунок відбитком пальця або розпізнаванням обличчя</string>
+    <string name="settings_biometric_unavailable">Біометрія недоступна на цьому пристрої</string>
+    <string name="biometric_enable_title">Увімкнути біометрію?</string>
+    <string name="biometric_enable_message">Використовувати відбиток пальця або розпізнавання обличчя для швидшого входу в застосунок?</string>
+    <string name="btn_not_now">Не зараз</string>
+
+    <string name="btn_enable">Увімкнути</string>
 </resources>

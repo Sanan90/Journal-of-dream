@@ -394,4 +394,26 @@
 
 
     <string name="dream_auto_title">%1$s %2$s yuxusu</string>
+    <string name="biometric_prompt_subtitle">Daxil olmaq üçün biometrik identifikasiyadan istifadə edin</string>
+    <string name="biometric_prompt_title">Journal of Dream tətbiqinə giriş</string>
+    <string name="notification_channel_description">Yuxunu qeyd etməyi xatırladan bildirişlər</string>
+    <string name="notification_channel_name">Yuxu kanalı</string>
+    <string name="pin_create">PIN-kod yaradın</string>
+    <string name="pin_enter_title">PIN-kodu daxil edin</string>
+    <string name="pin_error_invalid">Yanlış PIN-kod</string>
+    <string name="pin_error_mismatch">PIN-kodlar uyğun gəlmir</string>
+    <string name="pin_repeat">PIN-kodu təkrar daxil edin</string>
+    <string name="setup_exact_alarm_notice">Bəzi cihazlarda dəqiq siqnallar söndürülübsə, sistem xatırlatmaların vaxtını gecikdirə bilər.</string>
+    <string name="speech_prompt_tell_dream">Yuxunuzu danışın...</string>
+    <string name="technique_delete_title">Texnika silinsin?</string>
+    <string name="technique_delete_message">“%s” həmişəlik silinəcək.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">Biometrik girişdən istifadə et</string>
+    <string name="settings_biometric_desc">Tətbiqi barmaq izi və ya üz tanıma ilə açın</string>
+    <string name="settings_biometric_unavailable">Bu cihazda biometrik giriş mövcud deyil</string>
+    <string name="biometric_enable_title">Biometrik girişi aktiv edək?</string>
+    <string name="biometric_enable_message">Tətbiqə daha sürətli daxil olmaq üçün barmaq izi və ya üz tanımadan istifadə edilsin?</string>
+    <string name="btn_not_now">İndi yox</string>
+
+    <string name="btn_enable">Aktiv et</string>
 </resources>

@@ -393,4 +393,26 @@
 
 
     <string name="dream_auto_title">Traum %1$s %2$s</string>
+    <string name="biometric_prompt_subtitle">Biometrie zum Anmelden verwenden</string>
+    <string name="biometric_prompt_title">Anmeldung bei Journal of Dream</string>
+    <string name="notification_channel_description">Benachrichtigungen zur Erinnerung an den Traumeintrag</string>
+    <string name="notification_channel_name">Traumkanal</string>
+    <string name="pin_create">PIN erstellen</string>
+    <string name="pin_enter_title">PIN eingeben</string>
+    <string name="pin_error_invalid">Falsche PIN</string>
+    <string name="pin_error_mismatch">PIN stimmt nicht überein</string>
+    <string name="pin_repeat">PIN erneut eingeben</string>
+    <string name="setup_exact_alarm_notice">Auf manchen Geräten kann das System Erinnerungen verzögern, wenn exakte Alarme deaktiviert sind.</string>
+    <string name="speech_prompt_tell_dream">Erzähle von deinem Traum...</string>
+    <string name="technique_delete_title">Technik löschen?</string>
+    <string name="technique_delete_message">„%s“ wird dauerhaft gelöscht.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">Biometrie verwenden</string>
+    <string name="settings_biometric_desc">Die App mit Fingerabdruck oder Gesichtserkennung entsperren</string>
+    <string name="settings_biometric_unavailable">Biometrie ist auf diesem Gerät nicht verfügbar</string>
+    <string name="biometric_enable_title">Biometrie aktivieren?</string>
+    <string name="biometric_enable_message">Möchtest du die App schneller per Fingerabdruck oder Gesichtserkennung entsperren?</string>
+    <string name="btn_not_now">Jetzt nicht</string>
+
+    <string name="btn_enable">Aktivieren</string>
 </resources>

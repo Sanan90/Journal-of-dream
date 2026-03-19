@@ -393,4 +393,26 @@
 
 
     <string name="dream_auto_title">Sonho %1$s %2$s</string>
+    <string name="biometric_prompt_subtitle">Use a biometria para iniciar sessão</string>
+    <string name="biometric_prompt_title">Iniciar sessão no Journal of Dream</string>
+    <string name="notification_channel_description">Notificações para lembrar você de registrar o sonho</string>
+    <string name="notification_channel_name">Canal dos sonhos</string>
+    <string name="pin_create">Crie um PIN</string>
+    <string name="pin_enter_title">Digite o PIN</string>
+    <string name="pin_error_invalid">PIN incorreto</string>
+    <string name="pin_error_mismatch">Os PINs não coincidem</string>
+    <string name="pin_repeat">Repita o PIN</string>
+    <string name="setup_exact_alarm_notice">Em alguns dispositivos, o sistema pode atrasar os lembretes se os alarmes exatos estiverem desativados.</string>
+    <string name="speech_prompt_tell_dream">Conte o seu sonho...</string>
+    <string name="technique_delete_title">Excluir técnica?</string>
+    <string name="technique_delete_message">“%s” será excluído permanentemente.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">Usar biometria</string>
+    <string name="settings_biometric_desc">Desbloqueie a aplicação com impressão digital ou reconhecimento facial</string>
+    <string name="settings_biometric_unavailable">A biometria não está disponível neste dispositivo</string>
+    <string name="biometric_enable_title">Ativar biometria?</string>
+    <string name="biometric_enable_message">Pretende usar impressão digital ou reconhecimento facial para desbloquear a aplicação mais rapidamente?</string>
+    <string name="btn_not_now">Agora não</string>
+
+    <string name="btn_enable">Ativar</string>
 </resources>

@@ -1,21 +1,63 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# ═══════════════════════════════════════════════════════════════════════
+# ProGuard / R8 rules для Journal of Dream
+# ═══════════════════════════════════════════════════════════════════════
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# ── Общие ─────────────────────────────────────────────────────────────
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
+-keepattributes *Annotation*
+-keepattributes Signature
+-keepattributes InnerClasses,EnclosingMethod
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# ── Firebase ──────────────────────────────────────────────────────────
+-keep class com.google.firebase.** { *; }
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.firebase.**
+-dontwarn com.google.android.gms.**
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Firebase Auth
+-keep class com.google.firebase.auth.** { *; }
+
+# Firebase Firestore — КРИТИЧНО: модели данных для сериализации
+-keep class com.dreamjournal.journalofdream.model.Dream { *; }
+-keep class com.dreamjournal.journalofdream.model.Location { *; }
+-keep class com.dreamjournal.journalofdream.model.Category { *; }
+-keep class com.dreamjournal.journalofdream.model.DreamLocationCrossRef { *; }
+-keep class com.dreamjournal.journalofdream.model.Technique { *; }
+-keep class com.dreamjournal.journalofdream.model.TechniqueComment { *; }
+
+# Firebase Crashlytics
+-keep class com.google.firebase.crashlytics.** { *; }
+-dontwarn com.google.firebase.crashlytics.**
+
+# ── Room Database ─────────────────────────────────────────────────────
+-keep class * extends androidx.room.RoomDatabase { *; }
+-keep @androidx.room.Entity class * { *; }
+-keep @androidx.room.Dao interface * { *; }
+-dontwarn androidx.room.**
+
+# ── Jetpack Compose ───────────────────────────────────────────────────
+-dontwarn androidx.compose.**
+-keep class androidx.compose.** { *; }
+
+# ── Google Sign-In ────────────────────────────────────────────────────
+-keep class com.google.android.gms.auth.api.signin.** { *; }
+-dontwarn com.google.android.gms.auth.api.signin.**
+
+# ── Kotlin ────────────────────────────────────────────────────────────
+-dontwarn kotlin.**
+-keep class kotlin.Metadata { *; }
+-keepclassmembers class kotlin.Metadata {
+    public <methods>;
+}
+
+# ── AndroidX ──────────────────────────────────────────────────────────
+-keep class androidx.lifecycle.** { *; }
+-keep class androidx.navigation.** { *; }
+-dontwarn androidx.**
+
+# ── Предотвращение удаления enum ──────────────────────────────────────
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}

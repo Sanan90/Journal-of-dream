@@ -19,13 +19,13 @@ import com.dreamjournal.journalofdream.ui.auth.PinMode
 import com.dreamjournal.journalofdream.ui.auth.PinScreen
 import com.dreamjournal.journalofdream.ui.auth.hasPin
 import com.dreamjournal.journalofdream.ui.auth.isPinEnabled
+import com.dreamjournal.journalofdream.ui.auth.syncPinFromFirestore
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.dreamjournal.journalofdream.R
-import com.dreamjournal.journalofdream.ui.theme.AppTheme
 import com.dreamjournal.journalofdream.ui.theme.DreamsScreen
 import com.dreamjournal.journalofdream.ui.theme.LocationListScreen
 import com.dreamjournal.journalofdream.ui.theme.MainScreen
@@ -41,6 +41,7 @@ import com.dreamjournal.journalofdream.ui.theme.NotificationSetupScreen
 import com.dreamjournal.journalofdream.viewmodel.TechniqueViewModel
 import com.dreamjournal.journalofdream.ui.theme.ViewDreamScreen
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import kotlinx.coroutines.launch
 
 /**
  * Главный composable приложения, где определяются NavHost и навигация между экранами.
@@ -48,30 +49,33 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
  */
 @Composable
 fun JournalOfDreamApp() {
-    AppTheme {
-        val context = LocalContext.current
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-        // PIN-защита при запуске
-        var pinUnlocked by remember { mutableStateOf(!isPinEnabled(context)) }
+        val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val auth = FirebaseAuth.getInstance()
+        val currentUser = remember { mutableStateOf<FirebaseUser?>(auth.currentUser) }
+        val skipAuth = remember { mutableStateOf(sharedPreferences.getBoolean("skipAuth", false)) }
 
-        if (!pinUnlocked) {
+        val requiresPin = (currentUser.value != null || skipAuth.value) && isPinEnabled(context)
+        var pinUnlocked by remember(currentUser.value?.uid, skipAuth.value, requiresPin) {
+            mutableStateOf(!requiresPin)
+        }
+
+        if (requiresPin && !pinUnlocked) {
             PinScreen(
                 mode = PinMode.ENTER,
                 onSuccess = { pinUnlocked = true },
                 onForgotPin = {
-                    // Сбрасываем PIN, выходим из аккаунта и перезапускаем Activity
                     removePin(context)
                     com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
-                    context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-                        .edit().putBoolean("skipAuth", false).apply()
-                    // Полный перезапуск — NavHost пересоздастся с auth как startDestination
+                    sharedPreferences.edit().putBoolean("skipAuth", false).apply()
                     (context as? android.app.Activity)?.recreate()
                 }
             )
-            return@AppTheme
+            return
         }
 
-        val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
         // Онбординг — показываем один раз при первом запуске
         var onboardingDone by remember {
@@ -84,7 +88,7 @@ fun JournalOfDreamApp() {
                     onboardingDone = true
                 }
             )
-            return@AppTheme
+            return
         }
 
         // Настройка уведомления — показываем один раз после онбординга
@@ -97,11 +101,8 @@ fun JournalOfDreamApp() {
                     notifSetupDone = true
                 }
             )
-            return@AppTheme
+            return
         }
-
-        // Флаг, указывающий, что пользователь решил пропустить авторизацию (guest mode)
-        val skipAuth = remember { mutableStateOf(sharedPreferences.getBoolean("skipAuth", false)) }
 
         // NavController для навигации по экранам
         val navController = rememberNavController()
@@ -114,10 +115,6 @@ fun JournalOfDreamApp() {
 
         // Режим админа — общий для Техник и Настроек
         var isAdminMode by remember { mutableStateOf(false) }
-
-        // FirebaseAuth – определяем текущего авторизованного пользователя, если есть
-        val auth = FirebaseAuth.getInstance()
-        val currentUser = remember { mutableStateOf<FirebaseUser?>(auth.currentUser) }
 
         // Клиент для выхода из Google (если вход был через Google аккаунт)
         val googleSignInClient: GoogleSignInClient = remember {
@@ -179,7 +176,10 @@ fun JournalOfDreamApp() {
                         currentUser.value = auth.currentUser
                         skipAuth.value = false
                         sharedPreferences.edit().putBoolean("skipAuth", false).apply()
-                        auth.currentUser?.uid?.let { categoryViewModel.setOwner(it) }
+                        auth.currentUser?.uid?.let { uid ->
+                            categoryViewModel.setOwner(uid)
+                            scope.launch { syncPinFromFirestore(context) }
+                        }
                         navController.navigate("main") {
                             popUpTo("auth") { inclusive = true }
                         }
@@ -339,5 +339,4 @@ fun JournalOfDreamApp() {
                 )
             }
         }
-    }
 }

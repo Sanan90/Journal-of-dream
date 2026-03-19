@@ -393,4 +393,26 @@
 
 
     <string name="dream_auto_title">Sen %1$s %2$s</string>
+    <string name="biometric_prompt_subtitle">Użyj biometrii, aby się zalogować</string>
+    <string name="biometric_prompt_title">Logowanie do Journal of Dream</string>
+    <string name="notification_channel_description">Powiadomienia przypominające o zapisaniu snu</string>
+    <string name="notification_channel_name">Kanał snów</string>
+    <string name="pin_create">Utwórz PIN</string>
+    <string name="pin_enter_title">Wprowadź PIN</string>
+    <string name="pin_error_invalid">Nieprawidłowy PIN</string>
+    <string name="pin_error_mismatch">PIN-y nie są zgodne</string>
+    <string name="pin_repeat">Powtórz PIN</string>
+    <string name="setup_exact_alarm_notice">Na niektórych urządzeniach system może opóźniać przypomnienia, jeśli dokładne alarmy są wyłączone.</string>
+    <string name="speech_prompt_tell_dream">Opowiedz swój sen...</string>
+    <string name="technique_delete_title">Usunąć technikę?</string>
+    <string name="technique_delete_message">„%s” zostanie trwale usunięte.</string>
+    <string name="default_web_client_id">502456233313-0ipm8u871ae79jh3g9had483je6qtagn.apps.googleusercontent.com</string>
+    <string name="settings_biometric">Używaj biometrii</string>
+    <string name="settings_biometric_desc">Odblokuj aplikację odciskiem palca lub rozpoznawaniem twarzy</string>
+    <string name="settings_biometric_unavailable">Biometria nie jest dostępna na tym urządzeniu</string>
+    <string name="biometric_enable_title">Włączyć biometrię?</string>
+    <string name="biometric_enable_message">Czy chcesz szybciej odblokowywać aplikację odciskiem palca lub rozpoznawaniem twarzy?</string>
+    <string name="btn_not_now">Nie teraz</string>
+
+    <string name="btn_enable">Włącz</string>
 </resources>

@@ -22,9 +22,11 @@ import androidx.compose.ui.unit.sp
 import com.dreamjournal.journalofdream.MainActivity
 import com.dreamjournal.journalofdream.ui.auth.PinMode
 import com.dreamjournal.journalofdream.ui.auth.PinScreen
-import com.dreamjournal.journalofdream.ui.auth.hasPin
+import com.dreamjournal.journalofdream.ui.auth.isBiometricAvailable
+import com.dreamjournal.journalofdream.ui.auth.isBiometricEnabledForCurrentUser
 import com.dreamjournal.journalofdream.ui.auth.isPinEnabled
 import com.dreamjournal.journalofdream.ui.auth.removePin
+import com.dreamjournal.journalofdream.ui.auth.setBiometricEnabled
 import com.dreamjournal.journalofdream.ui.auth.setPinEnabled
 import com.dreamjournal.journalofdream.util.LocaleHelper
 import androidx.compose.material3.*
@@ -65,6 +67,8 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
 
     // PIN состояние — вынесено наверх чтобы показывать поверх всего экрана
     var pinEnabled by remember { mutableStateOf(isPinEnabled(context)) }
+    val biometricAvailable = remember { isBiometricAvailable(context) }
+    var biometricEnabled by remember { mutableStateOf(isBiometricEnabledForCurrentUser(context)) }
     val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
     val isGuest = currentUser == null || currentUser.isAnonymous
     var showSetPin by remember { mutableStateOf(false) }
@@ -213,7 +217,9 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                             } else {
                                 removePin(context)
                                 setPinEnabled(context, false)
+                                setBiometricEnabled(context, false)
                                 pinEnabled = false
+                                biometricEnabled = false
                             }
                         }
                     )
@@ -225,6 +231,26 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
                             title = stringResource(R.string.settings_pin_change),
                             subtitle = stringResource(R.string.settings_pin_set),
                             onClick = { showChangePin = true }
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        SettingsToggleRow(
+                            icon = Icons.Default.Lock,
+                            title = stringResource(R.string.settings_biometric),
+                            subtitle = if (biometricAvailable) {
+                                stringResource(R.string.settings_biometric_desc)
+                            } else {
+                                stringResource(R.string.settings_biometric_unavailable)
+                            },
+                            checked = biometricEnabled,
+                            enabled = biometricAvailable,
+                            onCheckedChange = { enabled ->
+                                if (biometricAvailable) {
+                                    biometricEnabled = enabled
+                                    setBiometricEnabled(context, enabled)
+                                }
+                            }
                         )
                     }
 
@@ -332,6 +358,7 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
             mode = PinMode.SET,
             onSuccess = {
                 pinEnabled = true
+                biometricEnabled = isBiometricEnabledForCurrentUser(context)
                 showSetPin = false
             },
             onCancel = { showSetPin = false }
@@ -339,7 +366,10 @@ fun SettingsScreen(navController: NavHostController, isAdminMode: Boolean = fals
     } else if (showChangePin) {
         PinScreen(
             mode = PinMode.SET,
-            onSuccess = { showChangePin = false },
+            onSuccess = {
+                biometricEnabled = isBiometricEnabledForCurrentUser(context)
+                showChangePin = false
+            },
             onCancel = { showChangePin = false }
         )
     }
@@ -466,6 +496,7 @@ fun SettingsToggleRow(
     title: String,
     subtitle: String,
     checked: Boolean,
+    enabled: Boolean = true,
     onCheckedChange: (Boolean) -> Unit
 ) {
     Card(
@@ -484,19 +515,23 @@ fun SettingsToggleRow(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
+                tint = if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = title, style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (enabled) 0.6f else 0.4f)
                 )
             }
-            Switch(checked = checked, onCheckedChange = onCheckedChange)
+            Switch(checked = checked, onCheckedChange = onCheckedChange, enabled = enabled)
         }
     }
 }
