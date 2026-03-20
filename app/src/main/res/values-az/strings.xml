@@ -476,4 +476,7 @@
     <string name="stats_rec_character_body">Bu obraz yuxularında təkrarlanır. Onu şəxsi siqnal kimi istifadə et: "%s" görünəndə reallıq yoxlaması et.</string>
     <string name="stats_rec_advanced_title">Daha inkişaf etmiş texnikaları sına</string>
     <string name="stats_rec_advanced_body">Artıq ya şüurlu yuxuların var, ya da gündəlik aparmaq vərdişin formalaşıb. MILD və ya WBTB-ni daha ciddi sınamaq üçün yaxşı vaxtdır.</string>
+    <string name="stats_deeper_insights_title">Yuxuların haqqında daha dərin baxış</string>
+    <string name="stats_recurring_overview">Təkrarlanan obrazlar: %1$d • təkrarlanan məkanlar: %2$d</string>
+    <string name="stats_hint_top_character_pair">"%1$s" və "%2$s" tez-tez birlikdə görünür — %3$d dəfə.</string>
 </resources>

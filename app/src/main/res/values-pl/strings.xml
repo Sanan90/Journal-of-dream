@@ -475,4 +475,7 @@
     <string name="stats_rec_character_body">Ten obraz powtarza się w Twoich snach. Spróbuj używać go jako osobistego sygnału: gdy pojawi się „%s”, zrób test rzeczywistości.</string>
     <string name="stats_rec_advanced_title">Możesz spróbować bardziej zaawansowanych technik</string>
     <string name="stats_rec_advanced_body">Masz już świadome sny albo stabilny nawyk prowadzenia dziennika. To może być dobry moment, by poważniej spróbować MILD lub WBTB.</string>
+    <string name="stats_deeper_insights_title">Głębszy wgląd w twoje sny</string>
+    <string name="stats_recurring_overview">Powtarzające się obrazy: %1$d • powtarzające się miejsca: %2$d</string>
+    <string name="stats_hint_top_character_pair">„%1$s” i „%2$s” często pojawiają się razem — %3$d razy.</string>
 </resources>

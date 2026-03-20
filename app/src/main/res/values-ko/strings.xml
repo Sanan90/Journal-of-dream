@@ -475,4 +475,7 @@
     <string name="stats_rec_character_body">이 이미지는 꿈에서 반복됩니다. 개인적인 신호로 활용해 보세요. "%s"가 나타나면 현실 점검을 해보세요.</string>
     <string name="stats_rec_advanced_title">고급 기법을 시도해 볼 수 있어요</string>
     <string name="stats_rec_advanced_body">이미 자각몽 경험이 있거나 꾸준한 기록 습관이 생겼습니다. 이제 MILD나 WBTB 같은 고급 기법을 더 진지하게 시도해 볼 만합니다.</string>
+    <string name="stats_deeper_insights_title">꿈에 대한 더 깊은 통찰</string>
+    <string name="stats_recurring_overview">반복되는 이미지: %1$d • 반복되는 장소: %2$d</string>
+    <string name="stats_hint_top_character_pair">"%1$s"와 "%2$s"가 함께 자주 등장합니다 — %3$d회.</string>
 </resources>

@@ -482,4 +482,7 @@
     <string name="stats_rec_character_body">Бұл бейне түстеріңізде қайталанады. Оны жеке белгі ретінде пайдаланыңыз: "%s" пайда болғанда шынайылық тексерісін жасаңыз.</string>
     <string name="stats_rec_advanced_title">Күрделірек техникаларды байқап көруге болады</string>
     <string name="stats_rec_advanced_body">Сізде қазірдің өзінде саналы түстер бар немесе күнделік жүргізу әдеті тұрақты. MILD не WBTB тәсілдерін байыппен байқап көруге жақсы уақыт болуы мүмкін.</string>
+    <string name="stats_deeper_insights_title">Түстеріңе тереңірек көзқарас</string>
+    <string name="stats_recurring_overview">Қайталанатын образдар: %1$d • қайталанатын орындар: %2$d</string>
+    <string name="stats_hint_top_character_pair">"%1$s" және "%2$s" жиі бірге кездеседі — %3$d рет.</string>
 </resources>

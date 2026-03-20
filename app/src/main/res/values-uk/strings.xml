@@ -482,4 +482,7 @@
     <string name="stats_rec_character_body">Цей образ повторюється у твоїх снах. Спробуй використовувати його як особистий знак: коли з’являється «%s», роби перевірку реальності.</string>
     <string name="stats_rec_advanced_title">Можна спробувати просунуті техніки</string>
     <string name="stats_rec_advanced_body">У тебе вже є або усвідомлені сни, або стабільна звичка вести щоденник. Можливо, саме час серйозніше спробувати MILD чи WBTB.</string>
+    <string name="stats_deeper_insights_title">Глибший погляд на твої сни</string>
+    <string name="stats_recurring_overview">Повторювані образи: %1$d • повторювані локації: %2$d</string>
+    <string name="stats_hint_top_character_pair">"%1$s" і "%2$s" часто з’являються разом — %3$d рази.</string>
 </resources>

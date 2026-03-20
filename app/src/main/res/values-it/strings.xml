@@ -476,4 +476,7 @@
     <string name="stats_rec_character_body">Questa figura si ripete nei tuoi sogni. Prova a usarla come segnale personale: quando compare "%s", fai un controllo di realtà.</string>
     <string name="stats_rec_advanced_title">Puoi provare tecniche avanzate</string>
     <string name="stats_rec_advanced_body">Hai già sogni lucidi oppure una buona abitudine nel diario. Potrebbe essere il momento giusto per provare MILD o WBTB più seriamente.</string>
+    <string name="stats_deeper_insights_title">Uno sguardo più profondo ai tuoi sogni</string>
+    <string name="stats_recurring_overview">Figure ricorrenti: %1$d • luoghi ricorrenti: %2$d</string>
+    <string name="stats_hint_top_character_pair">"%1$s" e "%2$s" compaiono spesso insieme — %3$d volte.</string>
 </resources>

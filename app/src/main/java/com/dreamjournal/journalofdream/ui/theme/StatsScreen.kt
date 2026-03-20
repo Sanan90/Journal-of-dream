@@ -1,5 +1,6 @@
 package com.dreamjournal.journalofdream.ui.theme
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.dreamjournal.journalofdream.R
 import com.dreamjournal.journalofdream.model.Dream
+import com.dreamjournal.journalofdream.model.DreamWithLocations
 import com.dreamjournal.journalofdream.ui.common.BackgroundScreen
 import com.dreamjournal.journalofdream.viewmodel.CharacterViewModel
 import com.dreamjournal.journalofdream.viewmodel.DreamViewModel
@@ -28,6 +30,8 @@ import com.dreamjournal.journalofdream.viewmodel.LocationViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 
 data class StatsData(
     val total: Int,
@@ -39,6 +43,32 @@ data class StatsData(
 data class TechniqueRecommendation(
     val title: String,
     val body: String
+)
+
+data class NamedCount(
+    val name: String,
+    val count: Int
+)
+
+data class PairInsight(
+    val first: String,
+    val second: String,
+    val count: Int
+)
+
+data class DreamAnalytics(
+    val uniqueCharacters: Int,
+    val uniqueLocations: Int,
+    val repeatedCharacterCount: Int,
+    val repeatedLocationCount: Int,
+    val topCharacters: List<NamedCount>,
+    val topLocations: List<NamedCount>,
+    val topCharacterLocationPairs: List<PairInsight>,
+    val topCharacterPairs: List<PairInsight>,
+    val strongestCharacter: NamedCount?,
+    val strongestLocation: NamedCount?,
+    val strongestCharacterLocationPair: PairInsight?,
+    val strongestCharacterPair: PairInsight?
 )
 
 fun computeStats(dreams: List<Dream>, noCategoryLabel: String = "Без категории"): StatsData {
@@ -91,58 +121,77 @@ fun formatDateForStats(dateStr: String): String {
     }
 }
 
-private fun buildTechniqueRecommendations(
-    dreams: List<Dream>,
-    maxStreak: Int,
-    topLocationName: String?,
-    topLocationCount: Int,
-    topCharacterName: String?,
-    topCharacterCount: Int,
-    lucidLabels: Set<String>,
-    recallTitle: String,
-    recallBody: String,
-    realityTitle: String,
-    realityBody: String,
-    locationTitle: (String) -> String,
-    locationBody: (String) -> String,
-    characterTitle: (String) -> String,
-    characterBody: (String) -> String,
-    advancedTitle: String,
-    advancedBody: String
-): List<TechniqueRecommendation> {
-    val lucidCount = dreams.count {
-        it.category.trim().lowercase(Locale.getDefault()) in lucidLabels
+private fun computeDreamAnalytics(dreamsWithDetails: List<DreamWithLocations>): DreamAnalytics {
+    val characterCounts = linkedMapOf<String, Int>()
+    val locationCounts = linkedMapOf<String, Int>()
+    val characterLocationCounts = linkedMapOf<Pair<String, String>, Int>()
+    val characterPairCounts = linkedMapOf<Pair<String, String>, Int>()
+
+    dreamsWithDetails.forEach { item ->
+        val characters = item.characters.map { it.name.trim() }.filter { it.isNotBlank() }.distinct()
+        val locations = item.locations.map { it.name.trim() }.filter { it.isNotBlank() }.distinct()
+
+        characters.forEach { name ->
+            characterCounts[name] = (characterCounts[name] ?: 0) + 1
+        }
+        locations.forEach { name ->
+            locationCounts[name] = (locationCounts[name] ?: 0) + 1
+        }
+
+        characters.forEach { character ->
+            locations.forEach { location ->
+                val key = character to location
+                characterLocationCounts[key] = (characterLocationCounts[key] ?: 0) + 1
+            }
+        }
+
+        for (i in characters.indices) {
+            for (j in i + 1 until characters.size) {
+                val ordered = listOf(characters[i], characters[j]).sorted()
+                val key = ordered[0] to ordered[1]
+                characterPairCounts[key] = (characterPairCounts[key] ?: 0) + 1
+            }
+        }
     }
 
-    val recommendations = mutableListOf<TechniqueRecommendation>()
+    fun Map<String, Int>.toTopCounts(): List<NamedCount> =
+        entries.sortedByDescending { it.value }.take(5).map { NamedCount(it.key, it.value) }
 
-    if (dreams.size < 5) {
-        recommendations += TechniqueRecommendation(recallTitle, recallBody)
+    fun Map<Pair<String, String>, Int>.toTopPairs(): List<PairInsight> =
+        entries.sortedByDescending { it.value }.take(5).map { PairInsight(it.key.first, it.key.second, it.value) }
+
+    val topCharacters = characterCounts.toTopCounts()
+    val topLocations = locationCounts.toTopCounts()
+    val topCharacterLocationPairs = characterLocationCounts.toTopPairs()
+    val topCharacterPairs = characterPairCounts.toTopPairs()
+
+    return DreamAnalytics(
+        uniqueCharacters = characterCounts.size,
+        uniqueLocations = locationCounts.size,
+        repeatedCharacterCount = characterCounts.count { it.value >= 2 },
+        repeatedLocationCount = locationCounts.count { it.value >= 2 },
+        topCharacters = topCharacters,
+        topLocations = topLocations,
+        topCharacterLocationPairs = topCharacterLocationPairs,
+        topCharacterPairs = topCharacterPairs,
+        strongestCharacter = topCharacters.firstOrNull(),
+        strongestLocation = topLocations.firstOrNull(),
+        strongestCharacterLocationPair = topCharacterLocationPairs.firstOrNull(),
+        strongestCharacterPair = topCharacterPairs.firstOrNull()
+    )
+}
+
+private fun safeFormatString(
+    context: Context,
+    @StringRes id: Int,
+    vararg formatArgs: Any,
+    fallback: String
+): String {
+    return try {
+        context.getString(id, *formatArgs)
+    } catch (_: Exception) {
+        fallback
     }
-
-    if (dreams.size >= 5 && lucidCount == 0) {
-        recommendations += TechniqueRecommendation(realityTitle, realityBody)
-    }
-
-    if (!topLocationName.isNullOrBlank() && topLocationCount >= 2) {
-        recommendations += TechniqueRecommendation(
-            locationTitle(topLocationName),
-            locationBody(topLocationName)
-        )
-    }
-
-    if (!topCharacterName.isNullOrBlank() && topCharacterCount >= 2) {
-        recommendations += TechniqueRecommendation(
-            characterTitle(topCharacterName),
-            characterBody(topCharacterName)
-        )
-    }
-
-    if (lucidCount >= 2 || maxStreak >= 5) {
-        recommendations += TechniqueRecommendation(advancedTitle, advancedBody)
-    }
-
-    return recommendations.distinctBy { it.title }.take(3)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -154,28 +203,23 @@ fun StatsScreen(
     characterViewModel: CharacterViewModel
 ) {
     val dreams by dreamViewModel.dreams.observeAsState(emptyList())
-    val locationsWithDreams by locationViewModel.getAllLocationsWithDreams().observeAsState(emptyList())
-    val charactersWithDreams by characterViewModel.getAllCharactersWithDreams().observeAsState(emptyList())
-
+    val dreamsWithDetails by dreamViewModel.getDreamsWithDetails().observeAsState(emptyList())
     val noCategoryLabel = stringResource(R.string.dreams_no_category)
     val pluralOne = stringResource(R.string.plural_dreams_one)
     val pluralFew = stringResource(R.string.plural_dreams_few)
     val pluralMany = stringResource(R.string.plural_dreams_many)
     val lucidCategoryLabel = stringResource(R.string.cat_lucid)
+    val context = LocalContext.current
 
     val stats = remember(dreams, noCategoryLabel) {
         computeStats(dreams, noCategoryLabel)
     }
 
-    val topLocations = remember(locationsWithDreams) {
-        locationsWithDreams.sortedByDescending { it.dreams.size }.take(3)
+    val analytics = remember(dreamsWithDetails) {
+        computeDreamAnalytics(dreamsWithDetails)
     }
 
-    val topCharacters = remember(charactersWithDreams) {
-        charactersWithDreams.sortedByDescending { it.dreams.size }.take(3)
-    }
-
-    // Оставлено для совместимости со старыми данными, где категория могла сохраниться текстом.
+    // Для совместимости со старыми данными, где категория могла быть сохранена текстом.
     val lucidLabels = remember(lucidCategoryLabel) {
         setOf(
             "осознанные сны",
@@ -190,70 +234,140 @@ fun StatsScreen(
     val advancedTitle = stringResource(R.string.stats_rec_advanced_title)
     val advancedBody = stringResource(R.string.stats_rec_advanced_body)
 
+    val topLocationsTitle = stringResource(R.string.stats_top_locations)
+    val topCharactersTitle = stringResource(R.string.stats_top_characters)
+    val charLocPairsTitle = stringResource(R.string.stats_character_location_pairs)
+    val charPairsTitle = stringResource(R.string.stats_character_pairs)
+
+
+    val recurringOverviewText = safeFormatString(
+        context,
+        R.string.stats_recurring_overview,
+        analytics.repeatedCharacterCount,
+        analytics.repeatedLocationCount,
+        fallback = "Повторяющиеся образы: ${analytics.repeatedCharacterCount}. Повторяющиеся локации: ${analytics.repeatedLocationCount}."
+    )
+
+    val strongestCharacterText = analytics.strongestCharacter?.let {
+        safeFormatString(
+            context,
+            R.string.stats_hint_top_character,
+            it.name,
+            it.count,
+            fallback = "Чаще всего повторяется образ: ${it.name} (${it.count})."
+        )
+    }
+
+    val strongestLocationText = analytics.strongestLocation?.let {
+        safeFormatString(
+            context,
+            R.string.stats_hint_top_location,
+            it.name,
+            it.count,
+            fallback = "Чаще всего повторяется локация: ${it.name} (${it.count})."
+        )
+    }
+
+    val strongestCharacterLocationText = analytics.strongestCharacterLocationPair?.let {
+        safeFormatString(
+            context,
+            R.string.stats_hint_top_character_location,
+            it.first,
+            it.second,
+            it.count,
+            fallback = "Самая частая связка: ${it.first} → ${it.second} (${it.count})."
+        )
+    }
+
+    val strongestCharacterPairText = analytics.strongestCharacterPair?.let {
+        safeFormatString(
+            context,
+            R.string.stats_hint_top_character_pair,
+            it.first,
+            it.second,
+            it.count,
+            fallback = "Самая частая пара образов: ${it.first} + ${it.second} (${it.count})."
+        )
+    }
+
+    val locationRecTitle = analytics.strongestLocation?.name?.let {
+        safeFormatString(
+            context,
+            R.string.stats_rec_location_title,
+            it,
+            fallback = "$topLocationsTitle: $it"
+        )
+    }
+    val locationRecBody = analytics.strongestLocation?.name?.let {
+        safeFormatString(
+            context,
+            R.string.stats_rec_location_body,
+            it,
+            fallback = "Эта локация часто повторяется. Используй её как триггер для проверки реальности."
+        )
+    }
+
+    val characterRecTitle = analytics.strongestCharacter?.name?.let {
+        safeFormatString(
+            context,
+            R.string.stats_rec_character_title,
+            it,
+            fallback = "$topCharactersTitle: $it"
+        )
+    }
+    val characterRecBody = analytics.strongestCharacter?.name?.let {
+        safeFormatString(
+            context,
+            R.string.stats_rec_character_body,
+            it,
+            fallback = "Этот образ часто повторяется. Попробуй распознавать его как знак сна."
+        )
+    }
+
     val recommendations = remember(
         dreams,
         stats.maxStreak,
-        topLocations,
-        topCharacters,
+        analytics.strongestLocation,
+        analytics.strongestCharacter,
         lucidLabels,
         recallTitle,
         recallBody,
         realityTitle,
         realityBody,
         advancedTitle,
-        advancedBody
+        advancedBody,
+        locationRecTitle,
+        locationRecBody,
+        characterRecTitle,
+        characterRecBody
     ) {
-        buildTechniqueRecommendations(
-            dreams = dreams,
-            maxStreak = stats.maxStreak,
-            topLocationName = topLocations.firstOrNull()?.location?.name,
-            topLocationCount = topLocations.firstOrNull()?.dreams?.size ?: 0,
-            topCharacterName = topCharacters.firstOrNull()?.character?.name,
-            topCharacterCount = topCharacters.firstOrNull()?.dreams?.size ?: 0,
-            lucidLabels = lucidLabels,
-            recallTitle = recallTitle,
-            recallBody = recallBody,
-            realityTitle = realityTitle,
-            realityBody = realityBody,
-            locationTitle = { name -> "LOC::$name" },
-            locationBody = { name -> "LOCBODY::$name" },
-            characterTitle = { name -> "CHAR::$name" },
-            characterBody = { name -> "CHARBODY::$name" },
-            advancedTitle = advancedTitle,
-            advancedBody = advancedBody
-        )
-    }
-
-    val localizedRecommendations = recommendations.mapNotNull { recommendation ->
-        when {
-            recommendation.title == recallTitle ->
-                recommendation
-
-            recommendation.title == realityTitle ->
-                recommendation
-
-            recommendation.title == advancedTitle ->
-                recommendation
-
-            recommendation.title.startsWith("LOC::") -> {
-                val name = recommendation.title.removePrefix("LOC::")
-                TechniqueRecommendation(
-                    stringResource(R.string.stats_rec_location_title, name),
-                    stringResource(R.string.stats_rec_location_body, name)
-                )
-            }
-
-            recommendation.title.startsWith("CHAR::") -> {
-                val name = recommendation.title.removePrefix("CHAR::")
-                TechniqueRecommendation(
-                    stringResource(R.string.stats_rec_character_title, name),
-                    stringResource(R.string.stats_rec_character_body, name)
-                )
-            }
-
-            else -> null
+        val lucidCount = dreams.count {
+            it.category.trim().lowercase(Locale.getDefault()) in lucidLabels
         }
+
+        buildList {
+            if (dreams.size < 5) {
+                add(TechniqueRecommendation(recallTitle, recallBody))
+            }
+            if (dreams.size >= 5 && lucidCount == 0) {
+                add(TechniqueRecommendation(realityTitle, realityBody))
+            }
+            if (!locationRecTitle.isNullOrBlank() && !locationRecBody.isNullOrBlank() && (analytics.strongestLocation?.count ?: 0) >= 2) {
+                add(TechniqueRecommendation(locationRecTitle, locationRecBody))
+            }
+            if (!characterRecTitle.isNullOrBlank() && !characterRecBody.isNullOrBlank() && (analytics.strongestCharacter?.count ?: 0) >= 2) {
+                add(TechniqueRecommendation(characterRecTitle, characterRecBody))
+            }
+            if (lucidCount >= 2 || stats.maxStreak >= 5) {
+                add(TechniqueRecommendation(advancedTitle, advancedBody))
+            }
+        }.distinctBy { it.title }.take(3)
     }
+
+    val topLocations = remember(analytics.topLocations) { analytics.topLocations.take(5) }
+    val topCharacters = remember(analytics.topCharacters) { analytics.topCharacters.take(5) }
+    val topCharacterLocationPairs = remember(analytics.topCharacterLocationPairs) { analytics.topCharacterLocationPairs.take(5) }
+    val topCharacterPairs = remember(analytics.topCharacterPairs) { analytics.topCharacterPairs.take(5) }
 
     Scaffold(
         topBar = {
@@ -328,16 +442,92 @@ fun StatsScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 emoji = "🏆",
                                 value = formatDateForStats(date),
-                                label = stringResource(
-                                    R.string.stats_best_day,
-                                    count,
-                                    pluralDreams(count, pluralOne, pluralFew, pluralMany)
-                                )
+                                label = "$count ${pluralDreams(count, pluralOne, pluralFew, pluralMany)}"
                             )
                         }
                     }
 
-                    if (localizedRecommendations.isNotEmpty()) {
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            StatCard(
+                                modifier = Modifier.weight(1f),
+                                emoji = "👤",
+                                value = analytics.uniqueCharacters.toString(),
+                                label = stringResource(R.string.stats_unique_characters)
+                            )
+                            StatCard(
+                                modifier = Modifier.weight(1f),
+                                emoji = "📍",
+                                value = analytics.uniqueLocations.toString(),
+                                label = stringResource(R.string.stats_unique_locations)
+                            )
+                        }
+                    }
+
+                    item {
+                        InsightCard(
+                            title = stringResource(R.string.stats_recurring_summary),
+                            body = recurringOverviewText
+                        )
+                    }
+
+                    if (
+                        analytics.strongestCharacter != null ||
+                        analytics.strongestLocation != null ||
+                        analytics.strongestCharacterLocationPair != null ||
+                        analytics.strongestCharacterPair != null
+                    ) {
+                        item {
+                            Text(
+                                text = stringResource(R.string.stats_deeper_insights_title),
+                                color = Color.White,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+                    }
+
+                    strongestCharacterText?.let {
+                        item {
+                            InsightCard(
+                                title = topCharactersTitle,
+                                body = it
+                            )
+                        }
+                    }
+
+                    strongestLocationText?.let {
+                        item {
+                            InsightCard(
+                                title = topLocationsTitle,
+                                body = it
+                            )
+                        }
+                    }
+
+                    strongestCharacterLocationText?.let {
+                        item {
+                            InsightCard(
+                                title = charLocPairsTitle,
+                                body = it
+                            )
+                        }
+                    }
+
+                    strongestCharacterPairText?.let {
+                        item {
+                            InsightCard(
+                                title = charPairsTitle,
+                                body = it
+                            )
+                        }
+                    }
+
+                    if (recommendations.isNotEmpty()) {
                         item {
                             Text(
                                 text = stringResource(R.string.stats_recommendations_title),
@@ -348,7 +538,7 @@ fun StatsScreen(
                             )
                         }
 
-                        items(localizedRecommendations) { recommendation ->
+                        items(recommendations) { recommendation ->
                             RecommendationCard(
                                 recommendation = recommendation,
                                 onOpenTechniques = { navController.navigate("techniques") }
@@ -356,10 +546,10 @@ fun StatsScreen(
                         }
                     }
 
-                    if (topLocations.isNotEmpty()) {
+                    if (topCharacters.isNotEmpty()) {
                         item {
                             Text(
-                                text = stringResource(R.string.stats_top_locations),
+                                text = topCharactersTitle,
                                 color = Color.White,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
@@ -367,19 +557,19 @@ fun StatsScreen(
                             )
                         }
 
-                        items(topLocations, key = { it.location.id }) { item ->
+                        items(topCharacters) { item ->
                             CategoryStatRow(
-                                category = "📍 ${item.location.name}",
-                                count = item.dreams.size,
+                                category = "👤 ${item.name}",
+                                count = item.count,
                                 total = stats.total
                             )
                         }
                     }
 
-                    if (topCharacters.isNotEmpty()) {
+                    if (topLocations.isNotEmpty()) {
                         item {
                             Text(
-                                text = stringResource(R.string.stats_top_characters),
+                                text = topLocationsTitle,
                                 color = Color.White,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
@@ -387,10 +577,50 @@ fun StatsScreen(
                             )
                         }
 
-                        items(topCharacters, key = { it.character.id }) { item ->
+                        items(topLocations) { item ->
                             CategoryStatRow(
-                                category = "👤 ${item.character.name}",
-                                count = item.dreams.size,
+                                category = "📍 ${item.name}",
+                                count = item.count,
+                                total = stats.total
+                            )
+                        }
+                    }
+
+                    if (topCharacterLocationPairs.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = charLocPairsTitle,
+                                color = Color.White,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+
+                        items(topCharacterLocationPairs) { item ->
+                            PairStatRow(
+                                title = "👤 ${item.first} • 📍 ${item.second}",
+                                count = item.count,
+                                total = stats.total
+                            )
+                        }
+                    }
+
+                    if (topCharacterPairs.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = charPairsTitle,
+                                color = Color.White,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+
+                        items(topCharacterPairs) { item ->
+                            PairStatRow(
+                                title = "👤 ${item.first} + ${item.second}",
+                                count = item.count,
                                 total = stats.total
                             )
                         }
@@ -417,6 +647,33 @@ fun StatsScreen(
                     item { Spacer(modifier = Modifier.height(24.dp)) }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun InsightCard(title: String, body: String) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
+                color = Color.White
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = body,
+                fontSize = 14.sp,
+                color = Color.White.copy(alpha = 0.92f)
+            )
         }
     }
 }
@@ -564,6 +821,11 @@ fun CategoryStatRow(category: String, count: Int, total: Int) {
             )
         }
     }
+}
+
+@Composable
+fun PairStatRow(title: String, count: Int, total: Int) {
+    CategoryStatRow(category = title, count = count, total = total)
 }
 
 fun pluralDreams(count: Int, one: String, few: String, many: String): String = when {

@@ -479,4 +479,7 @@
     <string name="stats_rec_character_body">This figure repeats in your dreams. Try using it as a personal sign: when "%s" appears, do a reality check.</string>
     <string name="stats_rec_advanced_title">You can try advanced techniques</string>
     <string name="stats_rec_advanced_body">You already have either lucid dreams or a stable journaling habit. It may be a good time to explore MILD or WBTB more seriously.</string>
+    <string name="stats_deeper_insights_title">Deeper insights into your dreams</string>
+    <string name="stats_recurring_overview">Recurring figures: %1$d • recurring locations: %2$d</string>
+    <string name="stats_hint_top_character_pair">"%1$s" and "%2$s" often appear together — %3$d times.</string>
 </resources>

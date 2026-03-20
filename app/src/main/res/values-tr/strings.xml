@@ -475,4 +475,7 @@
     <string name="stats_rec_character_body">Bu figür rüyalarında tekrar ediyor. Onu kişisel bir işaret olarak kullan: "%s" göründüğünde gerçeklik kontrolü yap.</string>
     <string name="stats_rec_advanced_title">Daha gelişmiş teknikleri deneyebilirsin</string>
     <string name="stats_rec_advanced_body">Zaten ya bilinçli rüyalar görüyorsun ya da düzenli günlük tutma alışkanlığı kazandın. MILD veya WBTB’yi daha ciddi denemek için iyi bir zaman olabilir.</string>
+    <string name="stats_deeper_insights_title">Rüyalarına daha derin bir bakış</string>
+    <string name="stats_recurring_overview">Tekrarlayan figürler: %1$d • tekrarlayan mekânlar: %2$d</string>
+    <string name="stats_hint_top_character_pair">"%1$s" ve "%2$s" sık sık birlikte görünüyor — %3$d kez.</string>
 </resources>

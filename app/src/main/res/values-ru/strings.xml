@@ -480,4 +480,7 @@
     <string name="stats_rec_character_body">Этот образ повторяется в твоих снах. Попробуй использовать его как личный знак: когда появляется «%s», делай проверку реальности.</string>
     <string name="stats_rec_advanced_title">Можно пробовать продвинутые техники</string>
     <string name="stats_rec_advanced_body">У тебя уже есть либо осознанные сны, либо стабильная привычка вести дневник. Похоже, пора серьёзнее попробовать MILD или WBTB.</string>
+    <string name="stats_deeper_insights_title">Глубже о твоих снах</string>
+    <string name="stats_recurring_overview">Повторяющиеся образы: %1$d • повторяющиеся локации: %2$d</string>
+    <string name="stats_hint_top_character_pair">Часто вместе появляются "%1$s" и "%2$s" — %3$d раз.</string>
 </resources>

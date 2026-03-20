@@ -475,4 +475,7 @@
     <string name="stats_rec_character_body">Cette figure revient dans vos rêves. Essayez de l’utiliser comme signe personnel : lorsque « %s » apparaît, faites un test de réalité.</string>
     <string name="stats_rec_advanced_title">Vous pouvez essayer des techniques avancées</string>
     <string name="stats_rec_advanced_body">Vous avez déjà des rêves lucides ou une habitude stable de journal. C’est peut-être le bon moment pour essayer plus sérieusement MILD ou WBTB.</string>
+    <string name="stats_deeper_insights_title">Un regard plus profond sur tes rêves</string>
+    <string name="stats_recurring_overview">Figures récurrentes : %1$d • lieux récurrents : %2$d</string>
+    <string name="stats_hint_top_character_pair">« %1$s » et « %2$s » apparaissent souvent ensemble — %3$d fois.</string>
 </resources>

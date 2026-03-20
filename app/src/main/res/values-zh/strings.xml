@@ -476,4 +476,7 @@
     <string name="stats_rec_character_body">这个形象会反复出现在你的梦里。试着把它当成个人提示：当“%s”出现时，就做一次现实检验。</string>
     <string name="stats_rec_advanced_title">你可以尝试更进阶的技巧</string>
     <string name="stats_rec_advanced_body">你已经有清醒梦经历，或已经建立了稳定的记录习惯。现在可能是认真尝试 MILD 或 WBTB 的好时机。</string>
+    <string name="stats_deeper_insights_title">更深入了解你的梦境</string>
+    <string name="stats_recurring_overview">重复出现的形象：%1$d • 重复出现的地点：%2$d</string>
+    <string name="stats_hint_top_character_pair">“%1$s”和“%2$s”经常一起出现——%3$d次。</string>
 </resources>

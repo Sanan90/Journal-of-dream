@@ -476,4 +476,7 @@
     <string name="stats_rec_character_body">هذه الشخصية تتكرر في أحلامك. حاول استخدامها كإشارة شخصية: عندما يظهر "%s" قم باختبار واقع.</string>
     <string name="stats_rec_advanced_title">يمكنك تجربة تقنيات متقدمة</string>
     <string name="stats_rec_advanced_body">لديك بالفعل أحلام واعية أو عادة مستقرة في التدوين. قد يكون الوقت مناسبًا لتجربة MILD أو WBTB بجدية أكبر.</string>
+    <string name="stats_deeper_insights_title">نظرة أعمق إلى أحلامك</string>
+    <string name="stats_recurring_overview">الصور المتكررة: %1$d • الأماكن المتكررة: %2$d</string>
+    <string name="stats_hint_top_character_pair">يظهر "%1$s" و "%2$s" معًا كثيرًا — %3$d مرات.</string>
 </resources>
