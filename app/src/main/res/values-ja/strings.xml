@@ -442,7 +442,6 @@
     <string name="dream_label_characters">夢の存在</string>
     <string name="stats_top_locations">よく出る場所</string>
     <string name="stats_top_characters">よく出る存在</string>
-
     <string name="btn_ok">OK</string>
     <string name="character_dreams_title">このイメージが出てくる夢</string>
     <string name="settings_reality_check">🌀 現実確認</string>
@@ -455,4 +454,25 @@
     <string name="reality_interval_2h">2時間ごと</string>
     <string name="notif_reality_title">現実確認</string>
     <string name="notif_reality_message">今すぐ現実確認をしましょう。</string>
+    <string name="stats_unique_characters">ユニークな夢のイメージ</string>
+    <string name="stats_unique_locations">ユニークな場所</string>
+    <string name="stats_recurring_summary">繰り返し現れる夢の要素</string>
+    <string name="stats_character_location_pairs">イメージ＋場所の組み合わせ</string>
+    <string name="stats_character_pairs">繰り返し現れるイメージの組み合わせ</string>
+    <string name="stats_hint_top_character">「%1$s」というイメージが最も多く現れています — %2$d回。</string>
+    <string name="stats_hint_top_location">「%1$s」という場所が最も多く繰り返されています — %2$d回。</string>
+    <string name="stats_hint_top_character_location">最も多い組み合わせ：%1$s — %2$d回。</string>
+
+    <string name="stats_recommendations_title">あなたへのおすすめ</string>
+    <string name="stats_open_techniques">テクニックを開く</string>
+    <string name="stats_rec_recall_title">まずは夢の想起から</string>
+    <string name="stats_rec_recall_body">まだ記録数が少ないです。起きた直後に夢を書き留め、細部が消える前に残すことに集中しましょう。</string>
+    <string name="stats_rec_reality_title">現実確認を増やそう</string>
+    <string name="stats_rec_reality_body">夢の記録はできていますが、明晰夢はまだ少ないです。日中の現実確認が、眠りの中へ意識を持ち込む助けになります。</string>
+    <string name="stats_rec_location_title">「%s」をトリガーに使おう</string>
+    <string name="stats_rec_location_body">この場所は夢の中で何度も現れています。寝る前に、「%s」を見たら自分に『今は夢か？』と問いかけると決めましょう。</string>
+    <string name="stats_rec_character_title">「%s」に注目しよう</string>
+    <string name="stats_rec_character_body">このイメージは夢に繰り返し現れています。個人的なサインとして使いましょう。「%s」が出たら現実確認をします。</string>
+    <string name="stats_rec_advanced_title">上級テクニックを試せます</string>
+    <string name="stats_rec_advanced_body">すでに明晰夢の経験があるか、安定して記録を続けられています。MILD や WBTB を本格的に試す良いタイミングかもしれません。</string>
 </resources>

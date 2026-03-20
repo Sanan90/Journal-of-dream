@@ -446,7 +446,6 @@
     <string name="dream_label_characters">Образы сна</string>
     <string name="stats_top_locations">Частые локации</string>
     <string name="stats_top_characters">Частые образы</string>
-
     <string name="btn_ok">OK</string>
     <string name="character_dreams_title">Dreams with this figure</string>
     <string name="settings_reality_check">🌀 Reality check</string>
@@ -459,4 +458,25 @@
     <string name="reality_interval_2h">Every 2 hours</string>
     <string name="notif_reality_title">Reality check</string>
     <string name="notif_reality_message">Do a reality check right now.</string>
+    <string name="stats_unique_characters">Уникальные образы</string>
+    <string name="stats_unique_locations">Уникальные локации</string>
+    <string name="stats_recurring_summary">Повторяющиеся элементы сна</string>
+    <string name="stats_character_location_pairs">Связки образ + локация</string>
+    <string name="stats_character_pairs">Повторяющиеся пары образов</string>
+    <string name="stats_hint_top_character">Чаще всего появляется образ "%1$s" — %2$d раз.</string>
+    <string name="stats_hint_top_location">Чаще всего повторяется локация "%1$s" — %2$d раз.</string>
+    <string name="stats_hint_top_character_location">Самая частая связка: %1$s — %2$d раз.</string>
+
+    <string name="stats_recommendations_title">Recommendations for you</string>
+    <string name="stats_open_techniques">Open techniques</string>
+    <string name="stats_rec_recall_title">Start with dream recall</string>
+    <string name="stats_rec_recall_body">You still have few entries. Focus on writing dreams immediately after waking up and keeping details while they are fresh.</string>
+    <string name="stats_rec_reality_title">Add more reality checks</string>
+    <string name="stats_rec_reality_body">You already record dreams, but lucid entries are still rare. Daytime reality checks can help transfer awareness into sleep.</string>
+    <string name="stats_rec_location_title">Use "%s" as a trigger</string>
+    <string name="stats_rec_location_body">This place appears repeatedly in your dreams. Before sleep, decide that when you see "%s", you will ask yourself whether you are dreaming.</string>
+    <string name="stats_rec_character_title">Watch for "%s"</string>
+    <string name="stats_rec_character_body">This figure repeats in your dreams. Try using it as a personal sign: when "%s" appears, do a reality check.</string>
+    <string name="stats_rec_advanced_title">You can try advanced techniques</string>
+    <string name="stats_rec_advanced_body">You already have either lucid dreams or a stable journaling habit. It may be a good time to explore MILD or WBTB more seriously.</string>
 </resources>

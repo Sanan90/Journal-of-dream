@@ -442,7 +442,6 @@
     <string name="dream_label_characters">Postacie ze snów</string>
     <string name="stats_top_locations">Częste miejsca</string>
     <string name="stats_top_characters">Częste postacie</string>
-
     <string name="btn_ok">OK</string>
     <string name="character_dreams_title">Sny z tym obrazem</string>
     <string name="settings_reality_check">🌀 Sprawdzenie rzeczywistości</string>
@@ -455,4 +454,25 @@
     <string name="reality_interval_2h">Co 2 godziny</string>
     <string name="notif_reality_title">Sprawdzenie rzeczywistości</string>
     <string name="notif_reality_message">Zrób teraz sprawdzenie rzeczywistości.</string>
+    <string name="stats_unique_characters">Unikalne obrazy senne</string>
+    <string name="stats_unique_locations">Unikalne miejsca</string>
+    <string name="stats_recurring_summary">Powtarzające się elementy snu</string>
+    <string name="stats_character_location_pairs">Powiązania obraz + miejsce</string>
+    <string name="stats_character_pairs">Powtarzające się pary obrazów</string>
+    <string name="stats_hint_top_character">Obraz "%1$s" pojawia się najczęściej — %2$d razy.</string>
+    <string name="stats_hint_top_location">Miejsce "%1$s" powtarza się najczęściej — %2$d razy.</string>
+    <string name="stats_hint_top_character_location">Najczęstsze powiązanie: %1$s — %2$d razy.</string>
+
+    <string name="stats_recommendations_title">Rekomendacje dla Ciebie</string>
+    <string name="stats_open_techniques">Otwórz techniki</string>
+    <string name="stats_rec_recall_title">Zacznij od zapamiętywania snów</string>
+    <string name="stats_rec_recall_body">Masz jeszcze niewiele wpisów. Skup się na zapisywaniu snu od razu po przebudzeniu i zachowaniu szczegółów, póki są świeże.</string>
+    <string name="stats_rec_reality_title">Dodaj więcej testów rzeczywistości</string>
+    <string name="stats_rec_reality_body">Już zapisujesz sny, ale świadome sny nadal pojawiają się rzadko. Testy rzeczywistości w ciągu dnia pomagają przenieść świadomość do snu.</string>
+    <string name="stats_rec_location_title">Użyj „%s” jako wyzwalacza</string>
+    <string name="stats_rec_location_body">To miejsce często pojawia się w Twoich snach. Przed snem postanów, że gdy znów zobaczysz „%s”, zapytasz siebie, czy śnisz.</string>
+    <string name="stats_rec_character_title">Zwróć uwagę na „%s”</string>
+    <string name="stats_rec_character_body">Ten obraz powtarza się w Twoich snach. Spróbuj używać go jako osobistego sygnału: gdy pojawi się „%s”, zrób test rzeczywistości.</string>
+    <string name="stats_rec_advanced_title">Możesz spróbować bardziej zaawansowanych technik</string>
+    <string name="stats_rec_advanced_body">Masz już świadome sny albo stabilny nawyk prowadzenia dziennika. To może być dobry moment, by poważniej spróbować MILD lub WBTB.</string>
 </resources>

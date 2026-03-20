@@ -442,7 +442,6 @@
     <string name="dream_label_characters">صور الحلم</string>
     <string name="stats_top_locations">الأماكن المتكررة</string>
     <string name="stats_top_characters">الصور المتكررة</string>
-
     <string name="btn_ok">حسنًا</string>
     <string name="character_dreams_title">أحلام مع هذه الصورة</string>
     <string name="settings_reality_check">🌀 فحص الواقع</string>
@@ -455,4 +454,26 @@
     <string name="reality_interval_2h">كل ساعتين</string>
     <string name="notif_reality_title">فحص الواقع</string>
     <string name="notif_reality_message">قم بإجراء فحص الواقع الآن.</string>
+
+    <string name="stats_unique_characters">صور الأحلام الفريدة</string>
+    <string name="stats_unique_locations">المواقع الفريدة</string>
+    <string name="stats_recurring_summary">عناصر الأحلام المتكررة</string>
+    <string name="stats_character_location_pairs">أنماط الصورة + الموقع</string>
+    <string name="stats_character_pairs">أزواج الصور المتكررة</string>
+    <string name="stats_hint_top_character">تظهر الصورة "%1$s" أكثر من غيرها — %2$d مرات.</string>
+    <string name="stats_hint_top_location">يتكرر المكان "%1$s" أكثر من غيره — %2$d مرات.</string>
+    <string name="stats_hint_top_character_location">النمط الأكثر تكرارًا: %1$s — %2$d مرات.</string>
+
+    <string name="stats_recommendations_title">توصيات لك</string>
+    <string name="stats_open_techniques">افتح التقنيات</string>
+    <string name="stats_rec_recall_title">ابدأ بتذكر الأحلام</string>
+    <string name="stats_rec_recall_body">لا يزال لديك عدد قليل من المذكرات. ركّز على كتابة الحلم فور الاستيقاظ والاحتفاظ بالتفاصيل وهي ما تزال حاضرة.</string>
+    <string name="stats_rec_reality_title">أضف المزيد من اختبارات الواقع</string>
+    <string name="stats_rec_reality_body">أنت تسجل الأحلام بالفعل، لكن الأحلام الواعية ما تزال نادرة. اختبارات الواقع خلال النهار تساعد على نقل الوعي إلى النوم.</string>
+    <string name="stats_rec_location_title">استخدم "%s" كمحفّز</string>
+    <string name="stats_rec_location_body">هذا المكان يتكرر كثيرًا في أحلامك. قبل النوم، قرر أنه عندما ترى "%s" مجددًا ستسأل نفسك: هل أنا أحلم؟</string>
+    <string name="stats_rec_character_title">انتبه إلى "%s"</string>
+    <string name="stats_rec_character_body">هذه الشخصية تتكرر في أحلامك. حاول استخدامها كإشارة شخصية: عندما يظهر "%s" قم باختبار واقع.</string>
+    <string name="stats_rec_advanced_title">يمكنك تجربة تقنيات متقدمة</string>
+    <string name="stats_rec_advanced_body">لديك بالفعل أحلام واعية أو عادة مستقرة في التدوين. قد يكون الوقت مناسبًا لتجربة MILD أو WBTB بجدية أكبر.</string>
 </resources>

@@ -443,7 +443,6 @@
     <string name="dream_label_characters">Yuxu obrazları</string>
     <string name="stats_top_locations">Tez-tez görünən məkanlar</string>
     <string name="stats_top_characters">Tez-tez görünən obrazlar</string>
-
     <string name="btn_ok">OK</string>
     <string name="character_dreams_title">Bu obrazla olan yuxular</string>
     <string name="settings_reality_check">🌀 Reallıq yoxlaması</string>
@@ -456,4 +455,25 @@
     <string name="reality_interval_2h">Hər 2 saatdan bir</string>
     <string name="notif_reality_title">Reallıq yoxlaması</string>
     <string name="notif_reality_message">İndi reallıq yoxlaması et.</string>
+    <string name="stats_unique_characters">Unikal obrazlar</string>
+    <string name="stats_unique_locations">Unikal məkanlar</string>
+    <string name="stats_recurring_summary">Təkrarlanan yuxu elementləri</string>
+    <string name="stats_character_location_pairs">Obraz + məkan əlaqələri</string>
+    <string name="stats_character_pairs">Təkrarlanan obraz cütləri</string>
+    <string name="stats_hint_top_character">"%1$s" obrazı ən çox görünür — %2$d dəfə.</string>
+    <string name="stats_hint_top_location">"%1$s" məkanı ən çox təkrarlanır — %2$d dəfə.</string>
+    <string name="stats_hint_top_character_location">Ən çox təkrarlanan əlaqə: %1$s — %2$d dəfə.</string>
+
+    <string name="stats_recommendations_title">Sənin üçün tövsiyələr</string>
+    <string name="stats_open_techniques">Texnikaları aç</string>
+    <string name="stats_rec_recall_title">Yuxuları xatırlamaqdan başla</string>
+    <string name="stats_rec_recall_body">Hələ qeydlərin azdır. Oyandıqdan dərhal sonra yuxunu yazmağa və detalları isti-isti saxlamağa fokuslan.</string>
+    <string name="stats_rec_reality_title">Daha çox reallıq yoxlaması əlavə et</string>
+    <string name="stats_rec_reality_body">Sən artıq yuxuları qeyd edirsən, amma şüurlu yuxular hələ azdır. Gündüz reallıq yoxlamaları şüuru yuxuya daşımağa kömək edir.</string>
+    <string name="stats_rec_location_title">"%s" məkanı tətikləyici kimi istifadə et</string>
+    <string name="stats_rec_location_body">Bu məkan yuxularında tez-tez təkrarlanır. Yatmazdan əvvəl qərar ver ki, "%s" yenə görünəndə özündən soruşacaqsan: mən yuxudayam?</string>
+    <string name="stats_rec_character_title">"%s" obrazına diqqət et</string>
+    <string name="stats_rec_character_body">Bu obraz yuxularında təkrarlanır. Onu şəxsi siqnal kimi istifadə et: "%s" görünəndə reallıq yoxlaması et.</string>
+    <string name="stats_rec_advanced_title">Daha inkişaf etmiş texnikaları sına</string>
+    <string name="stats_rec_advanced_body">Artıq ya şüurlu yuxuların var, ya da gündəlik aparmaq vərdişin formalaşıb. MILD və ya WBTB-ni daha ciddi sınamaq üçün yaxşı vaxtdır.</string>
 </resources>

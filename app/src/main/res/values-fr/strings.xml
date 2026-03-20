@@ -442,7 +442,6 @@
     <string name="dream_label_characters">Figures de rêve</string>
     <string name="stats_top_locations">Lieux fréquents</string>
     <string name="stats_top_characters">Figures fréquentes</string>
-
     <string name="btn_ok">OK</string>
     <string name="character_dreams_title">Rêves avec cette figure</string>
     <string name="settings_reality_check">🌀 Vérification de la réalité</string>
@@ -455,4 +454,25 @@
     <string name="reality_interval_2h">Toutes les 2 heures</string>
     <string name="notif_reality_title">Vérification de la réalité</string>
     <string name="notif_reality_message">Fais une vérification de la réalité maintenant.</string>
+    <string name="stats_unique_characters">Figures de rêve uniques</string>
+    <string name="stats_unique_locations">Lieux uniques</string>
+    <string name="stats_recurring_summary">Éléments de rêve récurrents</string>
+    <string name="stats_character_location_pairs">Schémas figure + lieu</string>
+    <string name="stats_character_pairs">Paires de figures récurrentes</string>
+    <string name="stats_hint_top_character">La figure "%1$s" apparaît le plus souvent — %2$d fois.</string>
+    <string name="stats_hint_top_location">Le lieu "%1$s" revient le plus souvent — %2$d fois.</string>
+    <string name="stats_hint_top_character_location">Schéma le plus fréquent : %1$s — %2$d fois.</string>
+
+    <string name="stats_recommendations_title">Recommandations pour vous</string>
+    <string name="stats_open_techniques">Ouvrir les techniques</string>
+    <string name="stats_rec_recall_title">Commencez par vous souvenir des rêves</string>
+    <string name="stats_rec_recall_body">Vous avez encore peu d’entrées. Concentrez-vous sur l’écriture du rêve juste au réveil et gardez les détails tant qu’ils sont frais.</string>
+    <string name="stats_rec_reality_title">Ajoutez plus de tests de réalité</string>
+    <string name="stats_rec_reality_body">Vous notez déjà vos rêves, mais les rêves lucides restent rares. Les tests de réalité en journée aident à transférer la conscience dans le sommeil.</string>
+    <string name="stats_rec_location_title">Utilisez « %s » comme déclencheur</string>
+    <string name="stats_rec_location_body">Ce lieu revient souvent dans vos rêves. Avant de dormir, décidez que lorsque vous verrez « %s », vous vous demanderez si vous rêvez.</string>
+    <string name="stats_rec_character_title">Surveillez « %s »</string>
+    <string name="stats_rec_character_body">Cette figure revient dans vos rêves. Essayez de l’utiliser comme signe personnel : lorsque « %s » apparaît, faites un test de réalité.</string>
+    <string name="stats_rec_advanced_title">Vous pouvez essayer des techniques avancées</string>
+    <string name="stats_rec_advanced_body">Vous avez déjà des rêves lucides ou une habitude stable de journal. C’est peut-être le bon moment pour essayer plus sérieusement MILD ou WBTB.</string>
 </resources>

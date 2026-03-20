@@ -442,7 +442,6 @@
     <string name="dream_label_characters">Rüya figürleri</string>
     <string name="stats_top_locations">Sık görülen mekânlar</string>
     <string name="stats_top_characters">Sık görülen figürler</string>
-
     <string name="btn_ok">Tamam</string>
     <string name="character_dreams_title">Bu figürle ilgili rüyalar</string>
     <string name="settings_reality_check">🌀 Gerçeklik kontrolü</string>
@@ -455,4 +454,25 @@
     <string name="reality_interval_2h">Her 2 saatte bir</string>
     <string name="notif_reality_title">Gerçeklik kontrolü</string>
     <string name="notif_reality_message">Şimdi bir gerçeklik kontrolü yap.</string>
+    <string name="stats_unique_characters">Benzersiz rüya figürleri</string>
+    <string name="stats_unique_locations">Benzersiz konumlar</string>
+    <string name="stats_recurring_summary">Tekrarlayan rüya öğeleri</string>
+    <string name="stats_character_location_pairs">Figür + konum eşleşmeleri</string>
+    <string name="stats_character_pairs">Tekrarlayan figür çiftleri</string>
+    <string name="stats_hint_top_character">"%1$s" figürü en sık görünüyor — %2$d kez.</string>
+    <string name="stats_hint_top_location">"%1$s" konumu en sık tekrarlanıyor — %2$d kez.</string>
+    <string name="stats_hint_top_character_location">En sık eşleşme: %1$s — %2$d kez.</string>
+
+    <string name="stats_recommendations_title">Senin için öneriler</string>
+    <string name="stats_open_techniques">Teknikleri aç</string>
+    <string name="stats_rec_recall_title">Önce rüya hatırlamaya odaklan</string>
+    <string name="stats_rec_recall_body">Henüz az kaydın var. Uyanır uyanmaz rüyayı yazmaya ve ayrıntılar tazeyken onları korumaya odaklan.</string>
+    <string name="stats_rec_reality_title">Daha fazla gerçeklik kontrolü ekle</string>
+    <string name="stats_rec_reality_body">Rüyalarını zaten kaydediyorsun ama bilinçli rüya kayıtları hâlâ az. Gün içindeki gerçeklik kontrolleri farkındalığı uykuya taşımaya yardımcı olur.</string>
+    <string name="stats_rec_location_title">"%s" yerini tetikleyici olarak kullan</string>
+    <string name="stats_rec_location_body">Bu yer rüyalarında sık sık görünüyor. Uyumadan önce, "%s" tekrar göründüğünde kendine rüyada olup olmadığını soracağına karar ver.</string>
+    <string name="stats_rec_character_title">"%s" figürüne dikkat et</string>
+    <string name="stats_rec_character_body">Bu figür rüyalarında tekrar ediyor. Onu kişisel bir işaret olarak kullan: "%s" göründüğünde gerçeklik kontrolü yap.</string>
+    <string name="stats_rec_advanced_title">Daha gelişmiş teknikleri deneyebilirsin</string>
+    <string name="stats_rec_advanced_body">Zaten ya bilinçli rüyalar görüyorsun ya da düzenli günlük tutma alışkanlığı kazandın. MILD veya WBTB’yi daha ciddi denemek için iyi bir zaman olabilir.</string>
 </resources>

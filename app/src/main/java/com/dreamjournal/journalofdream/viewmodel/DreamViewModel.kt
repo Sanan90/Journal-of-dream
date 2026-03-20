@@ -102,6 +102,11 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
         prefs.edit().putBoolean(key, true).apply()
     }
 
+    fun getDreamsWithDetails(): LiveData<List<DreamWithLocations>> {
+        val ownerUid = _currentOwnerUid.value ?: "guest"
+        return localDb.dreamDao().getDreamsWithDetailsByOwner(ownerUid)
+    }
+
     /**
      * Получить LiveData сна по его ID вместе с привязанными локациями.
      * Используется для отображения деталей сна и предварительного выбора локаций при редактировании.

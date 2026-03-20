@@ -447,7 +447,6 @@
     <string name="dream_label_characters">Образы сна</string>
     <string name="stats_top_locations">Частые локации</string>
     <string name="stats_top_characters">Частые образы</string>
-
     <string name="btn_ok">ОК</string>
     <string name="character_dreams_title">Сны с этим образом</string>
     <string name="settings_reality_check">🌀 Проверка реальности</string>
@@ -460,4 +459,25 @@
     <string name="reality_interval_2h">Каждые 2 часа</string>
     <string name="notif_reality_title">Проверка реальности</string>
     <string name="notif_reality_message">Сделай проверку реальности прямо сейчас.</string>
+    <string name="stats_unique_characters">Уникальные образы</string>
+    <string name="stats_unique_locations">Уникальные локации</string>
+    <string name="stats_recurring_summary">Повторяющиеся элементы сна</string>
+    <string name="stats_character_location_pairs">Связки образ + локация</string>
+    <string name="stats_character_pairs">Повторяющиеся пары образов</string>
+    <string name="stats_hint_top_character">Чаще всего появляется образ "%1$s" — %2$d раз.</string>
+    <string name="stats_hint_top_location">Чаще всего повторяется локация "%1$s" — %2$d раз.</string>
+    <string name="stats_hint_top_character_location">Самая частая связка: %1$s — %2$d раз.</string>
+
+    <string name="stats_recommendations_title">Рекомендации для тебя</string>
+    <string name="stats_open_techniques">Открыть техники</string>
+    <string name="stats_rec_recall_title">Начни с запоминания снов</string>
+    <string name="stats_rec_recall_body">У тебя пока мало записей. Сосредоточься на том, чтобы записывать сон сразу после пробуждения и сохранять детали, пока они свежие.</string>
+    <string name="stats_rec_reality_title">Добавь больше проверок реальности</string>
+    <string name="stats_rec_reality_body">Ты уже записываешь сны, но осознанные записи пока редки. Дневные проверки реальности помогут перенести осознанность в сон.</string>
+    <string name="stats_rec_location_title">Используй «%s» как триггер</string>
+    <string name="stats_rec_location_body">Это место часто появляется в твоих снах. Перед сном реши, что когда снова увидишь «%s», ты спросишь себя, не спишь ли ты.</string>
+    <string name="stats_rec_character_title">Следи за образом «%s»</string>
+    <string name="stats_rec_character_body">Этот образ повторяется в твоих снах. Попробуй использовать его как личный знак: когда появляется «%s», делай проверку реальности.</string>
+    <string name="stats_rec_advanced_title">Можно пробовать продвинутые техники</string>
+    <string name="stats_rec_advanced_body">У тебя уже есть либо осознанные сны, либо стабильная привычка вести дневник. Похоже, пора серьёзнее попробовать MILD или WBTB.</string>
 </resources>

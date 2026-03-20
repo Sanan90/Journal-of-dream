@@ -442,7 +442,6 @@
     <string name="dream_label_characters">꿈속 존재</string>
     <string name="stats_top_locations">자주 나오는 장소</string>
     <string name="stats_top_characters">자주 나오는 존재</string>
-
     <string name="btn_ok">확인</string>
     <string name="character_dreams_title">이 이미지가 등장한 꿈</string>
     <string name="settings_reality_check">🌀 현실 점검</string>
@@ -455,4 +454,25 @@
     <string name="reality_interval_2h">2시간마다</string>
     <string name="notif_reality_title">현실 점검</string>
     <string name="notif_reality_message">지금 바로 현실 점검을 하세요.</string>
+    <string name="stats_unique_characters">고유한 꿈 이미지</string>
+    <string name="stats_unique_locations">고유한 장소</string>
+    <string name="stats_recurring_summary">반복되는 꿈 요소</string>
+    <string name="stats_character_location_pairs">이미지 + 장소 패턴</string>
+    <string name="stats_character_pairs">반복되는 이미지 조합</string>
+    <string name="stats_hint_top_character">"%1$s" 이미지가 가장 자주 나타납니다 — %2$d회.</string>
+    <string name="stats_hint_top_location">"%1$s" 장소가 가장 자주 반복됩니다 — %2$d회.</string>
+    <string name="stats_hint_top_character_location">가장 잦은 패턴: %1$s — %2$d회.</string>
+
+    <string name="stats_recommendations_title">당신을 위한 추천</string>
+    <string name="stats_open_techniques">기법 열기</string>
+    <string name="stats_rec_recall_title">먼저 꿈 회상부터 시작하세요</string>
+    <string name="stats_rec_recall_body">아직 기록이 적어요. 깨어난 직후 꿈을 적고 세부사항이 사라지기 전에 남기세요.</string>
+    <string name="stats_rec_reality_title">현실 점검을 더 추가하세요</string>
+    <string name="stats_rec_reality_body">꿈 기록은 하고 있지만 자각몽 기록은 아직 드뭅니다. 낮 동안의 현실 점검이 수면 중 자각으로 이어지는 데 도움이 됩니다.</string>
+    <string name="stats_rec_location_title">"%s"를 신호로 활용하세요</string>
+    <string name="stats_rec_location_body">이 장소는 꿈에서 반복해서 나타납니다. 잠들기 전에 "%s"를 보면 스스로 꿈인지 질문하겠다고 정해 보세요.</string>
+    <string name="stats_rec_character_title">"%s"를 주의 깊게 보세요</string>
+    <string name="stats_rec_character_body">이 이미지는 꿈에서 반복됩니다. 개인적인 신호로 활용해 보세요. "%s"가 나타나면 현실 점검을 해보세요.</string>
+    <string name="stats_rec_advanced_title">고급 기법을 시도해 볼 수 있어요</string>
+    <string name="stats_rec_advanced_body">이미 자각몽 경험이 있거나 꾸준한 기록 습관이 생겼습니다. 이제 MILD나 WBTB 같은 고급 기법을 더 진지하게 시도해 볼 만합니다.</string>
 </resources>

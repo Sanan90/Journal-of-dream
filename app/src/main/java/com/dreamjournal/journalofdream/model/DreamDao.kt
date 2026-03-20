@@ -38,6 +38,11 @@ interface DreamDao {
     @Query("SELECT * FROM dreams WHERE ownerUid = :ownerUid ORDER BY date DESC")
     fun getDreamsByOwner(ownerUid: String): LiveData<List<Dream>>
 
+
+    @Transaction
+    @Query("SELECT * FROM dreams WHERE ownerUid = :ownerUid ORDER BY date DESC")
+    fun getDreamsWithDetailsByOwner(ownerUid: String): LiveData<List<DreamWithLocations>>
+
     // Получение сна по ID вместе с локациями (LiveData для наблюдения)
     @Transaction
     @Query("SELECT * FROM dreams WHERE localId = :dreamId")

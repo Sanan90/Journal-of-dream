@@ -449,7 +449,6 @@
     <string name="dream_label_characters">Түс бейнелері</string>
     <string name="stats_top_locations">Жиі кездесетін орындар</string>
     <string name="stats_top_characters">Жиі кездесетін бейнелер</string>
-
     <string name="btn_ok">Жарайды</string>
     <string name="character_dreams_title">Осы бейнемен байланысты түстер</string>
     <string name="settings_reality_check">🌀 Шынайылықты тексеру</string>
@@ -462,4 +461,25 @@
     <string name="reality_interval_2h">Әр 2 сағат сайын</string>
     <string name="notif_reality_title">Шынайылықты тексеру</string>
     <string name="notif_reality_message">Дәл қазір шынайылықты тексер.</string>
+    <string name="stats_unique_characters">Бірегей образдар</string>
+    <string name="stats_unique_locations">Бірегей орындар</string>
+    <string name="stats_recurring_summary">Қайталанатын түс элементтері</string>
+    <string name="stats_character_location_pairs">Образ + орын байланыстары</string>
+    <string name="stats_character_pairs">Қайталанатын образ жұптары</string>
+    <string name="stats_hint_top_character">"%1$s" образы ең жиі кездеседі — %2$d рет.</string>
+    <string name="stats_hint_top_location">"%1$s" орны ең жиі қайталанады — %2$d рет.</string>
+    <string name="stats_hint_top_character_location">Ең жиі байланыс: %1$s — %2$d рет.</string>
+
+    <string name="stats_recommendations_title">Сізге арналған ұсыныстар</string>
+    <string name="stats_open_techniques">Техникаларды ашу</string>
+    <string name="stats_rec_recall_title">Алдымен түстерді еске түсіруден бастаңыз</string>
+    <string name="stats_rec_recall_body">Жазбаларыңыз әлі аз. Оянған бойда түсіңізді жазып, детальдарын ұмытпай тұрғанда сақтауға көңіл бөліңіз.</string>
+    <string name="stats_rec_reality_title">Шынайылық тексерістерін көбейтіңіз</string>
+    <string name="stats_rec_reality_body">Түстеріңізді жазып жүрсіз, бірақ саналы түстер әлі сирек. Күндізгі шынайылық тексерістері сананы түске көшіруге көмектеседі.</string>
+    <string name="stats_rec_location_title">"%s" орнын триггер ретінде пайдаланыңыз</string>
+    <string name="stats_rec_location_body">Бұл орын түстеріңізде жиі қайталанады. Ұйықтар алдында "%s" жерін көрсеңіз, өзіңізден түс көріп жатырмын ба деп сұраймын деп шешіңіз.</string>
+    <string name="stats_rec_character_title">"%s" бейнесіне назар аударыңыз</string>
+    <string name="stats_rec_character_body">Бұл бейне түстеріңізде қайталанады. Оны жеке белгі ретінде пайдаланыңыз: "%s" пайда болғанда шынайылық тексерісін жасаңыз.</string>
+    <string name="stats_rec_advanced_title">Күрделірек техникаларды байқап көруге болады</string>
+    <string name="stats_rec_advanced_body">Сізде қазірдің өзінде саналы түстер бар немесе күнделік жүргізу әдеті тұрақты. MILD не WBTB тәсілдерін байыппен байқап көруге жақсы уақыт болуы мүмкін.</string>
 </resources>

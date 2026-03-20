@@ -443,7 +443,6 @@
     <string name="dream_label_characters">梦中形象</string>
     <string name="stats_top_locations">常见地点</string>
     <string name="stats_top_characters">常见形象</string>
-
     <string name="btn_ok">确定</string>
     <string name="character_dreams_title">包含这个形象的梦</string>
     <string name="settings_reality_check">🌀 现实检查</string>
@@ -456,4 +455,25 @@
     <string name="reality_interval_2h">每2小时</string>
     <string name="notif_reality_title">现实检查</string>
     <string name="notif_reality_message">现在就做一次现实检查。</string>
+    <string name="stats_unique_characters">独特的梦中形象</string>
+    <string name="stats_unique_locations">独特的地点</string>
+    <string name="stats_recurring_summary">重复出现的梦境元素</string>
+    <string name="stats_character_location_pairs">形象 + 地点组合</string>
+    <string name="stats_character_pairs">重复出现的形象组合</string>
+    <string name="stats_hint_top_character">“%1$s”这个形象出现得最多——%2$d次。</string>
+    <string name="stats_hint_top_location">“%1$s”这个地点重复出现最多——%2$d次。</string>
+    <string name="stats_hint_top_character_location">最常见的组合：%1$s——%2$d次。</string>
+
+    <string name="stats_recommendations_title">给你的建议</string>
+    <string name="stats_open_techniques">打开技巧</string>
+    <string name="stats_rec_recall_title">先从回忆梦境开始</string>
+    <string name="stats_rec_recall_body">你的记录还比较少。先专注于醒来后立刻记录梦境，并在细节还清晰时把它们写下来。</string>
+    <string name="stats_rec_reality_title">增加现实检验</string>
+    <string name="stats_rec_reality_body">你已经开始记录梦境了，但清醒梦仍然较少。白天进行现实检验，有助于把觉察带入睡眠。</string>
+    <string name="stats_rec_location_title">把“%s”当作触发点</string>
+    <string name="stats_rec_location_body">这个地点在你的梦里反复出现。睡前可以先设定：当你再次看到“%s”时，就问自己是不是在做梦。</string>
+    <string name="stats_rec_character_title">留意“%s”</string>
+    <string name="stats_rec_character_body">这个形象会反复出现在你的梦里。试着把它当成个人提示：当“%s”出现时，就做一次现实检验。</string>
+    <string name="stats_rec_advanced_title">你可以尝试更进阶的技巧</string>
+    <string name="stats_rec_advanced_body">你已经有清醒梦经历，或已经建立了稳定的记录习惯。现在可能是认真尝试 MILD 或 WBTB 的好时机。</string>
 </resources>

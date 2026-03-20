@@ -442,7 +442,6 @@
     <string name="dream_label_characters">Traumfiguren</string>
     <string name="stats_top_locations">Häufige Orte</string>
     <string name="stats_top_characters">Häufige Figuren</string>
-
     <string name="btn_ok">OK</string>
     <string name="character_dreams_title">Träume mit diesem Traumbild</string>
     <string name="settings_reality_check">🌀 Realitätscheck</string>
@@ -455,4 +454,25 @@
     <string name="reality_interval_2h">Alle 2 Stunden</string>
     <string name="notif_reality_title">Realitätscheck</string>
     <string name="notif_reality_message">Mach jetzt einen Realitätscheck.</string>
+    <string name="stats_unique_characters">Einzigartige Traumfiguren</string>
+    <string name="stats_unique_locations">Einzigartige Orte</string>
+    <string name="stats_recurring_summary">Wiederkehrende Traumelemente</string>
+    <string name="stats_character_location_pairs">Figur + Ort Muster</string>
+    <string name="stats_character_pairs">Wiederkehrende Figurenpaare</string>
+    <string name="stats_hint_top_character">Die Figur "%1$s" erscheint am häufigsten — %2$d Mal.</string>
+    <string name="stats_hint_top_location">Der Ort "%1$s" wiederholt sich am häufigsten — %2$d Mal.</string>
+    <string name="stats_hint_top_character_location">Häufigstes Muster: %1$s — %2$d Mal.</string>
+
+    <string name="stats_recommendations_title">Empfehlungen für dich</string>
+    <string name="stats_open_techniques">Techniken öffnen</string>
+    <string name="stats_rec_recall_title">Beginne mit Traumerinnerung</string>
+    <string name="stats_rec_recall_body">Du hast noch wenige Einträge. Konzentriere dich darauf, Träume direkt nach dem Aufwachen aufzuschreiben und Details frisch festzuhalten.</string>
+    <string name="stats_rec_reality_title">Füge mehr Realitätschecks hinzu</string>
+    <string name="stats_rec_reality_body">Du hältst Träume bereits fest, aber luzide Einträge sind noch selten. Realitätschecks am Tag helfen, Bewusstsein in den Schlaf mitzunehmen.</string>
+    <string name="stats_rec_location_title">Nutze „%s“ als Auslöser</string>
+    <string name="stats_rec_location_body">Dieser Ort taucht in deinen Träumen immer wieder auf. Nimm dir vor dem Schlafen vor, dich bei „%s“ zu fragen, ob du träumst.</string>
+    <string name="stats_rec_character_title">Achte auf „%s“</string>
+    <string name="stats_rec_character_body">Diese Figur taucht in deinen Träumen wiederholt auf. Nutze sie als persönliches Zeichen: Wenn „%s“ erscheint, mache einen Realitätscheck.</string>
+    <string name="stats_rec_advanced_title">Du kannst fortgeschrittene Techniken versuchen</string>
+    <string name="stats_rec_advanced_body">Du hast bereits luzide Träume oder eine stabile Tagebuchgewohnheit. Jetzt könnte ein guter Zeitpunkt sein, MILD oder WBTB ernster auszuprobieren.</string>
 </resources>

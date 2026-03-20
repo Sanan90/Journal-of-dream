@@ -442,7 +442,6 @@
     <string name="dream_label_characters">Droomfiguren</string>
     <string name="stats_top_locations">Vaak voorkomende plaatsen</string>
     <string name="stats_top_characters">Vaak voorkomende figuren</string>
-
     <string name="btn_ok">OK</string>
     <string name="character_dreams_title">Dromen met deze figuur</string>
     <string name="settings_reality_check">🌀 Werkelijkheidscontrole</string>
@@ -455,4 +454,25 @@
     <string name="reality_interval_2h">Elke 2 uur</string>
     <string name="notif_reality_title">Werkelijkheidscontrole</string>
     <string name="notif_reality_message">Doe nu een werkelijkheidscontrole.</string>
+    <string name="stats_unique_characters">Unieke droomfiguren</string>
+    <string name="stats_unique_locations">Unieke locaties</string>
+    <string name="stats_recurring_summary">Terugkerende droomelementen</string>
+    <string name="stats_character_location_pairs">Patronen figuur + locatie</string>
+    <string name="stats_character_pairs">Terugkerende figuurparen</string>
+    <string name="stats_hint_top_character">De figuur "%1$s" verschijnt het vaakst — %2$d keer.</string>
+    <string name="stats_hint_top_location">De locatie "%1$s" komt het vaakst terug — %2$d keer.</string>
+    <string name="stats_hint_top_character_location">Meest voorkomende patroon: %1$s — %2$d keer.</string>
+
+    <string name="stats_recommendations_title">Aanbevelingen voor jou</string>
+    <string name="stats_open_techniques">Technieken openen</string>
+    <string name="stats_rec_recall_title">Begin met droomherinnering</string>
+    <string name="stats_rec_recall_body">Je hebt nog weinig notities. Richt je erop om dromen direct na het wakker worden op te schrijven en details vast te houden zolang ze nog vers zijn.</string>
+    <string name="stats_rec_reality_title">Voeg meer reality checks toe</string>
+    <string name="stats_rec_reality_body">Je noteert je dromen al, maar lucide dromen zijn nog zeldzaam. Reality checks overdag helpen om bewustzijn mee de slaap in te nemen.</string>
+    <string name="stats_rec_location_title">Gebruik "%s" als trigger</string>
+    <string name="stats_rec_location_body">Deze plek verschijnt herhaaldelijk in je dromen. Neem je voor dat wanneer je "%s" ziet, je jezelf afvraagt of je droomt.</string>
+    <string name="stats_rec_character_title">Let op "%s"</string>
+    <string name="stats_rec_character_body">Deze figuur komt terug in je dromen. Gebruik hem als persoonlijk signaal: wanneer "%s" verschijnt, doe dan een reality check.</string>
+    <string name="stats_rec_advanced_title">Je kunt geavanceerde technieken proberen</string>
+    <string name="stats_rec_advanced_body">Je hebt al lucide dromen of een stabiele gewoonte om je dromen op te schrijven. Dit kan een goed moment zijn om MILD of WBTB serieuzer te proberen.</string>
 </resources>

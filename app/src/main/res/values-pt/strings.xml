@@ -442,7 +442,6 @@
     <string name="dream_label_characters">Figuras do sonho</string>
     <string name="stats_top_locations">Locais frequentes</string>
     <string name="stats_top_characters">Figuras frequentes</string>
-
     <string name="btn_ok">OK</string>
     <string name="character_dreams_title">Sonhos com esta figura</string>
     <string name="settings_reality_check">🌀 Verificação da realidade</string>
@@ -455,4 +454,25 @@
     <string name="reality_interval_2h">A cada 2 horas</string>
     <string name="notif_reality_title">Verificação da realidade</string>
     <string name="notif_reality_message">Faça uma verificação da realidade agora mesmo.</string>
+    <string name="stats_unique_characters">Figuras de sonho únicas</string>
+    <string name="stats_unique_locations">Locais únicos</string>
+    <string name="stats_recurring_summary">Elementos recorrentes do sonho</string>
+    <string name="stats_character_location_pairs">Padrões figura + local</string>
+    <string name="stats_character_pairs">Pares de figuras recorrentes</string>
+    <string name="stats_hint_top_character">A figura "%1$s" aparece com mais frequência — %2$d vezes.</string>
+    <string name="stats_hint_top_location">O local "%1$s" se repete com mais frequência — %2$d vezes.</string>
+    <string name="stats_hint_top_character_location">Padrão mais frequente: %1$s — %2$d vezes.</string>
+
+    <string name="stats_recommendations_title">Recomendações para você</string>
+    <string name="stats_open_techniques">Abrir técnicas</string>
+    <string name="stats_rec_recall_title">Comece pela recordação dos sonhos</string>
+    <string name="stats_rec_recall_body">Você ainda tem poucas entradas. Foque em registrar o sonho logo ao acordar e preservar os detalhes enquanto ainda estão frescos.</string>
+    <string name="stats_rec_reality_title">Adicione mais verificações de realidade</string>
+    <string name="stats_rec_reality_body">Você já registra sonhos, mas os sonhos lúcidos ainda são raros. Verificações de realidade durante o dia ajudam a levar a consciência para o sono.</string>
+    <string name="stats_rec_location_title">Use "%s" como gatilho</string>
+    <string name="stats_rec_location_body">Este lugar aparece repetidamente nos seus sonhos. Antes de dormir, decida que quando vir "%s" você vai se perguntar se está sonhando.</string>
+    <string name="stats_rec_character_title">Observe "%s"</string>
+    <string name="stats_rec_character_body">Essa figura se repete nos seus sonhos. Tente usá-la como um sinal pessoal: quando "%s" aparecer, faça uma verificação de realidade.</string>
+    <string name="stats_rec_advanced_title">Você pode tentar técnicas avançadas</string>
+    <string name="stats_rec_advanced_body">Você já tem sonhos lúcidos ou um hábito estável de registrar sonhos. Pode ser um bom momento para explorar MILD ou WBTB com mais seriedade.</string>
 </resources>
