@@ -23,6 +23,20 @@ class CharacterRepository(
 
     var onSyncError: ((String) -> Unit)? = null
 
+    /**
+     * Важно: не используем INSERT ... REPLACE для уже существующего персонажа.
+     * REPLACE удаляет старую строку и вставляет новую заново,
+     * а из-за CASCADE это сносит связи в dream_character_cross_ref.
+     */
+    private suspend fun upsertCharacterLocallyPreservingRefs(character: DreamCharacter) {
+        val existing = db.characterDao().getCharacterByIdOnce(character.id, character.ownerUid)
+        if (existing == null) {
+            db.characterDao().insert(character)
+        } else {
+            db.characterDao().update(character)
+        }
+    }
+
     fun startSync() {
         val user = auth.currentUser ?: return
         val userId = user.uid
@@ -43,7 +57,9 @@ class CharacterRepository(
                         DocumentChange.Type.MODIFIED -> {
                             val remoteCharacter = dc.document.toObject(DreamCharacter::class.java)
                             if (charId != null && remoteCharacter != null) {
-                                db.characterDao().insert(remoteCharacter.copy(id = charId, ownerUid = userId))
+                                upsertCharacterLocallyPreservingRefs(
+                                    remoteCharacter.copy(id = charId, ownerUid = userId)
+                                )
                             }
                         }
                         DocumentChange.Type.REMOVED -> {
@@ -64,8 +80,14 @@ class CharacterRepository(
 
     suspend fun upsertCharacter(character: DreamCharacter): Result<Unit> {
         val dao = db.characterDao()
-        val newRowId = dao.insert(character)
-        val finalCharacter = if (character.id == 0) character.copy(id = newRowId.toInt()) else character
+        val finalCharacter = if (character.id == 0) {
+            val newRowId = dao.insert(character)
+            character.copy(id = newRowId.toInt())
+        } else {
+            upsertCharacterLocallyPreservingRefs(character)
+            character
+        }
+
         auth.currentUser?.let { user ->
             try {
                 remoteDb.collection("users").document(user.uid).collection("characters")
