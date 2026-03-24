@@ -131,7 +131,7 @@ fun MainScreen(
                 .verticalScroll(rememberScrollState())
                 .statusBarsPadding()
                 .navigationBarsPadding()
-                .padding(horizontal = 20.dp),
+                .padding(horizontal = 14.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // ═══ ВЕРХНЯЯ ПАНЕЛЬ ═══
@@ -143,7 +143,7 @@ fun MainScreen(
                 if (isGuest) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(stringResource(R.string.main_guest), color = Color.White.copy(0.7f), fontSize = 13.sp)
-                        Spacer(Modifier.width(8.dp))
+                        Spacer(Modifier.width(6.dp))
                         TextButton(onClick = { navController.navigate("auth") }) {
                             Text(stringResource(R.string.btn_login), fontSize = 12.sp)
                         }
@@ -261,7 +261,7 @@ fun MainScreen(
             // ═══════════════════════════════════════
             // ═══ КНОПКИ НАВИГАЦИИ 2×2 ════════════
             // ═══════════════════════════════════════
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 NavButton(Modifier.weight(1f), stringResource(R.string.nav_diary), R.drawable.dream_journal_icon, R.drawable.dreamy_purple_blue) {
                     navController.navigate("dreams")
                 }
@@ -269,8 +269,8 @@ fun MainScreen(
                     navController.navigate("locations")
                 }
             }
-            Spacer(Modifier.height(8.dp))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Spacer(Modifier.height(6.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 NavButton(Modifier.weight(1f), stringResource(R.string.nav_characters), R.drawable.dreamers_icon, R.drawable.soft_lavender) {
                     navController.navigate("characters")
                 }
@@ -428,7 +428,7 @@ private fun NavButton(
     onClick: () -> Unit
 ) {
     Card(
-        modifier = modifier.height(64.dp).shadow(6.dp, RoundedCornerShape(22.dp)),
+        modifier = modifier.height(58.dp).shadow(6.dp, RoundedCornerShape(22.dp)),
         shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -452,18 +452,24 @@ private fun NavButton(
                 RoundedCornerShape(22.dp)
             ))
             Row(
-                Modifier.fillMaxSize().padding(horizontal = 8.dp),
+                Modifier.fillMaxSize().padding(horizontal = 6.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
                 Image(
                     painter = painterResource(iconRes),
                     contentDescription = null,
-                    modifier = Modifier.size(28.dp),
+                    modifier = Modifier.size(26.dp),
                     contentScale = ContentScale.Fit
                 )
                 Spacer(Modifier.width(8.dp))
-                AutoSizeText(text = text, color = Color.White, fontWeight = FontWeight.SemiBold, maxFontSize = 13.sp, minFontSize = 8.sp)
+                AutoSizeText(
+                    text = text,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    maxFontSize = 13.sp,
+                    minFontSize = 9.sp
+                )
             }
         }
     }

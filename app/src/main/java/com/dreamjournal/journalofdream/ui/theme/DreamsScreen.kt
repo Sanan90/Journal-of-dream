@@ -1,69 +1,126 @@
 package com.dreamjournal.journalofdream.ui.theme
 
-import com.dreamjournal.journalofdream.util.localizeCategory
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import com.dreamjournal.journalofdream.R
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.grid.items as gridItems
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.dreamjournal.journalofdream.R
 import com.dreamjournal.journalofdream.model.Category
 import com.dreamjournal.journalofdream.model.Dream
-import com.dreamjournal.journalofdream.ui.common.BackgroundScreen
 import com.dreamjournal.journalofdream.ui.dreams.DreamListItem
+import com.dreamjournal.journalofdream.util.localizeCategory
 import com.dreamjournal.journalofdream.viewmodel.CategoryViewModel
 import com.dreamjournal.journalofdream.viewmodel.DreamViewModel
 import kotlinx.coroutines.delay
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxHeight
 
-// monthNames объявляется внутри composable через getMonthNames()
 
-// Конвертирует любой формат даты в "yyyy-MM" для группировки
+private val GoldLight = Color(0xFFF0D68C)
+private val GoldDark = Color(0xFFD4A76A)
+private val SoftWhite = Color.White.copy(alpha = 0.78f)
+private val PlayfairFamily = FontFamily(
+    Font(R.font.playfair_display_bold, FontWeight.Bold)
+)
+
 fun dateToMonthKey(date: String): String {
     return try {
         if (date.matches(Regex("\\d{4}-\\d{2}-\\d{2}"))) {
-            // Уже в формате yyyy-MM-dd
             date.substring(0, 7)
         } else {
-            // Старый формат dd.MM.yyyy
             val sdf = java.text.SimpleDateFormat("dd.MM.yyyy", java.util.Locale.getDefault())
             val cal = java.util.Calendar.getInstance()
             cal.time = sdf.parse(date)!!
             String.format("%04d-%02d", cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH) + 1)
         }
-    } catch (e: Exception) { "0000-00" }
+    } catch (e: Exception) {
+        "0000-00"
+    }
 }
 
-// Конвертирует любой формат даты в "yyyy-MM-dd" для корректной сортировки
 fun dateToSortKey(date: String): String {
     return try {
         if (date.matches(Regex("\\d{4}-\\d{2}-\\d{2}"))) {
@@ -72,12 +129,16 @@ fun dateToSortKey(date: String): String {
             val sdf = java.text.SimpleDateFormat("dd.MM.yyyy", java.util.Locale.getDefault())
             val cal = java.util.Calendar.getInstance()
             cal.time = sdf.parse(date)!!
-            String.format("%04d-%02d-%02d",
+            String.format(
+                "%04d-%02d-%02d",
                 cal.get(java.util.Calendar.YEAR),
                 cal.get(java.util.Calendar.MONTH) + 1,
-                cal.get(java.util.Calendar.DAY_OF_MONTH))
+                cal.get(java.util.Calendar.DAY_OF_MONTH)
+            )
         }
-    } catch (e: Exception) { "0000-00-00" }
+    } catch (e: Exception) {
+        "0000-00-00"
+    }
 }
 
 fun formatMonthKey(key: String, monthNames: List<String>): String {
@@ -86,10 +147,14 @@ fun formatMonthKey(key: String, monthNames: List<String>): String {
         val year = parts[0]
         val month = parts[1].toInt() - 1
         "${monthNames[month]} $year"
-    } catch (e: Exception) { key }
+    } catch (e: Exception) {
+        key
+    }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun DreamsScreen(
     navController: NavHostController,
@@ -105,9 +170,7 @@ fun DreamsScreen(
     )
     val allDreams by dreamViewModel.dreams.observeAsState(emptyList())
     val categories by categoryViewModel.allCategories.observeAsState(emptyList())
-    val categoryColorMap = remember(categories) {
-        categories.associate { it.name to it.color }
-    }
+    val categoryColorMap = remember(categories) { categories.associate { it.name to it.color } }
     val syncError by dreamViewModel.syncError.observeAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -125,17 +188,10 @@ fun DreamsScreen(
     var categoryExpanded by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
     var monthMode by remember { mutableStateOf(true) }
-    // Сортировка в режиме обычного списка: true = по дате, false = по категории
     var sortByDate by rememberSaveable { mutableStateOf(true) }
-
-    // Выбранный месяц (если открыт) — null = показываем сетку
-    // rememberSaveable сохраняет значение при возврате с экрана просмотра сна
     var openedMonth by rememberSaveable { mutableStateOf<String?>(null) }
 
-    // Перехватываем кнопку назад на телефоне
-    BackHandler(enabled = openedMonth != null) {
-        openedMonth = null
-    }
+    BackHandler(enabled = openedMonth != null) { openedMonth = null }
 
     val searchResults by produceState(
         initialValue = allDreams,
@@ -146,378 +202,288 @@ fun DreamsScreen(
         if (searchQuery.text.isBlank() && selectedCategory == null) {
             value = allDreams
         } else {
-            delay(300)
+            delay(250)
             value = allDreams.filter { dream ->
                 (selectedCategory == null || dream.category == selectedCategory?.name) &&
-                (searchQuery.text.isBlank() ||
-                    dream.title.contains(searchQuery.text, ignoreCase = true) ||
-                    dream.content.contains(searchQuery.text, ignoreCase = true))
+                    (searchQuery.text.isBlank() ||
+                        dream.title.contains(searchQuery.text, ignoreCase = true) ||
+                        dream.content.contains(searchQuery.text, ignoreCase = true))
             }
         }
     }
 
-    // Все месяцы — строятся из ВСЕХ снов (не фильтруются)
     val allMonthKeys = remember(allDreams) {
         allDreams
-            .map { dream -> dateToMonthKey(dream.date) }
+            .map { dateToMonthKey(it.date) }
             .toSortedSet(compareByDescending { it })
     }
 
-    // Количество снов в каждом месяце с учётом фильтра (категория + поиск)
     val dreamsByMonth = remember(searchResults) {
-        searchResults.groupBy { dream -> dateToMonthKey(dream.date) }
+        searchResults.groupBy { dateToMonthKey(it.date) }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            TopAppBar(
-                title = {
-                    // Если открыт месяц — показываем его название
-                    Text(
-                        text = if (openedMonth != null) formatMonthKey(openedMonth!!, monthNames)
-                               else stringResource(R.string.dreams_list),
-                        color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        if (openedMonth != null) {
-                            openedMonth = null // закрываем месяц, возвращаемся к сетке
-                        } else {
-                            navController.popBackStack()
-                        }
-                    }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.btn_back), tint = Color.White)
-                    }
-                },
-                actions = {
-                    if (openedMonth == null) {
-                        TextButton(onClick = { monthMode = !monthMode }) {
-                            Text(
-                                text = if (monthMode) stringResource(R.string.dreams_list) else stringResource(R.string.dreams_months),
-                                color = Color.White.copy(alpha = 0.8f),
-                                fontSize = 13.sp
-                            )
-                        }
-                        // Кнопка сортировки — только в режиме обычного списка
-                        if (!monthMode) {
-                            TextButton(onClick = { sortByDate = !sortByDate }) {
-                                Text(
-                                    text = if (sortByDate) stringResource(R.string.dreams_sort_az) else stringResource(R.string.dreams_sort_date),
-                                    color = Color.White.copy(alpha = 0.8f),
-                                    fontSize = 13.sp
-                                )
-                            }
-                        }
-                    } else {
-                        // Кнопка сортировки внутри открытого месяца
-                        TextButton(onClick = { sortByDate = !sortByDate }) {
-                            Text(
-                                text = if (sortByDate) stringResource(R.string.dreams_sort_az) else stringResource(R.string.dreams_sort_date),
-                                color = Color.White.copy(alpha = 0.8f),
-                                fontSize = 13.sp
-                            )
-                        }
-                    }
-                    IconButton(onClick = { navController.navigate("addDream") }) {
-                        Icon(Icons.Default.Add, contentDescription = stringResource(R.string.btn_add_dream), tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
-                modifier = Modifier.background(Color.Transparent)
-            )
-        }
-    ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            BackgroundScreen()
+    val headerTitle = if (openedMonth != null) formatMonthKey(openedMonth!!, monthNames) else stringResource(R.string.dreams_list)
+    val modeButtonText = if (sortByDate) stringResource(R.string.dreams_sort_az) else stringResource(R.string.dreams_sort_date)
 
+    val arrowRotation by animateFloatAsState(
+        targetValue = if (categoryExpanded) 180f else 0f,
+        animationSpec = tween(200, easing = FastOutSlowInEasing),
+        label = "categoryArrow"
+    )
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(R.drawable.new_fon),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            containerColor = Color.Transparent
+        ) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .statusBarsPadding()
+                    .navigationBarsPadding()
                     .padding(paddingValues)
+                    .padding(horizontal = 14.dp)
                     .imePadding()
-                    // Клик на пустое место — убираем фокус и клавиатуру
-                    .clickable(indication = null, interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }) {
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
                         focusManager.clearFocus()
                         keyboardController?.hide()
                     }
             ) {
-                // Поиск и фильтр — всегда видны
-                Column {
-                    OutlinedTextField(
-                        value = searchQuery,
-                        onValueChange = {
-                            searchQuery = it
-                            // При поиске — переключаемся в список и закрываем месяц
-                            if (it.text.isNotBlank()) {
-                                openedMonth = null
-                                monthMode = false
-                            }
-                        },
-                        placeholder = { Text(stringResource(R.string.dreams_search), color = Color.White.copy(alpha = 0.7f)) },
-                        leadingIcon = {
-                            Icon(Icons.Default.Search, contentDescription = stringResource(R.string.dreams_search), tint = Color.White.copy(alpha = 0.7f))
-                        },
-                        textStyle = TextStyle(color = Color.White),
-                        singleLine = true,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Color.White.copy(alpha = 0.6f),
-                            unfocusedBorderColor = Color.Transparent,
-                            focusedContainerColor = Color.White.copy(alpha = 0.15f),
-                            unfocusedContainerColor = Color.White.copy(alpha = 0.1f),
-                            cursorColor = Color.White,
-                        ),
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .clickable { categoryExpanded = true }
-                            .background(Color.White.copy(alpha = 0.2f), shape = RoundedCornerShape(8.dp))
-                            .padding(16.dp)
-                    ) {
-                        Text(
-                            text = selectedCategory?.name?.let { localizeCategory(it, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal)) } ?: stringResource(R.string.dreams_all),
-                            color = Color.White,
-                            fontSize = 18.sp
-                        )
-                        DropdownMenu(
-                            expanded = categoryExpanded,
-                            onDismissRequest = { categoryExpanded = false }
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.dreams_all)) },
-                                onClick = { selectedCategory = null; categoryExpanded = false }
+                Spacer(Modifier.padding(top = 4.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (openedMonth != null) {
+                        IconButton(onClick = { openedMonth = null }) {
+                            Icon(
+                                Icons.Default.ArrowBack,
+                                contentDescription = stringResource(R.string.btn_back),
+                                tint = GoldLight,
+                                modifier = Modifier.size(28.dp)
                             )
-                            categories.forEach { category ->
-                                DropdownMenuItem(
-                                    text = { Text(localizeCategory(category.name, stringResource(R.string.dreams_no_category), stringResource(R.string.cat_nightmares), stringResource(R.string.cat_lucid), stringResource(R.string.cat_plot), stringResource(R.string.cat_personal))) },
-                                    onClick = { selectedCategory = category; categoryExpanded = false }
-                                )
-                            }
                         }
+                    } else {
+                        Spacer(Modifier.size(48.dp))
+                    }
+
+                    Text(
+                        text = headerTitle,
+                        color = GoldLight,
+                        fontFamily = PlayfairFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = if (openedMonth == null) 31.sp else 28.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    if (openedMonth == null) {
+                        TextButton(
+                            onClick = { monthMode = !monthMode },
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(Color.White.copy(alpha = 0.06f))
+                        ) {
+                            Text(
+                                text = modeButtonText,
+                                color = SoftWhite,
+                                fontSize = 14.sp
+                            )
+                        }
+                        Spacer(Modifier.size(4.dp))
+                    } else {
+                        TextButton(
+                            onClick = { sortByDate = !sortByDate },
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(Color.White.copy(alpha = 0.06f))
+                        ) {
+                            Text(
+                                text = modeButtonText,
+                                color = SoftWhite,
+                                fontSize = 14.sp
+                            )
+                        }
+                        Spacer(Modifier.size(4.dp))
+                    }
+
+                    IconButton(onClick = { navController.navigate("addDream") }) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = stringResource(R.string.btn_add_dream),
+                            tint = GoldLight,
+                            modifier = Modifier.size(30.dp)
+                        )
                     }
                 }
 
-                // Контент
+                Spacer(Modifier.size(8.dp))
+
+                DreamSearchField(
+                    value = searchQuery,
+                    onValueChange = {
+                        searchQuery = it
+                        if (it.text.isNotBlank()) {
+                            openedMonth = null
+                            monthMode = false
+                        }
+                    }
+                )
+
+                Spacer(Modifier.size(10.dp))
+
+                DreamCategoryField(
+                    selectedCategory = selectedCategory,
+                    categoryExpanded = categoryExpanded,
+                    onOpen = { categoryExpanded = true },
+                    onDismiss = { categoryExpanded = false },
+                    categories = categories,
+                    arrowRotation = arrowRotation,
+                    onSelectCategory = {
+                        selectedCategory = it
+                        categoryExpanded = false
+                    }
+                )
+
+                Spacer(Modifier.size(12.dp))
+
                 AnimatedContent(
                     targetState = openedMonth,
+                    label = "monthTransition",
                     transitionSpec = {
                         if (targetState != null) {
-                            // Открываем месяц — влетает снизу
                             slideInVertically(
-                                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                                initialOffsetY = { it }
+                                animationSpec = spring(stiffness = 400f),
+                                initialOffsetY = { it / 2 }
                             ) + fadeIn() togetherWith
-                            slideOutVertically(
-                                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                                targetOffsetY = { -it / 3 }
-                            ) + fadeOut()
+                                slideOutVertically(
+                                    animationSpec = spring(stiffness = 400f),
+                                    targetOffsetY = { -it / 4 }
+                                ) + fadeOut()
                         } else {
-                            // Закрываем — сетка возвращается
                             slideInVertically(
-                                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                                initialOffsetY = { -it / 3 }
+                                animationSpec = spring(stiffness = 400f),
+                                initialOffsetY = { -it / 4 }
                             ) + fadeIn() togetherWith
-                            slideOutVertically(
-                                animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                                targetOffsetY = { it }
-                            ) + fadeOut()
+                                slideOutVertically(
+                                    animationSpec = spring(stiffness = 400f),
+                                    targetOffsetY = { it / 2 }
+                                ) + fadeOut()
                         }
-                    },
-                    label = "monthTransition"
+                    }
                 ) { month ->
                     if (month != null) {
-                        // ── СПИСОК СНОВ ВЫБРАННОГО МЕСЯЦА ──
-                        // Фильтруем по категории и поиску внутри месяца
-                        val dreamsInMonth = (dreamsByMonth[month] ?: emptyList()).let { list ->
-                            list.filter { dream ->
-                                (selectedCategory == null || dream.category == selectedCategory?.name) &&
+                        val dreamsInMonth = (dreamsByMonth[month] ?: emptyList()).filter { dream ->
+                            (selectedCategory == null || dream.category == selectedCategory?.name) &&
                                 (searchQuery.text.isBlank() ||
                                     dream.title.contains(searchQuery.text, ignoreCase = true) ||
                                     dream.content.contains(searchQuery.text, ignoreCase = true))
-                            }
                         }
+
                         if (dreamsInMonth.isEmpty()) {
-                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                Text(stringResource(R.string.dreams_empty_month), color = Color.White, fontSize = 16.sp)
-                            }
+                            DreamEmptyCard(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 18.dp),
+                                title = stringResource(R.string.dreams_empty_month),
+                                subtitle = ""
+                            )
                         } else {
                             val sortedInMonth = remember(dreamsInMonth, sortByDate) {
                                 if (sortByDate) {
-                                    dreamsInMonth.sortedByDescending { dateToSortKey(it.date) }
+                                    dreamsInMonth.sortedByDescending { dateToSortKey(it.date) + " " + it.time }
                                 } else {
                                     dreamsInMonth.sortedWith(
                                         compareBy(
                                             { it.category.ifBlank { context.getString(R.string.dreams_no_category) } },
-                                            { dateToSortKey(it.date) }
+                                            { dateToSortKey(it.date) + " " + it.time }
                                         )
                                     )
                                 }
                             }
-                            LazyColumn(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(horizontal = 16.dp),
-                                verticalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                item { Spacer(modifier = Modifier.height(4.dp)) }
-                                if (!sortByDate) {
-                                    val grouped = sortedInMonth.groupBy {
-                                        it.category.ifBlank { context.getString(R.string.dreams_no_category) }
-                                    }
-                                    grouped.forEach { (category, dreams) ->
-                                        item(key = "cat_month_$category") {
-                                            Text(
-                                                text = category,
-                                                color = Color.White,
-                                                fontWeight = FontWeight.Bold,
-                                                fontSize = 16.sp,
-                                                modifier = Modifier.padding(
-                                                    top = 8.dp, start = 4.dp, bottom = 4.dp
-                                                )
-                                            )
-                                        }
-                                        items(items = dreams, key = { it.localId }) { dream ->
-                                            DreamListItem(
-                                                dream = dream,
-                                                navController = navController,
-                                                onDelete = { dreamViewModel.deleteDream(it) },
-                                                categoryColor = categoryColorMap[dream.category]
-                                            )
-                                        }
-                                    }
-                                } else {
-                                    items(items = sortedInMonth, key = { it.localId }) { dream ->
-                                        DreamListItem(
-                                            dream = dream,
-                                            navController = navController,
-                                            onDelete = { dreamViewModel.deleteDream(it) },
-                                            categoryColor = categoryColorMap[dream.category]
-                                        )
-                                    }
-                                }
-                                item { Spacer(modifier = Modifier.height(16.dp)) }
-                            }
+
+                            DreamsListContent(
+                                dreams = sortedInMonth,
+                                sortByDate = sortByDate,
+                                navController = navController,
+                                dreamViewModel = dreamViewModel,
+                                categoryColorMap = categoryColorMap,
+                                noCategoryText = context.getString(R.string.dreams_no_category)
+                            )
                         }
                     } else {
-                        // ── СЕТКА МЕСЯЦЕВ или ОБЫЧНЫЙ СПИСОК ──
-                        if (searchResults.isEmpty()) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text("🌙", fontSize = 64.sp)
-                                    Spacer(modifier = Modifier.height(16.dp))
-                                    Text(
-                                        text = if (searchQuery.text.isNotEmpty() || selectedCategory != null)
-                                            stringResource(R.string.dreams_not_found)
-                                        else
-                                            stringResource(R.string.dreams_empty),
-                                        color = Color.White,
-                                        fontSize = 18.sp
-                                    )
-                                    if (searchQuery.text.isEmpty() && selectedCategory == null) {
-                                        Spacer(modifier = Modifier.height(8.dp))
-                                        Text(
-                                            text = stringResource(R.string.dreams_empty_hint),
-                                            color = Color.White.copy(alpha = 0.6f),
-                                            fontSize = 14.sp
+                        when {
+                            searchResults.isEmpty() -> {
+                                DreamEmptyCard(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 18.dp),
+                                    title = if (searchQuery.text.isNotBlank() || selectedCategory != null)
+                                        stringResource(R.string.dreams_not_found)
+                                    else
+                                        stringResource(R.string.dreams_empty),
+                                    subtitle = if (searchQuery.text.isBlank() && selectedCategory == null)
+                                        stringResource(R.string.dreams_empty_hint)
+                                    else
+                                        ""
+                                )
+                            }
+                            monthMode -> {
+                                LazyVerticalGrid(
+                                    columns = GridCells.Fixed(2),
+                                    modifier = Modifier.fillMaxSize(),
+                                    horizontalArrangement = Arrangement.spacedBy(14.dp),
+                                    verticalArrangement = Arrangement.spacedBy(18.dp),
+                                    contentPadding = PaddingValues(top = 6.dp, bottom = 140.dp)
+                                ) {
+                                    gridItems(allMonthKeys.toList()) { monthKey ->
+                                        DreamMonthCard(
+                                            monthKey = monthKey,
+                                            count = dreamsByMonth[monthKey]?.size ?: 0,
+                                            monthNames = monthNames,
+                                            onClick = { openedMonth = monthKey }
                                         )
                                     }
                                 }
                             }
-                        } else if (monthMode) {
-                            // Сетка квадратиков
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(2),
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(horizontal = 12.dp),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                verticalArrangement = Arrangement.spacedBy(12.dp),
-                                contentPadding = PaddingValues(vertical = 8.dp)
-                            ) {
-                                gridItems(allMonthKeys.toList()) { monthKey ->
-                                    val count = dreamsByMonth[monthKey]?.size ?: 0
-                                    MonthCard(
-                                        monthKey = monthKey,
-                                        count = count,
-                                        monthNames = monthNames,
-                                        onClick = { openedMonth = monthKey }
-                                    )
-                                }
-                            }
-                        } else {
-                            // Обычный список с сортировкой
-                            val sortedResults = remember(searchResults, sortByDate) {
-                                if (sortByDate) {
-                                    searchResults.sortedByDescending { dateToSortKey(it.date) }
-                                } else {
-                                    searchResults.sortedWith(
-                                        compareBy(
-                                            { it.category.ifBlank { context.getString(R.string.dreams_no_category) } },
-                                            { dateToSortKey(it.date) }
-                                        )
-                                    )
-                                }
-                            }
-                            LazyColumn(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(horizontal = 16.dp),
-                                verticalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                // Если сортировка по категории — показываем заголовки групп
-                                if (!sortByDate) {
-                                    val grouped = sortedResults.groupBy {
-                                        it.category.ifBlank { context.getString(R.string.dreams_no_category) }
-                                    }
-                                    grouped.forEach { (category, dreams) ->
-                                        item(key = "cat_$category") {
-                                            Text(
-                                                text = category,
-                                                color = Color.White,
-                                                fontWeight = FontWeight.Bold,
-                                                fontSize = 16.sp,
-                                                modifier = Modifier.padding(
-                                                    top = 12.dp,
-                                                    start = 4.dp,
-                                                    bottom = 4.dp
-                                                )
+                            else -> {
+                                val sortedResults = remember(searchResults, sortByDate) {
+                                    if (sortByDate) {
+                                        searchResults.sortedByDescending { dateToSortKey(it.date) + " " + it.time }
+                                    } else {
+                                        searchResults.sortedWith(
+                                            compareBy(
+                                                { it.category.ifBlank { context.getString(R.string.dreams_no_category) } },
+                                                { dateToSortKey(it.date) + " " + it.time }
                                             )
-                                        }
-                                        items(
-                                            items = dreams,
-                                            key = { it.localId }
-                                        ) { dream ->
-                                            DreamListItem(
-                                                dream = dream,
-                                                navController = navController,
-                                                onDelete = { dreamViewModel.deleteDream(it) },
-                                                categoryColor = categoryColorMap[dream.category]
-                                            )
-                                        }
-                                    }
-                                } else {
-                                    items(
-                                        items = sortedResults,
-                                        key = { it.localId }
-                                    ) { dream ->
-                                        DreamListItem(
-                                            dream = dream,
-                                            navController = navController,
-                                            onDelete = { dreamViewModel.deleteDream(it) },
-                                            categoryColor = categoryColorMap[dream.category]
                                         )
                                     }
                                 }
+
+                                DreamsListContent(
+                                    dreams = sortedResults,
+                                    sortByDate = sortByDate,
+                                    navController = navController,
+                                    dreamViewModel = dreamViewModel,
+                                    categoryColorMap = categoryColorMap,
+                                    noCategoryText = context.getString(R.string.dreams_no_category)
+                                )
                             }
                         }
                     }
@@ -528,7 +494,186 @@ fun DreamsScreen(
 }
 
 @Composable
-fun MonthCard(
+private fun DreamSearchField(
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        Color(0xFF6E4BA0).copy(alpha = 0.28f),
+                        Color(0xFF413167).copy(alpha = 0.28f)
+                    )
+                )
+            )
+            .padding(horizontal = 14.dp, vertical = 12.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                Icons.Default.Search,
+                contentDescription = stringResource(R.string.dreams_search),
+                tint = Color.White.copy(alpha = 0.68f),
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(Modifier.size(10.dp))
+            BasicTextField(
+                value = value,
+                onValueChange = onValueChange,
+                singleLine = true,
+                textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
+                modifier = Modifier.fillMaxWidth(),
+                decorationBox = { innerTextField ->
+                    if (value.text.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.dreams_search),
+                            color = Color.White.copy(alpha = 0.50f),
+                            fontSize = 18.sp
+                        )
+                    }
+                    innerTextField()
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun DreamCategoryField(
+    selectedCategory: Category?,
+    categoryExpanded: Boolean,
+    onOpen: () -> Unit,
+    onDismiss: () -> Unit,
+    categories: List<Category>,
+    arrowRotation: Float,
+    onSelectCategory: (Category?) -> Unit
+) {
+    val noCategory = stringResource(R.string.dreams_no_category)
+    val localizedText = selectedCategory?.name?.let {
+        localizeCategory(
+            it,
+            noCategory,
+            stringResource(R.string.cat_nightmares),
+            stringResource(R.string.cat_lucid),
+            stringResource(R.string.cat_plot),
+            stringResource(R.string.cat_personal)
+        )
+    } ?: stringResource(R.string.dreams_all)
+
+    Box {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(22.dp))
+                .background(
+                    Brush.horizontalGradient(
+                        listOf(
+                            Color(0xFF5A2E78).copy(alpha = 0.32f),
+                            Color(0xFF2F224D).copy(alpha = 0.36f),
+                            Color(0xFF6B478F).copy(alpha = 0.32f)
+                        )
+                    )
+                )
+                .clickable { onOpen() }
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = localizedText,
+                color = Color.White.copy(alpha = 0.95f),
+                fontSize = 17.sp,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                Icons.Default.ArrowDropDown,
+                contentDescription = null,
+                tint = GoldLight,
+                modifier = Modifier.rotate(arrowRotation)
+            )
+        }
+
+        DropdownMenu(
+            expanded = categoryExpanded,
+            onDismissRequest = onDismiss
+        ) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.dreams_all)) },
+                onClick = { onSelectCategory(null) }
+            )
+            categories.forEach { category ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            localizeCategory(
+                                category.name,
+                                noCategory,
+                                stringResource(R.string.cat_nightmares),
+                                stringResource(R.string.cat_lucid),
+                                stringResource(R.string.cat_plot),
+                                stringResource(R.string.cat_personal)
+                            )
+                        )
+                    },
+                    onClick = { onSelectCategory(category) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DreamsListContent(
+    dreams: List<Dream>,
+    sortByDate: Boolean,
+    navController: NavHostController,
+    dreamViewModel: DreamViewModel,
+    categoryColorMap: Map<String, String>,
+    noCategoryText: String
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(bottom = 28.dp)
+    ) {
+        if (!sortByDate) {
+            val grouped = dreams.groupBy { it.category.ifBlank { noCategoryText } }
+            grouped.forEach { (category, dreamsInGroup) ->
+                item(key = "group_$category") {
+                    Text(
+                        text = category,
+                        color = GoldLight,
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 6.dp, bottom = 4.dp, top = 2.dp)
+                    )
+                }
+                items(dreamsInGroup, key = { it.localId }) { dream ->
+                    DreamListItem(
+                        dream = dream,
+                        navController = navController,
+                        onDelete = { dreamViewModel.deleteDream(it) },
+                        categoryColor = categoryColorMap[dream.category]
+                    )
+                }
+            }
+        } else {
+            items(dreams, key = { it.localId }) { dream ->
+                DreamListItem(
+                    dream = dream,
+                    navController = navController,
+                    onDelete = { dreamViewModel.deleteDream(it) },
+                    categoryColor = categoryColorMap[dream.category]
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun DreamMonthCard(
     monthKey: String,
     count: Int,
     monthNames: List<String>,
@@ -537,42 +682,114 @@ fun MonthCard(
     val pluralOne = stringResource(R.string.plural_dreams_one)
     val pluralFew = stringResource(R.string.plural_dreams_few)
     val pluralMany = stringResource(R.string.plural_dreams_many)
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f)
-            .clickable { onClick() },
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Column(
+        val cardWidth = maxWidth
+        val titleFont = (cardWidth.value * 0.07f).sp
+        val numberFont = (cardWidth.value * 0.22f).sp
+        val bottomFont = (cardWidth.value * 0.075f).sp
+
+        Card(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+                .fillMaxWidth()
+                .aspectRatio(0.88f),
+            onClick = onClick,
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
-            Text(
-                text = formatMonthKey(monthKey, monthNames),
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Column {
-                Text(
-                    text = count.toString(),
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.month_ram),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Fit
                 )
-                Text(
-                    text = pluralDreams(count, pluralOne, pluralFew, pluralMany),
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                    fontSize = 13.sp
-                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.68f)
+                        .fillMaxHeight(0.56f)
+                        .align(Alignment.Center),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = formatMonthKey(monthKey, monthNames),
+                        color = GoldLight,
+                        fontFamily = PlayfairFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = titleFont,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                    )
+
+                    Text(
+                        text = count.toString(),
+                        color = GoldLight,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = numberFont,
+                        lineHeight = numberFont,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+
+                    Text(
+                        text = pluralDreams(count, pluralOne, pluralFew, pluralMany),
+                        color = Color.White.copy(alpha = 0.92f),
+                        fontSize = bottomFont,
+                        modifier = Modifier.align(Alignment.BottomCenter)
+                    )
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun DreamEmptyCard(
+    modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String
+) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(30.dp))
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        Color(0xFF241748).copy(alpha = 0.58f),
+                        Color(0xFF120B2D).copy(alpha = 0.76f)
+                    )
+                )
+            )
+            .padding(horizontal = 12.dp, vertical = 26.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "🌙",
+            fontSize = 42.sp
+        )
+        Spacer(Modifier.size(12.dp))
+        Text(
+            text = title,
+            color = GoldLight,
+            fontFamily = PlayfairFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp
+        )
+        if (subtitle.isNotBlank()) {
+            Spacer(Modifier.size(10.dp))
+            Text(
+                text = subtitle,
+                color = Color.White.copy(alpha = 0.72f),
+                fontSize = 14.sp
+            )
         }
     }
 }
