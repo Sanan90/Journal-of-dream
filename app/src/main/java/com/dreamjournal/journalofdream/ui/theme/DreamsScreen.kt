@@ -249,7 +249,6 @@ fun DreamsScreen(
                     .statusBarsPadding()
                     .navigationBarsPadding()
                     .padding(paddingValues)
-                    .padding(horizontal = 14.dp)
                     .imePadding()
                     .clickable(
                         indication = null,
@@ -264,7 +263,7 @@ fun DreamsScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 2.dp),
+                        .padding(top = 2.dp, start = 14.dp, end = 14.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (openedMonth != null) {
@@ -343,7 +342,8 @@ fun DreamsScreen(
                             openedMonth = null
                             monthMode = false
                         }
-                    }
+                    },
+                    modifier = Modifier.padding(horizontal = 14.dp)
                 )
 
                 Spacer(Modifier.size(10.dp))
@@ -358,7 +358,8 @@ fun DreamsScreen(
                     onSelectCategory = {
                         selectedCategory = it
                         categoryExpanded = false
-                    }
+                    },
+                    modifier = Modifier.padding(horizontal = 14.dp)
                 )
 
                 Spacer(Modifier.size(12.dp))
@@ -400,7 +401,7 @@ fun DreamsScreen(
                             DreamEmptyCard(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(top = 18.dp),
+                                    .padding(horizontal = 14.dp, vertical = 18.dp),
                                 title = stringResource(R.string.dreams_empty_month),
                                 subtitle = ""
                             )
@@ -424,7 +425,8 @@ fun DreamsScreen(
                                 navController = navController,
                                 dreamViewModel = dreamViewModel,
                                 categoryColorMap = categoryColorMap,
-                                noCategoryText = context.getString(R.string.dreams_no_category)
+                                noCategoryText = context.getString(R.string.dreams_no_category),
+                                modifier = Modifier.padding(horizontal = 14.dp)
                             )
                         }
                     } else {
@@ -433,7 +435,7 @@ fun DreamsScreen(
                                 DreamEmptyCard(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(top = 18.dp),
+                                        .padding(horizontal = 14.dp, vertical = 18.dp),
                                     title = if (searchQuery.text.isNotBlank() || selectedCategory != null)
                                         stringResource(R.string.dreams_not_found)
                                     else
@@ -448,9 +450,9 @@ fun DreamsScreen(
                                 LazyVerticalGrid(
                                     columns = GridCells.Fixed(2),
                                     modifier = Modifier.fillMaxSize(),
-                                    horizontalArrangement = Arrangement.spacedBy(14.dp),
-                                    verticalArrangement = Arrangement.spacedBy(18.dp),
-                                    contentPadding = PaddingValues(top = 6.dp, bottom = 140.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                                    contentPadding = PaddingValues(start = 2.dp, end = 2.dp, top = 2.dp, bottom = 40.dp)
                                 ) {
                                     gridItems(allMonthKeys.toList()) { monthKey ->
                                         DreamMonthCard(
@@ -482,7 +484,8 @@ fun DreamsScreen(
                                     navController = navController,
                                     dreamViewModel = dreamViewModel,
                                     categoryColorMap = categoryColorMap,
-                                    noCategoryText = context.getString(R.string.dreams_no_category)
+                                    noCategoryText = context.getString(R.string.dreams_no_category),
+                                    modifier = Modifier.padding(horizontal = 14.dp)
                                 )
                             }
                         }
@@ -496,10 +499,11 @@ fun DreamsScreen(
 @Composable
 private fun DreamSearchField(
     value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit
+    onValueChange: (TextFieldValue) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
             .background(
@@ -549,7 +553,8 @@ private fun DreamCategoryField(
     onDismiss: () -> Unit,
     categories: List<Category>,
     arrowRotation: Float,
-    onSelectCategory: (Category?) -> Unit
+    onSelectCategory: (Category?) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val noCategory = stringResource(R.string.dreams_no_category)
     val localizedText = selectedCategory?.name?.let {
@@ -563,7 +568,7 @@ private fun DreamCategoryField(
         )
     } ?: stringResource(R.string.dreams_all)
 
-    Box {
+    Box(modifier = modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -631,10 +636,11 @@ private fun DreamsListContent(
     navController: NavHostController,
     dreamViewModel: DreamViewModel,
     categoryColorMap: Map<String, String>,
-    noCategoryText: String
+    noCategoryText: String,
+    modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(bottom = 28.dp)
     ) {
@@ -687,16 +693,16 @@ fun DreamMonthCard(
         modifier = Modifier.fillMaxWidth()
     ) {
         val cardWidth = maxWidth
-        val titleFont = (cardWidth.value * 0.07f).sp
-        val numberFont = (cardWidth.value * 0.22f).sp
-        val bottomFont = (cardWidth.value * 0.075f).sp
+        val titleFont = (cardWidth.value * 0.082f).sp
+        val numberFont = (cardWidth.value * 0.32f).sp
+        val bottomFont = (cardWidth.value * 0.11f).sp
 
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(0.88f),
             onClick = onClick,
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(0.dp),
             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
@@ -708,13 +714,13 @@ fun DreamMonthCard(
                     painter = painterResource(R.drawable.month_ram),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Fit
+                    contentScale = ContentScale.FillBounds
                 )
 
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(0.68f)
-                        .fillMaxHeight(0.56f)
+                        .fillMaxWidth(0.75f)
+                        .fillMaxHeight(0.52f)
                         .align(Alignment.Center),
                     contentAlignment = Alignment.Center
                 ) {
@@ -725,7 +731,8 @@ fun DreamMonthCard(
                         fontWeight = FontWeight.Bold,
                         fontSize = titleFont,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                        softWrap = false,
+                        overflow = TextOverflow.Visible,
                         modifier = Modifier
                             .align(Alignment.TopCenter)
                     )

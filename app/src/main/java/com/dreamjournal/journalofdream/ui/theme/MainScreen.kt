@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -128,7 +129,6 @@ fun MainScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .statusBarsPadding()
                 .navigationBarsPadding()
                 .padding(horizontal = 14.dp),
@@ -279,7 +279,7 @@ fun MainScreen(
                 }
             }
 
-            Spacer(Modifier.weight(1f).heightIn(min = 12.dp))
+            Spacer(Modifier.weight(1f))
 
             // ═══════════════════════════════════════
             // ═══ НИЖНЯЯ ПАНЕЛЬ ═══════════════════
@@ -345,7 +345,7 @@ fun MainScreen(
                         painter = painterResource(R.drawable.add_button),
                         contentDescription = null,
                         modifier = Modifier
-                            .size(120.dp)
+                            .size(100.dp)
                             .scale(fabScale)
                             .clip(CircleShape)
                             .shadow(10.dp, CircleShape)
