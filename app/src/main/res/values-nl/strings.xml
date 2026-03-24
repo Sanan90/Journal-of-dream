@@ -478,4 +478,6 @@
     <string name="stats_deeper_insights_title">Diepere inzichten in je dromen</string>
     <string name="stats_recurring_overview">Terugkerende figuren: %1$d • terugkerende locaties: %2$d</string>
     <string name="stats_hint_top_character_pair">"%1$s" en "%2$s" verschijnen vaak samen — %3$d keer.</string>
+    <string name="stats_lucid_short">Lucide</string>
+    <string name="stats_this_month">deze maand</string>
 </resources>

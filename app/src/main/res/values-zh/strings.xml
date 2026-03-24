@@ -479,4 +479,6 @@
     <string name="stats_deeper_insights_title">更深入了解你的梦境</string>
     <string name="stats_recurring_overview">重复出现的形象：%1$d • 重复出现的地点：%2$d</string>
     <string name="stats_hint_top_character_pair">“%1$s”和“%2$s”经常一起出现——%3$d次。</string>
+    <string name="stats_lucid_short">清醒梦</string>
+    <string name="stats_this_month">本月</string>
 </resources>

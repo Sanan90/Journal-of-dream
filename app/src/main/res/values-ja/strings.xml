@@ -478,4 +478,6 @@
     <string name="stats_deeper_insights_title">夢をさらに深く見る</string>
     <string name="stats_recurring_overview">繰り返し現れるイメージ: %1$d • 繰り返し現れる場所: %2$d</string>
     <string name="stats_hint_top_character_pair">「%1$s」と「%2$s」は一緒に現れることが多いです — %3$d回。</string>
+    <string name="stats_lucid_short">明晰夢</string>
+    <string name="stats_this_month">今月</string>
 </resources>

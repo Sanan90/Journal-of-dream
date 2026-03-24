@@ -485,4 +485,6 @@
     <string name="stats_deeper_insights_title">Глибший погляд на твої сни</string>
     <string name="stats_recurring_overview">Повторювані образи: %1$d • повторювані локації: %2$d</string>
     <string name="stats_hint_top_character_pair">"%1$s" і "%2$s" часто з’являються разом — %3$d рази.</string>
+    <string name="stats_lucid_short">Усвідомлених</string>
+    <string name="stats_this_month">цього місяця</string>
 </resources>

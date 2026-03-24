@@ -479,4 +479,6 @@
     <string name="stats_deeper_insights_title">Uno sguardo più profondo ai tuoi sogni</string>
     <string name="stats_recurring_overview">Figure ricorrenti: %1$d • luoghi ricorrenti: %2$d</string>
     <string name="stats_hint_top_character_pair">"%1$s" e "%2$s" compaiono spesso insieme — %3$d volte.</string>
+    <string name="stats_lucid_short">Lucidi</string>
+    <string name="stats_this_month">questo mese</string>
 </resources>

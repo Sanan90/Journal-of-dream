@@ -479,4 +479,6 @@
     <string name="stats_deeper_insights_title">نظرة أعمق إلى أحلامك</string>
     <string name="stats_recurring_overview">الصور المتكررة: %1$d • الأماكن المتكررة: %2$d</string>
     <string name="stats_hint_top_character_pair">يظهر "%1$s" و "%2$s" معًا كثيرًا — %3$d مرات.</string>
+    <string name="stats_lucid_short">واعية</string>
+    <string name="stats_this_month">هذا الشهر</string>
 </resources>

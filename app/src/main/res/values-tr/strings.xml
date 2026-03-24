@@ -478,4 +478,6 @@
     <string name="stats_deeper_insights_title">Rüyalarına daha derin bir bakış</string>
     <string name="stats_recurring_overview">Tekrarlayan figürler: %1$d • tekrarlayan mekânlar: %2$d</string>
     <string name="stats_hint_top_character_pair">"%1$s" ve "%2$s" sık sık birlikte görünüyor — %3$d kez.</string>
+    <string name="stats_lucid_short">Lucid</string>
+    <string name="stats_this_month">bu ay</string>
 </resources>

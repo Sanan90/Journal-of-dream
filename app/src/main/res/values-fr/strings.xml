@@ -478,4 +478,6 @@
     <string name="stats_deeper_insights_title">Un regard plus profond sur tes rêves</string>
     <string name="stats_recurring_overview">Figures récurrentes : %1$d • lieux récurrents : %2$d</string>
     <string name="stats_hint_top_character_pair">« %1$s » et « %2$s » apparaissent souvent ensemble — %3$d fois.</string>
+    <string name="stats_lucid_short">Lucides</string>
+    <string name="stats_this_month">ce mois</string>
 </resources>

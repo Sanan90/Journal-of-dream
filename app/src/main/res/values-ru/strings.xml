@@ -483,4 +483,6 @@
     <string name="stats_deeper_insights_title">Глубже о твоих снах</string>
     <string name="stats_recurring_overview">Повторяющиеся образы: %1$d • повторяющиеся локации: %2$d</string>
     <string name="stats_hint_top_character_pair">Часто вместе появляются "%1$s" и "%2$s" — %3$d раз.</string>
+    <string name="stats_lucid_short">Осознанных</string>
+    <string name="stats_this_month">за месяц</string>
 </resources>
