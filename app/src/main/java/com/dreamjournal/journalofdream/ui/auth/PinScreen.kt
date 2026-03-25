@@ -25,7 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import com.dreamjournal.journalofdream.ui.common.BackgroundScreen
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -351,7 +353,7 @@ fun PinScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        BackgroundScreen()
+        Image(painterResource(R.drawable.new_fon), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -364,7 +366,7 @@ fun PinScreen(
                     mode == PinMode.SET && isConfirming -> stringResource(R.string.pin_repeat)
                     else -> stringResource(R.string.pin_enter_title)
                 },
-                color = Color.White,
+                color = Color(0xFFF0D68C),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -475,9 +477,9 @@ fun PinKey(onClick: () -> Unit, content: @Composable () -> Unit) {
         modifier = Modifier.size(72.dp),
         shape = CircleShape,
         colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = Color.White.copy(alpha = 0.1f)
+            containerColor = Color(0xFF2E1650).copy(alpha = 0.70f)
         ),
-        border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.3f)),
+        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFF0D68C).copy(alpha = 0.30f)),
         contentPadding = PaddingValues(0.dp)
     ) { content() }
 }

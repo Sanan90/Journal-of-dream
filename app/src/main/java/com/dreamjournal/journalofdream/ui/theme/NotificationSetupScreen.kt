@@ -22,7 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dreamjournal.journalofdream.R
-import com.dreamjournal.journalofdream.ui.common.BackgroundScreen
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import com.dreamjournal.journalofdream.util.areNotificationsAllowed
 import com.dreamjournal.journalofdream.util.canUseExactAlarms
 import com.dreamjournal.journalofdream.util.openAppNotificationSettings
@@ -67,7 +69,7 @@ fun NotificationSetupScreen(onDone: () -> Unit) {
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
-        BackgroundScreen()
+        Image(painterResource(R.drawable.new_fon), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
 
         // Glow фон
         Box(
@@ -123,7 +125,7 @@ fun NotificationSetupScreen(onDone: () -> Unit) {
                 text = stringResource(R.string.setup_title),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
+                color = Color(0xFFF0D68C),
                 textAlign = TextAlign.Center
             )
 
@@ -189,27 +191,28 @@ fun NotificationSetupScreen(onDone: () -> Unit) {
             Card(
                 shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White.copy(alpha = 0.08f)
-                )
+                    containerColor = Color(0xFF2E1650).copy(alpha = 0.85f)
+                ),
+                border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFF0D68C).copy(alpha = 0.22f))
             ) {
                 TimeInput(
                     state = timePickerState,
                     modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
                     colors = TimePickerDefaults.colors(
                         containerColor = Color.Transparent,
-                        timeSelectorSelectedContainerColor = Color(0xFF7C4DFF),
+                        timeSelectorSelectedContainerColor = Color(0xFF7B3FA0),
                         timeSelectorUnselectedContainerColor = Color.White.copy(alpha = 0.12f),
                         timeSelectorSelectedContentColor = Color.White,
                         timeSelectorUnselectedContentColor = Color.White.copy(alpha = 0.7f),
                         periodSelectorBorderColor = Color.White.copy(alpha = 0.3f),
-                        periodSelectorSelectedContainerColor = Color(0xFF7C4DFF),
+                        periodSelectorSelectedContainerColor = Color(0xFF7B3FA0),
                         periodSelectorUnselectedContainerColor = Color.White.copy(alpha = 0.08f),
                         periodSelectorSelectedContentColor = Color.White,
                         periodSelectorUnselectedContentColor = Color.White.copy(alpha = 0.6f),
                         clockDialColor = Color.Transparent,
                         clockDialSelectedContentColor = Color.White,
                         clockDialUnselectedContentColor = Color.White.copy(alpha = 0.6f),
-                        selectorColor = Color(0xFF7C4DFF),
+                        selectorColor = Color(0xFFF0D68C),
                     )
                 )
             }
@@ -258,9 +261,9 @@ fun NotificationSetupScreen(onDone: () -> Unit) {
                     },
                     modifier = Modifier.weight(1f).height(52.dp),
                     shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C4DFF))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7B3FA0))
                 ) {
-                    Text(stringResource(R.string.setup_done), fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                    Text(stringResource(R.string.setup_done), fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = Color(0xFFF0D68C))
                 }
             }
         }

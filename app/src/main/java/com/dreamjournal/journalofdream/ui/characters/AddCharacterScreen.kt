@@ -1,7 +1,12 @@
 package com.dreamjournal.journalofdream.ui.characters
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -9,15 +14,26 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.dreamjournal.journalofdream.R
-import com.dreamjournal.journalofdream.ui.common.BackgroundScreen
+import com.dreamjournal.journalofdream.ui.locations.LocAlertDialog
+import com.dreamjournal.journalofdream.ui.locations.LocFieldLabel
+import com.dreamjournal.journalofdream.ui.locations.LocSaveButton
+import com.dreamjournal.journalofdream.ui.locations.locFieldColors
 import com.dreamjournal.journalofdream.viewmodel.CharacterViewModel
+
+private val GoldLightC = Color(0xFFF0D68C)
+private val PlayfairFamilyC = FontFamily(Font(R.font.playfair_display_bold, FontWeight.Bold))
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,9 +41,9 @@ fun AddCharacterScreen(
     navController: NavHostController,
     characterViewModel: CharacterViewModel
 ) {
-    var name by remember { mutableStateOf("") }
+    var name        by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var showError by remember { mutableStateOf(false) }
+    var showError      by remember { mutableStateOf(false) }
     var showExitDialog by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val hasUnsavedChanges = name.isNotBlank() || description.isNotBlank()
@@ -35,83 +51,78 @@ fun AddCharacterScreen(
     BackHandler(enabled = hasUnsavedChanges) { showExitDialog = true }
 
     if (showExitDialog) {
-        AlertDialog(
-            onDismissRequest = { showExitDialog = false },
-            title = { Text(stringResource(R.string.discard_title)) },
-            text = { Text(stringResource(R.string.discard_character_message)) },
-            confirmButton = {
-                TextButton(onClick = { showExitDialog = false; navController.popBackStack() }) {
-                    Text(stringResource(R.string.discard_confirm), color = MaterialTheme.colorScheme.error)
-                }
-            },
-            dismissButton = { TextButton(onClick = { showExitDialog = false }) { Text(stringResource(R.string.discard_dismiss)) } }
+        LocAlertDialog(
+            title = stringResource(R.string.discard_title),
+            message = stringResource(R.string.discard_character_message),
+            confirmText = stringResource(R.string.discard_confirm),
+            confirmColor = Color(0xFFEF5350),
+            onConfirm = { showExitDialog = false; navController.popBackStack() },
+            onDismiss = { showExitDialog = false }
         )
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.character_add_title), color = Color.White) },
-                navigationIcon = {
-                    IconButton(onClick = { if (hasUnsavedChanges) showExitDialog = true else navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.btn_back), tint = Color.White)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
-            )
-        }
-    ) { paddingValues ->
-        Box(Modifier.fillMaxSize()) {
-            BackgroundScreen()
+    Box(Modifier.fillMaxSize()) {
+        Image(painterResource(R.drawable.new_fon), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+
+        Column(Modifier.fillMaxSize().statusBarsPadding().imePadding()) {
+            // Заголовок
+            Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = { if (hasUnsavedChanges) showExitDialog = true else navController.popBackStack() }) {
+                    Icon(Icons.Default.ArrowBack, null, tint = GoldLightC, modifier = Modifier.size(28.dp))
+                }
+                Text(stringResource(R.string.character_add_title), color = GoldLightC,
+                    fontFamily = PlayfairFamilyC, fontWeight = FontWeight.Bold,
+                    fontSize = 26.sp, modifier = Modifier.weight(1f))
+                Image(painterResource(R.drawable.dreamers_icon), null,
+                    Modifier.size(32.dp).padding(end = 10.dp), contentScale = ContentScale.Fit)
+            }
+
             Column(
-                modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp).imePadding(),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier
+                    .fillMaxWidth().weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 14.dp)
+                    .navigationBarsPadding(),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(4.dp))
+
+                LocFieldLabel(R.drawable.dreamers_icon, stringResource(R.string.character_field_name))
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it; if (it.isNotBlank()) showError = false },
-                    label = { Text(stringResource(R.string.character_field_name), color = Color.White.copy(alpha = 0.7f)) },
-                    textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
-                    isError = showError,
-                    singleLine = true,
+                    placeholder = { Text(stringResource(R.string.character_field_name), color = Color.White.copy(0.35f)) },
+                    textStyle = TextStyle(color = Color.White, fontSize = 17.sp),
+                    singleLine = true, isError = showError,
                     modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.White,
-                        unfocusedBorderColor = Color.White.copy(alpha = 0.5f),
-                        errorBorderColor = Color.Red
-                    )
+                    shape = RoundedCornerShape(14.dp),
+                    colors = locFieldColors()
                 )
-                if (showError) {
-                    Text(stringResource(R.string.character_error_name), color = Color.Red, fontSize = 12.sp, modifier = Modifier.align(Alignment.Start).padding(top = 4.dp))
-                }
-                Spacer(Modifier.height(16.dp))
+                if (showError) Text(stringResource(R.string.character_error_name),
+                    color = Color(0xFFEF5350), fontSize = 11.sp)
+
+                LocFieldLabel(R.drawable.magic_glass_icon, stringResource(R.string.character_field_desc))
                 OutlinedTextField(
-                    value = description,
-                    onValueChange = { description = it },
-                    label = { Text(stringResource(R.string.character_field_desc), color = Color.White.copy(alpha = 0.7f)) },
-                    textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
-                    modifier = Modifier.fillMaxWidth().height(140.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.White,
-                        unfocusedBorderColor = Color.White.copy(alpha = 0.5f)
-                    )
+                    value = description, onValueChange = { description = it },
+                    textStyle = TextStyle(color = Color.White, fontSize = 16.sp, lineHeight = 22.sp),
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 120.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    colors = locFieldColors()
                 )
-                Spacer(Modifier.height(24.dp))
-                Button(
+
+                Spacer(Modifier.height(4.dp))
+                LocSaveButton(
+                    text = stringResource(R.string.btn_save),
+                    modifier = Modifier.align(Alignment.End),
                     onClick = {
-                        if (name.isBlank()) {
-                            showError = true
-                            return@Button
-                        }
+                        if (name.isBlank()) { showError = true; return@LocSaveButton }
                         characterViewModel.addCharacter(name.trim(), description.trim())
                         keyboardController?.hide()
                         navController.popBackStack()
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.2f))
-                ) { Text(stringResource(R.string.btn_save), color = Color.White, fontSize = 16.sp) }
+                    }
+                )
+                Spacer(Modifier.height(20.dp))
             }
         }
     }

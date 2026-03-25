@@ -29,7 +29,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dreamjournal.journalofdream.R
-import com.dreamjournal.journalofdream.ui.common.BackgroundScreen
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.foundation.border
 
 data class OnboardingPage(
     val emoji: String,
@@ -88,7 +93,7 @@ fun OnboardingScreen(onFinish: () -> Unit) {
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
-        BackgroundScreen()
+        Image(painterResource(R.drawable.new_fon), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
 
         // Glow-круг за эмодзи
         Box(
@@ -160,7 +165,7 @@ fun OnboardingScreen(onFinish: () -> Unit) {
                         text = pages[page].title,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White,
+                        color = Color(0xFFF0D68C),
                         textAlign = TextAlign.Center
                     )
 
@@ -172,8 +177,15 @@ fun OnboardingScreen(onFinish: () -> Unit) {
                             .fillMaxWidth()
                             .heightIn(min = 120.dp, max = 280.dp)
                             .background(
-                                color = Color.White.copy(alpha = 0.06f),
+                                brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                                    listOf(Color(0xFF3B1A58).copy(alpha = 0.72f), Color(0xFF1A0C30).copy(alpha = 0.88f))
+                                ),
                                 shape = RoundedCornerShape(16.dp)
+                            )
+                            .border(
+                                1.dp,
+                                Color(0xFFF0D68C).copy(alpha = 0.20f),
+                                RoundedCornerShape(16.dp)
                             )
                             .padding(16.dp)
                     ) {
@@ -248,7 +260,7 @@ fun OnboardingScreen(onFinish: () -> Unit) {
                         else onFinish()
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = pages[currentPage].accentColor
+                        containerColor = Color(0xFF7B3FA0)
                     ),
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier.height(48.dp)
@@ -260,7 +272,7 @@ fun OnboardingScreen(onFinish: () -> Unit) {
                             stringResource(R.string.onboarding_start),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 15.sp,
-                        color = Color.White
+                        color = Color(0xFFF0D68C)
                     )
                 }
             }
