@@ -304,6 +304,7 @@
     <string name="ach_lucky_77_desc">정확히 꿈 77개 기록</string>
     <string name="ach_ghost_desc">제목 없는 꿈 만들기</string>
     <string name="dream_label_locations">장소</string>
+    <string name="dream_content_label">꿈 설명</string>
     <string name="cat_nightmares">악몽</string>
     <string name="cat_lucid">명료몽</string>
     <string name="cat_plot">스토리 꿈</string>
@@ -389,6 +390,7 @@
     <string name="unknown_user">알 수 없는 사용자</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 언어</string>
+    <string name="settings_section_account">👤 계정</string>
 
 
 

@@ -304,6 +304,7 @@
     <string name="ach_lucky_77_desc">Registre exatamente 77 sonhos</string>
     <string name="ach_ghost_desc">Crie um sonho sem título</string>
     <string name="dream_label_locations">Locais</string>
+    <string name="dream_content_label">Descrição do sonho</string>
     <string name="cat_nightmares">Pesadelos</string>
     <string name="cat_lucid">Sonhos lúcidos</string>
     <string name="cat_plot">Sonhos narrativos</string>
@@ -389,6 +390,7 @@
     <string name="unknown_user">Usuário desconhecido</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 Idioma</string>
+    <string name="settings_section_account">👤 Conta</string>
 
 
 

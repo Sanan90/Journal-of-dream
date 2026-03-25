@@ -304,6 +304,7 @@
     <string name="ach_lucky_77_desc">Zapisz dokładnie 77 snów</string>
     <string name="ach_ghost_desc">Utwórz sen bez tytułu</string>
     <string name="dream_label_locations">Miejsca</string>
+    <string name="dream_content_label">Opis snu</string>
     <string name="cat_nightmares">Koszmary</string>
     <string name="cat_lucid">Sny świadome</string>
     <string name="cat_plot">Sny fabularne</string>
@@ -389,6 +390,7 @@
     <string name="unknown_user">Nieznany użytkownik</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 Język</string>
+    <string name="settings_section_account">👤 Konto</string>
 
 
 

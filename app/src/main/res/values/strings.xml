@@ -306,6 +306,7 @@
     <string name="ach_lucky_77_desc">Record exactly 77 dreams</string>
     <string name="ach_ghost_desc">Create a dream without a title</string>
     <string name="dream_label_locations">Locations</string>
+    <string name="dream_content_label">Описание сна</string>
     <string name="cat_nightmares">Nightmares</string>
     <string name="cat_lucid">Lucid Dreams</string>
     <string name="cat_plot">Story Dreams</string>
@@ -393,6 +394,7 @@
     <string name="unknown_user">Неизвестный пользователь</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 Язык</string>
+    <string name="settings_section_account">👤 Аккаунт</string>
 
     <string name="dream_auto_title">Dream %1$s %2$s</string>
 

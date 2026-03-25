@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -79,7 +78,6 @@ fun MainScreen(
 
     var isVisible by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
-    var showLogoutDialog by remember { mutableStateOf(false) }
 
     val lucidPercent = remember(allDreams) {
         if (allDreams.isEmpty()) 0
@@ -151,9 +149,7 @@ fun MainScreen(
                 } else Spacer(Modifier.width(1.dp))
 
                 if (!isGuest) {
-                    IconButton(onClick = { showLogoutDialog = true }) {
-                        Icon(Icons.Default.ExitToApp, null, tint = Color.White.copy(0.7f))
-                    }
+
                 }
             }
 
@@ -345,7 +341,7 @@ fun MainScreen(
                         painter = painterResource(R.drawable.add_button),
                         contentDescription = null,
                         modifier = Modifier
-                            .size(100.dp)
+                            .size(90.dp)
                             .scale(fabScale)
                             .clip(CircleShape)
                             .shadow(10.dp, CircleShape)
@@ -374,23 +370,7 @@ fun MainScreen(
                 onCharacterSelected = { navController.navigate("addCharacter"); showDialog = false }
             )
         }
-        if (showLogoutDialog) {
-            AlertDialog(
-                onDismissRequest = { showLogoutDialog = false },
-                title = { Text(stringResource(R.string.dialog_logout_title)) },
-                text = { Text(stringResource(R.string.dialog_logout_message)) },
-                confirmButton = {
-                    TextButton(onClick = { showLogoutDialog = false; onLogout() }) {
-                        Text(stringResource(R.string.btn_logout), color = MaterialTheme.colorScheme.error)
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showLogoutDialog = false }) {
-                        Text(stringResource(R.string.btn_cancel))
-                    }
-                }
-            )
-        }
+
     }
 }
 

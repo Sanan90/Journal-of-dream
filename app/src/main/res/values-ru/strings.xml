@@ -305,6 +305,7 @@
     <string name="ach_lucky_77_desc">Запишите ровно 77 снов</string>
     <string name="ach_ghost_desc">Создайте сон без заголовка</string>
     <string name="dream_label_locations">Локации</string>
+    <string name="dream_content_label">Описание сна</string>
     <string name="cat_nightmares">Кошмары</string>
     <string name="cat_lucid">Осознанные сны</string>
     <string name="cat_plot">Сюжетные сны</string>
@@ -390,6 +391,7 @@
     <string name="unknown_user">Неизвестный пользователь</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 Язык</string>
+    <string name="settings_section_account">👤 Аккаунт</string>
 
 
 

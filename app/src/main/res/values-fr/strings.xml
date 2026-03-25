@@ -304,6 +304,7 @@
     <string name="ach_lucky_77_desc">Notez exactement 77 rêves</string>
     <string name="ach_ghost_desc">Créez un rêve sans titre</string>
     <string name="dream_label_locations">Lieux</string>
+    <string name="dream_content_label">Description du rêve</string>
     <string name="cat_nightmares">Cauchemars</string>
     <string name="cat_lucid">Rêves lucides</string>
     <string name="cat_plot">Rêves narratifs</string>
@@ -389,6 +390,7 @@
     <string name="unknown_user">Utilisateur inconnu</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 Langue</string>
+    <string name="settings_section_account">👤 Compte</string>
 
 
 

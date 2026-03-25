@@ -304,6 +304,7 @@
     <string name="ach_lucky_77_desc">ちょうど77の夢を記録</string>
     <string name="ach_ghost_desc">タイトルなしの夢を作成</string>
     <string name="dream_label_locations">場所</string>
+    <string name="dream_content_label">夢の説明</string>
     <string name="cat_nightmares">悪夢</string>
     <string name="cat_lucid">明晰夢</string>
     <string name="cat_plot">ストーリー夢</string>
@@ -389,6 +390,7 @@
     <string name="unknown_user">不明なユーザー</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 言語</string>
+    <string name="settings_section_account">👤 アカウント</string>
 
 
 

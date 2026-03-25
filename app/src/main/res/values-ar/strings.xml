@@ -304,6 +304,7 @@
     <string name="ach_lucky_77_desc">سجّل 77 حلماً بالضبط</string>
     <string name="ach_ghost_desc">أنشئ حلماً بدون عنوان</string>
     <string name="dream_label_locations">المواقع</string>
+    <string name="dream_content_label">وصف الحلم</string>
     <string name="cat_nightmares">كوابيس</string>
     <string name="cat_lucid">أحلام واعية</string>
     <string name="cat_plot">أحلام قصصية</string>
@@ -389,6 +390,7 @@
     <string name="unknown_user">مستخدم غير معروف</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 اللغة</string>
+    <string name="settings_section_account">👤 الحساب</string>
 
 
 

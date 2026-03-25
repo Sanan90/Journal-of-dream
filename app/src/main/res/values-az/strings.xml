@@ -305,6 +305,7 @@
     <string name="ach_lucky_77_desc">Düz 77 yuxu yaz</string>
     <string name="ach_ghost_desc">Başlıqsız yuxu yarat</string>
     <string name="dream_label_locations">Yerlər</string>
+    <string name="dream_content_label">Yuxu təsviri</string>
     <string name="cat_nightmares">Kabuslar</string>
     <string name="cat_lucid">Şüurlu yuxular</string>
     <string name="cat_plot">Süjetli yuxular</string>
@@ -390,6 +391,7 @@
     <string name="unknown_user">Naməlum istifadəçi</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 Dil</string>
+    <string name="settings_section_account">👤 Hesab</string>
 
 
 

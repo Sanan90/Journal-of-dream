@@ -311,6 +311,7 @@
     <string name="ach_ghost_desc">Створіть сон без заголовку</string>
 
     <string name="dream_label_locations">Локації</string>
+    <string name="dream_content_label">Опис сну</string>
     <string name="cat_nightmares">Кошмари</string>
     <string name="cat_lucid">Усвідомлені сни</string>
     <string name="cat_plot">Сюжетні сни</string>
@@ -396,6 +397,7 @@
     <string name="unknown_user">Невідомий користувач</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 Мова</string>
+    <string name="settings_section_account">👤 Обліковий запис</string>
 
 
 

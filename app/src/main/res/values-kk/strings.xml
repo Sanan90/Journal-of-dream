@@ -311,6 +311,7 @@
     <string name="ach_ghost_desc">Тақырыпсыз арман жасаңыз</string>
 
     <string name="dream_label_locations">Локациялар</string>
+    <string name="dream_content_label">Түс сипаттамасы</string>
     <string name="cat_nightmares">Қорқынышты түстер</string>
     <string name="cat_lucid">Саналы армандар</string>
     <string name="cat_plot">Сюжеттік армандар</string>
@@ -396,6 +397,7 @@
     <string name="unknown_user">Белгісіз пайдаланушы</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 Тіл</string>
+    <string name="settings_section_account">👤 Аккаунт</string>
 
 
 

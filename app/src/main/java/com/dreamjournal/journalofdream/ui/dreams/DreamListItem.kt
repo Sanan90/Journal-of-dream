@@ -69,7 +69,8 @@ fun DreamListItem(
     dream: Dream,
     navController: NavHostController,
     onDelete: ((Dream) -> Unit)? = null,
-    categoryColor: String? = null
+    categoryColor: String? = null,
+    clickEnabled: Boolean = true
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
     val accentColor = categoryColor?.let { hexToColor(it) } ?: FallbackAccent
@@ -155,7 +156,7 @@ fun DreamListItem(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { navController.navigate("viewDream/${dream.localId}") },
+                .clickable(enabled = clickEnabled) { navController.navigate("viewDream/${dream.localId}") },
             shape = RoundedCornerShape(24.dp),
             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)

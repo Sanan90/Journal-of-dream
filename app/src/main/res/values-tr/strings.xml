@@ -304,6 +304,7 @@
     <string name="ach_lucky_77_desc">Tam 77 rüya yaz</string>
     <string name="ach_ghost_desc">Başlıksız rüya oluştur</string>
     <string name="dream_label_locations">Konumlar</string>
+    <string name="dream_content_label">Rüya açıklaması</string>
     <string name="cat_nightmares">Kabuslar</string>
     <string name="cat_lucid">Lucid rüyalar</string>
     <string name="cat_plot">Hikayeli rüyalar</string>
@@ -389,6 +390,7 @@
     <string name="unknown_user">Bilinmeyen kullanıcı</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 Dil</string>
+    <string name="settings_section_account">👤 Hesap</string>
 
 
 

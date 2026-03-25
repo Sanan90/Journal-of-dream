@@ -276,17 +276,33 @@ fun DreamsScreen(
                             )
                         }
                     } else {
-                        Spacer(Modifier.size(48.dp))
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                Icons.Default.ArrowBack,
+                                contentDescription = stringResource(R.string.btn_back),
+                                tint = GoldLight,
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
                     }
 
+                    var headerFontSize by remember(headerTitle) {
+                        mutableStateOf(if (openedMonth == null) 31.sp else 24.sp)
+                    }
                     Text(
                         text = headerTitle,
                         color = GoldLight,
                         fontFamily = PlayfairFamily,
                         fontWeight = FontWeight.Bold,
-                        fontSize = if (openedMonth == null) 31.sp else 28.sp,
+                        fontSize = headerFontSize,
                         maxLines = 1,
+                        softWrap = false,
                         overflow = TextOverflow.Ellipsis,
+                        onTextLayout = { result ->
+                            if (result.didOverflowWidth && headerFontSize > 13.sp) {
+                                headerFontSize = (headerFontSize.value * 0.88f).sp
+                            }
+                        },
                         modifier = Modifier.weight(1f)
                     )
 
@@ -323,13 +339,13 @@ fun DreamsScreen(
                     }
 
                     IconButton(onClick = { navController.navigate("addDream") }) {
-                        Icon(
-                            Icons.Default.Add,
-                            contentDescription = stringResource(R.string.btn_add_dream),
-                            tint = GoldLight,
-                            modifier = Modifier.size(30.dp)
-                        )
-                    }
+                            Icon(
+                                Icons.Default.Add,
+                                contentDescription = stringResource(R.string.btn_add_dream),
+                                tint = GoldLight,
+                                modifier = Modifier.size(30.dp)
+                            )
+                        }
                 }
 
                 Spacer(Modifier.size(8.dp))
@@ -389,6 +405,9 @@ fun DreamsScreen(
                         }
                     }
                 ) { month ->
+                    // Блокируем только клики на карточки снов во время перехода ВПЕРЁД
+                    // (когда открываем месяц). При возврате назад блокировки нет.
+                    val blockDreamClicks = transition.isRunning && month != null
                     if (month != null) {
                         val dreamsInMonth = (dreamsByMonth[month] ?: emptyList()).filter { dream ->
                             (selectedCategory == null || dream.category == selectedCategory?.name) &&
@@ -426,7 +445,8 @@ fun DreamsScreen(
                                 dreamViewModel = dreamViewModel,
                                 categoryColorMap = categoryColorMap,
                                 noCategoryText = context.getString(R.string.dreams_no_category),
-                                modifier = Modifier.padding(horizontal = 14.dp)
+                                modifier = Modifier.padding(horizontal = 14.dp),
+                                clicksEnabled = !blockDreamClicks
                             )
                         }
                     } else {
@@ -637,7 +657,8 @@ private fun DreamsListContent(
     dreamViewModel: DreamViewModel,
     categoryColorMap: Map<String, String>,
     noCategoryText: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    clicksEnabled: Boolean = true
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -661,7 +682,8 @@ private fun DreamsListContent(
                         dream = dream,
                         navController = navController,
                         onDelete = { dreamViewModel.deleteDream(it) },
-                        categoryColor = categoryColorMap[dream.category]
+                        categoryColor = categoryColorMap[dream.category],
+                        clickEnabled = clicksEnabled
                     )
                 }
             }
@@ -671,7 +693,8 @@ private fun DreamsListContent(
                     dream = dream,
                     navController = navController,
                     onDelete = { dreamViewModel.deleteDream(it) },
-                    categoryColor = categoryColorMap[dream.category]
+                    categoryColor = categoryColorMap[dream.category],
+                    clickEnabled = clicksEnabled
                 )
             }
         }

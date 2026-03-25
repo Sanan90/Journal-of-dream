@@ -305,6 +305,7 @@
     <string name="ach_lucky_77_desc">记录恰好77个梦</string>
     <string name="ach_ghost_desc">创建无标题梦境</string>
     <string name="dream_label_locations">地点</string>
+    <string name="dream_content_label">梦境描述</string>
     <string name="cat_nightmares">噩梦</string>
     <string name="cat_lucid">清醒梦</string>
     <string name="cat_plot">故事梦</string>
@@ -390,6 +391,7 @@
     <string name="unknown_user">未知用户</string>
     <string name="ok">OK</string>
     <string name="settings_section_language">🌐 语言</string>
+    <string name="settings_section_account">👤 账户</string>
 
 
 
