@@ -351,7 +351,26 @@ fun JournalOfDreamApp() {
 
             // Экран настроек
             composable("settings") {
-                SettingsScreen(navController = navController, isAdminMode = isAdminMode)
+                SettingsScreen(
+                    navController = navController,
+                    isAdminMode = isAdminMode,
+                    onLogout = {
+                        if (auth.currentUser != null) {
+                            dreamViewModel.onUserLogout()
+                            locationViewModel.onUserLogout()
+                            characterViewModel.onUserLogout()
+                            googleSignInClient.signOut()
+                            auth.signOut()
+                            currentUser.value = null
+                            skipAuth.value = false
+                            sharedPreferences.edit().putBoolean("skipAuth", false).apply()
+                            categoryViewModel.setOwner("guest")
+                        }
+                        navController.navigate("auth") {
+                            popUpTo("main") { inclusive = true }
+                        }
+                    }
+                )
             }
 
             // Экран управления цитатами (только для админа)

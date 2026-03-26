@@ -105,13 +105,7 @@ fun SplashScreenContent(onFinished: () -> Unit) {
         Font(R.font.gabriela_regular)
     )
 
-    val titleBrush = ShaderBrush(
-        ImageShader(
-            ImageBitmap.imageResource(R.drawable.dream_text_gradient),
-            TileMode.Clamp,
-            TileMode.Clamp
-        )
-    )
+    // titleBrush теперь создаётся inline внутри Text
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -174,17 +168,44 @@ fun SplashScreenContent(onFinished: () -> Unit) {
             val titleY = titleStartY + (titleTargetY - titleStartY) * titleEased + bounce
             val titleYDp = with(density) { titleY.toDp() }
 
+            // Тень-подложка для объёма (рисуем чуть сзади смещённый текст)
             Text(
                 text = stringResource(R.string.app_name),
                 style = TextStyle(
                     fontFamily = gabrielaFamily,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 44.sp,
-                    brush = titleBrush,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 48.sp,
+                    color = androidx.compose.ui.graphics.Color(0x66000033),
                     shadow = Shadow(
-                        color = androidx.compose.ui.graphics.Color(0x55000000),
-                        offset = Offset(0f, 4f),
-                        blurRadius = 14f
+                        color = androidx.compose.ui.graphics.Color(0xCC000000),
+                        offset = Offset(0f, 6f),
+                        blurRadius = 18f
+                    )
+                ),
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .absoluteOffset(y = titleYDp + with(density) { 3f.toDp() })
+                    .alpha(titleAlpha * 0.7f)
+                    .scale(titleScale)
+            )
+            // Основной текст — золотой градиент + жирный
+            Text(
+                text = stringResource(R.string.app_name),
+                style = TextStyle(
+                    fontFamily = gabrielaFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 48.sp,
+                    brush = ShaderBrush(
+                        ImageShader(
+                            ImageBitmap.imageResource(R.drawable.dream_text_gradient),
+                            TileMode.Clamp,
+                            TileMode.Clamp
+                        )
+                    ),
+                    shadow = Shadow(
+                        color = androidx.compose.ui.graphics.Color(0xDD000020),
+                        offset = Offset(0f, 5f),
+                        blurRadius = 20f
                     )
                 ),
                 modifier = Modifier

@@ -406,7 +406,11 @@ fun AuthScreen(
                             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                                 .requestIdToken(context.getString(R.string.default_web_client_id))
                                 .requestEmail().build()
-                            googleLauncher.launch(GoogleSignIn.getClient(context, gso).signInIntent)
+                            val googleClient = GoogleSignIn.getClient(context, gso)
+                            // signOut перед входом — чтобы показывался диалог выбора аккаунта
+                            googleClient.signOut().addOnCompleteListener {
+                                googleLauncher.launch(googleClient.signInIntent)
+                            }
                         },
                         enabled = !isLoading,
                         modifier = Modifier.fillMaxWidth().height(52.dp),

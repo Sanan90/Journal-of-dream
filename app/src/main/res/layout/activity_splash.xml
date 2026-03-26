@@ -3,9 +3,9 @@
     android:id="@+id/splash_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/zastavka7">
+    android:background="@android:color/black">
 
-    <!-- Ваш логотип -->
+    <!-- Логотип (не используется — анимация через SplashActivity.kt) -->
     <ImageView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
