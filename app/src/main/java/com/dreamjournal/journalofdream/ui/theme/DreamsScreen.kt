@@ -222,7 +222,7 @@ fun DreamsScreen(
         searchResults.groupBy { dateToMonthKey(it.date) }
     }
 
-    val headerTitle = if (openedMonth != null) formatMonthKey(openedMonth!!, monthNames) else stringResource(R.string.dreams_list)
+    val headerTitle = if (openedMonth != null) formatMonthKey(openedMonth!!, monthNames) else stringResource(R.string.app_name)
     val modeButtonText = if (sortByDate) stringResource(R.string.dreams_sort_az) else stringResource(R.string.dreams_sort_date)
 
     val arrowRotation by animateFloatAsState(
@@ -260,92 +260,100 @@ fun DreamsScreen(
             ) {
                 Spacer(Modifier.padding(top = 4.dp))
 
-                Row(
+                BoxWithConstraints(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 2.dp, start = 14.dp, end = 14.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(top = 2.dp, start = 14.dp, end = 14.dp)
                 ) {
-                    if (openedMonth != null) {
-                        IconButton(onClick = { openedMonth = null }) {
-                            Icon(
-                                Icons.Default.ArrowBack,
-                                contentDescription = stringResource(R.string.btn_back),
-                                tint = GoldLight,
-                                modifier = Modifier.size(28.dp)
-                            )
-                        }
-                    } else {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(
-                                Icons.Default.ArrowBack,
-                                contentDescription = stringResource(R.string.btn_back),
-                                tint = GoldLight,
-                                modifier = Modifier.size(28.dp)
-                            )
-                        }
+                    var headerFontSize by remember(headerTitle, openedMonth, maxWidth) {
+                        mutableStateOf(if (openedMonth == null) 26.sp else 24.sp)
                     }
 
-                    var headerFontSize by remember(headerTitle) {
-                        mutableStateOf(if (openedMonth == null) 31.sp else 24.sp)
-                    }
-                    Text(
-                        text = headerTitle,
-                        color = GoldLight,
-                        fontFamily = PlayfairFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = headerFontSize,
-                        maxLines = 1,
-                        softWrap = false,
-                        overflow = TextOverflow.Ellipsis,
-                        onTextLayout = { result ->
-                            if (result.didOverflowWidth && headerFontSize > 13.sp) {
-                                headerFontSize = (headerFontSize.value * 0.88f).sp
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (openedMonth != null) {
+                            IconButton(
+                                onClick = { openedMonth = null },
+                                modifier = Modifier.size(42.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.ArrowBack,
+                                    contentDescription = stringResource(R.string.btn_back),
+                                    tint = GoldLight,
+                                    modifier = Modifier.size(26.dp)
+                                )
                             }
-                        },
-                        modifier = Modifier.weight(1f)
-                    )
+                        } else {
+                            IconButton(
+                                onClick = { navController.popBackStack() },
+                                modifier = Modifier.size(42.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.ArrowBack,
+                                    contentDescription = stringResource(R.string.btn_back),
+                                    tint = GoldLight,
+                                    modifier = Modifier.size(26.dp)
+                                )
+                            }
+                        }
 
-                    if (openedMonth == null) {
-                        TextButton(
-                            onClick = { monthMode = !monthMode },
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                        Text(
+                            text = headerTitle,
+                            color = GoldLight,
+                            fontFamily = PlayfairFamily,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = headerFontSize,
+                            maxLines = 1,
+                            softWrap = false,
+                            overflow = TextOverflow.Ellipsis,
+                            onTextLayout = { result ->
+                                if (result.didOverflowWidth && headerFontSize > 17.sp) {
+                                    headerFontSize = (headerFontSize.value * 0.93f).sp
+                                }
+                            },
                             modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
+                                .weight(1f)
+                                .padding(start = 2.dp, end = 2.dp)
+                        )
+
+                        TextButton(
+                            onClick = {
+                                if (openedMonth == null) {
+                                    monthMode = !monthMode
+                                } else {
+                                    sortByDate = !sortByDate
+                                }
+                            },
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(11.dp))
                                 .background(Color.White.copy(alpha = 0.06f))
+                                .height(32.dp)
                         ) {
                             Text(
                                 text = modeButtonText,
                                 color = SoftWhite,
-                                fontSize = 14.sp
+                                fontSize = 12.sp,
+                                maxLines = 1
                             )
                         }
-                        Spacer(Modifier.size(4.dp))
-                    } else {
-                        TextButton(
-                            onClick = { sortByDate = !sortByDate },
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(Color.White.copy(alpha = 0.06f))
-                        ) {
-                            Text(
-                                text = modeButtonText,
-                                color = SoftWhite,
-                                fontSize = 14.sp
-                            )
-                        }
-                        Spacer(Modifier.size(4.dp))
-                    }
 
-                    IconButton(onClick = { navController.navigate("addDream") }) {
+                        Spacer(Modifier.size(2.dp))
+
+                        IconButton(
+                            onClick = { navController.navigate("addDream") },
+                            modifier = Modifier.size(42.dp)
+                        ) {
                             Icon(
                                 Icons.Default.Add,
                                 contentDescription = stringResource(R.string.btn_add_dream),
                                 tint = GoldLight,
-                                modifier = Modifier.size(30.dp)
+                                modifier = Modifier.size(28.dp)
                             )
                         }
+                    }
                 }
 
                 Spacer(Modifier.size(8.dp))

@@ -122,7 +122,7 @@ fun SplashScreenContent(onFinished: () -> Unit) {
         )
 
         Image(
-            painter = painterResource(R.drawable.light_splash),
+            painter = painterResource(R.drawable.dream_text_gradient),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()
