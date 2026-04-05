@@ -483,4 +483,9 @@
     <string name="stats_hint_top_character_pair">يظهر "%1$s" و "%2$s" معًا كثيرًا — %3$d مرات.</string>
     <string name="stats_lucid_short">واعية</string>
     <string name="stats_this_month">هذا الشهر</string>
+
+    <string name="onboarding_5_title">صور الأحلام</string>
+    <string name="onboarding_5_body">أحلامنا مليئة بالأشخاص والمخلوقات والشخصيات. تساعدك صور الأحلام على تتبعها.\n\n• احفظ الشخصيات المتكررة\n• شاهد في أي أحلام تظهر\n• لاحظ الأنماط — قد تكون نفس الصورة محفزاً للوضوح\n\nكلما عرفت سكان أحلامك بشكل أفضل، كلما أدركت بسرعة أنك تحلم.</string>
+    <string name="onboarding_6_title">تقنيات الحلم الواضح</string>
+    <string name="onboarding_6_body">يحتوي التطبيق على تقنيات مجربة للحلم الواضح:\n\n• MILD — نية الوضوح قبل النوم\n• WILD — الدخول في النوم مع الحفاظ على الوعي\n• WBTB — الاستيقاظ في منتصف الليل للممارسة\n• فحوصات الواقع — تطوير عادة\n\nيمكن دراسة كل تقنية بالتفصيل.</string>
 </resources>

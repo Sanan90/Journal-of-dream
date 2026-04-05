@@ -482,4 +482,9 @@
     <string name="stats_hint_top_character_pair">« %1$s » et « %2$s » apparaissent souvent ensemble — %3$d fois.</string>
     <string name="stats_lucid_short">Lucides</string>
     <string name="stats_this_month">ce mois</string>
+
+    <string name="onboarding_5_title">Images du rêve</string>
+    <string name="onboarding_5_body">Nos rêves sont peuplés de personnes, créatures, personnages. Les images du rêve vous aident à les suivre.\n\n• Sauvegardez les personnages récurrents\n• Voyez dans quels rêves ils apparaissent\n• Repérez les schémas — la même image peut déclencher la lucidité\n\nMieux vous connaissez les habitants de vos rêves, plus vite vous réaliserez que vous rêvez.</string>
+    <string name="onboarding_6_title">Techniques de rêve lucide</string>
+    <string name="onboarding_6_body">L\'application contient des techniques éprouvées pour le rêve lucide:\n\n• MILD — intention de lucidité avant le sommeil\n• WILD — entrer dans le sommeil en maintenant la conscience\n• WBTB — se réveiller au milieu de la nuit pour pratiquer\n• Vérifications de réalité — développer une habitude\n\nChaque technique peut être étudiée en détail.</string>
 </resources>

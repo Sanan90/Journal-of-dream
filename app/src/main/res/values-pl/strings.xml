@@ -482,4 +482,9 @@
     <string name="stats_hint_top_character_pair">„%1$s” i „%2$s” często pojawiają się razem — %3$d razy.</string>
     <string name="stats_lucid_short">Świadomych</string>
     <string name="stats_this_month">w tym miesiącu</string>
+
+    <string name="onboarding_5_title">Obrazy snów</string>
+    <string name="onboarding_5_body">Nasze sny są pełne ludzi, stworzeń, postaci. Obrazy snów pomagają je śledzić.\n\n• Zapisuj powtarzające się postacie\n• Zobacz w jakich snach się pojawiają\n• Zauważaj wzorce — ten sam obraz może być wyzwalaczem lucydności\n\nIm lepiej znasz mieszkańców swoich snów, tym szybciej zdasz sobie sprawę, że śnisz.</string>
+    <string name="onboarding_6_title">Techniki snów lucydnych</string>
+    <string name="onboarding_6_body">Aplikacja zawiera sprawdzone techniki snów lucydnych:\n\n• MILD — intencja lucydności przed snem\n• WILD — wejście w sen z zachowaniem świadomości\n• WBTB — budzenie się w nocy do ćwiczeń\n• Kontrole rzeczywistości — budowanie nawyku\n\nKażdą technikę można szczegółowo poznać.</string>
 </resources>

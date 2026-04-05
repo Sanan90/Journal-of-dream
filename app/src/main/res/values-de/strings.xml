@@ -482,4 +482,9 @@
     <string name="stats_hint_top_character_pair">„%1$s“ und „%2$s“ erscheinen oft zusammen — %3$d-mal.</string>
     <string name="stats_lucid_short">Klarträume</string>
     <string name="stats_this_month">diesen Monat</string>
+
+    <string name="onboarding_5_title">Traumbilder</string>
+    <string name="onboarding_5_body">In unseren Träumen erscheinen Menschen, Wesen, Charaktere. Traumbilder helfen dir, sie zu verfolgen.\n\n• Speichere wiederkehrende Charaktere\n• Sieh, in welchen Träumen sie erscheinen\n• Erkenne Muster — dasselbe Bild kann ein Luzidtrigger sein\n\nJe besser du die Bewohner deiner Träume kennst, desto schneller erkennst du, dass du träumst.</string>
+    <string name="onboarding_6_title">Techniken für luzides Träumen</string>
+    <string name="onboarding_6_body">Die App enthält bewährte Techniken für luzides Träumen:\n\n• MILD — Vorsatz zur Luzidität vor dem Schlafen\n• WILD — Schlaf mit Bewusstsein betreten\n• WBTB — mitten in der Nacht aufwachen zum Üben\n• Reality Checks — Gewohnheit entwickeln\n\nJede Technik kann ausführlich studiert werden.</string>
 </resources>

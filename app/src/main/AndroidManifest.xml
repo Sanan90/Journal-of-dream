@@ -25,9 +25,12 @@
         android:allowBackup="false"
         android:fullBackupContent="false">
 
+        <!-- FIX 3: Убран screenOrientation="portrait" из обоих Activity.
+             На Android 16+ это ограничение всё равно игнорируется на планшетах
+             и складных устройствах, а его наличие генерирует предупреждение.
+             Приложение на Jetpack Compose корректно адаптируется к любой ориентации. -->
         <activity android:name=".SplashActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -37,8 +40,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- Ресивер для напоминания о записи сна -->
         <receiver

@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.dreamjournal.journalofdream.ui.JournalOfDreamApp
@@ -28,6 +29,10 @@ class MainActivity : FragmentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // FIX 1: enableEdgeToEdge() вызывается ДО super.onCreate()
+        // Это заменяет устаревшие setStatusBarColor / setNavigationBarColor
+        // и корректно обрабатывает отступы на Android 15+
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         createNotificationChannel(this)

@@ -486,4 +486,9 @@
     <string name="stats_hint_top_character_pair">"%1$s" and "%2$s" often appear together — %3$d times.</string>
     <string name="stats_lucid_short">Lucid</string>
     <string name="stats_this_month">this month</string>
+
+    <string name="onboarding_5_title">Dream Images</string>
+    <string name="onboarding_5_body">Our dreams are filled with people, creatures, characters — real and imagined. Dream images help you track them.\n\n• Save recurring characters that appear often\n• See which dreams they appear in\n• Notice patterns — the same image can be a lucidity trigger\n\nThe better you know the inhabitants of your dreams, the faster you will realise you are dreaming.</string>
+    <string name="onboarding_6_title">Lucid Dreaming Techniques</string>
+    <string name="onboarding_6_body">The app contains proven techniques for entering a lucid dream:\n\n• MILD — set intention to become lucid before sleep\n• WILD — enter sleep while maintaining consciousness\n• WBTB — wake up in the middle of the night to practise\n• Reality checks — build a habit of checking reality\n\nEach technique can be studied in detail. Vote for your favourites to help other dreamers.</string>
 </resources>

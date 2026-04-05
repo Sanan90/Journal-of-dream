@@ -482,4 +482,9 @@
     <string name="stats_hint_top_character_pair">"%1$s"와 "%2$s"가 함께 자주 등장합니다 — %3$d회.</string>
     <string name="stats_lucid_short">자각몽</string>
     <string name="stats_this_month">이번 달</string>
+
+    <string name="onboarding_5_title">꿈의 이미지</string>
+    <string name="onboarding_5_body">우리 꿈은 사람들, 생명체, 캐릭터로 가득 차 있습니다. 꿈의 이미지는 그들을 추적하는 데 도움이 됩니다.\n\n• 자주 등장하는 반복 캐릭터를 저장하세요\n• 어떤 꿈에 나타나는지 확인하세요\n• 패턴을 알아차리세요 — 같은 이미지가 루시드 트리거가 될 수 있습니다\n\n꿈의 주민들을 잘 알수록 꿈을 꾸고 있다는 것을 더 빨리 깨달을 수 있습니다.</string>
+    <string name="onboarding_6_title">자각몽 기술</string>
+    <string name="onboarding_6_body">앱에는 자각몽을 위한 검증된 기술이 수록되어 있습니다:\n\n• MILD — 잠들기 전 자각 의도 갖기\n• WILD — 의식을 유지하며 수면에 들기\n• WBTB — 연습을 위해 한밤중에 깨기\n• 리얼리티 체크 — 습관 기르기\n\n각 기술을 자세히 공부할 수 있습니다.</string>
 </resources>

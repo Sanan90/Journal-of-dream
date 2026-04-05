@@ -5,6 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
@@ -52,12 +55,13 @@ class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        @Suppress("DEPRECATION")
-        window.decorView.systemUiVisibility = (
-            android.view.View.SYSTEM_UI_FLAG_FULLSCREEN or
-                android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            )
+        // FIX 2: Заменяем устаревший systemUiVisibility на современный API
+        // WindowCompat + WindowInsetsController — корректно работает на Android 15+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val controller = WindowInsetsControllerCompat(window, window.decorView)
+        controller.hide(WindowInsetsCompat.Type.systemBars())
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         setContent {
             SplashScreenContent(
@@ -104,8 +108,6 @@ fun SplashScreenContent(onFinished: () -> Unit) {
     val gabrielaFamily = FontFamily(
         Font(R.font.gabriela_regular)
     )
-
-    // titleBrush теперь создаётся inline внутри Text
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -168,7 +170,6 @@ fun SplashScreenContent(onFinished: () -> Unit) {
             val titleY = titleStartY + (titleTargetY - titleStartY) * titleEased + bounce
             val titleYDp = with(density) { titleY.toDp() }
 
-            // Тень-подложка для объёма (рисуем чуть сзади смещённый текст)
             Text(
                 text = stringResource(R.string.app_name),
                 style = TextStyle(
@@ -188,7 +189,6 @@ fun SplashScreenContent(onFinished: () -> Unit) {
                     .alpha(titleAlpha * 0.7f)
                     .scale(titleScale)
             )
-            // Основной текст — золотой градиент + жирный
             Text(
                 text = stringResource(R.string.app_name),
                 style = TextStyle(

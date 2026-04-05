@@ -482,4 +482,9 @@
     <string name="stats_hint_top_character_pair">「%1$s」と「%2$s」は一緒に現れることが多いです — %3$d回。</string>
     <string name="stats_lucid_short">明晰夢</string>
     <string name="stats_this_month">今月</string>
+
+    <string name="onboarding_5_title">夢のイメージ</string>
+    <string name="onboarding_5_body">夢には人物、生き物、キャラクターがたくさん登場します。夢のイメージはそれらを追跡するのに役立ちます。\n\n• よく登場する繰り返しのキャラクターを保存する\n• どの夢に登場するかを確認する\n• パターンに気づく — 同じイメージが明晰さのトリガーになることがある\n\n夢の住人をよく知るほど、夢を見ていることに早く気づけます。</string>
+    <string name="onboarding_6_title">明晰夢のテクニック</string>
+    <string name="onboarding_6_body">アプリには明晰夢のための実証済みテクニックが収録されています:\n\n• MILD — 就寝前に明晰になる意図を持つ\n• WILD — 意識を保ちながら睡眠に入る\n• WBTB — 夜中に目を覚まして練習する\n• リアリティチェック — 習慣を身につける\n\n各テクニックを詳しく学ぶことができます。</string>
 </resources>

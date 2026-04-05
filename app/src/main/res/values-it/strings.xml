@@ -483,4 +483,9 @@
     <string name="stats_hint_top_character_pair">"%1$s" e "%2$s" compaiono spesso insieme — %3$d volte.</string>
     <string name="stats_lucid_short">Lucidi</string>
     <string name="stats_this_month">questo mese</string>
+
+    <string name="onboarding_5_title">Immagini del sogno</string>
+    <string name="onboarding_5_body">I nostri sogni sono pieni di persone, creature, personaggi. Le immagini del sogno ti aiutano a tracciarli.\n\n• Salva i personaggi ricorrenti che appaiono spesso\n• Vedi in quali sogni appaiono\n• Nota i pattern — la stessa immagine può essere un trigger di lucidità\n\nPiù conosci gli abitanti dei tuoi sogni, più velocemente capirai che stai sognando.</string>
+    <string name="onboarding_6_title">Tecniche per i sogni lucidi</string>
+    <string name="onboarding_6_body">L\'app contiene tecniche provate per i sogni lucidi:\n\n• MILD — intenzione di lucidità prima di dormire\n• WILD — entrare nel sonno mantenendo la coscienza\n• WBTB — svegliarsi di notte per praticare\n• Controlli di realtà — sviluppare un\'abitudine\n\nOgni tecnica può essere studiata in dettaglio.</string>
 </resources>

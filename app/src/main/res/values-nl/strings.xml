@@ -482,4 +482,9 @@
     <string name="stats_hint_top_character_pair">"%1$s" en "%2$s" verschijnen vaak samen — %3$d keer.</string>
     <string name="stats_lucid_short">Lucide</string>
     <string name="stats_this_month">deze maand</string>
+
+    <string name="onboarding_5_title">Droombeelden</string>
+    <string name="onboarding_5_body">Onze dromen zijn gevuld met mensen, wezens, karakters. Droombeelden helpen je ze bij te houden.\n\n• Sla terugkerende personages op\n• Zie in welke dromen ze verschijnen\n• Merk patronen op — hetzelfde beeld kan een luciditeitsreferentie zijn\n\nHoe beter je de bewoners van je dromen kent, hoe sneller je zult beseffen dat je droomt.</string>
+    <string name="onboarding_6_title">Technieken voor lucide dromen</string>
+    <string name="onboarding_6_body">De app bevat bewezen technieken voor lucide dromen:\n\n• MILD — intentie tot luciditeit voor het slapen\n• WILD — in slaap vallen met behoud van bewustzijn\n• WBTB — s nachts wakker worden om te oefenen\n• Realiteitscontroles — een gewoonte ontwikkelen\n\nElke techniek kan uitgebreid worden bestudeerd.</string>
 </resources>

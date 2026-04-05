@@ -483,4 +483,9 @@
     <string name="stats_hint_top_character_pair">“%1$s”和“%2$s”经常一起出现——%3$d次。</string>
     <string name="stats_lucid_short">清醒梦</string>
     <string name="stats_this_month">本月</string>
+
+    <string name="onboarding_5_title">梦境意象</string>
+    <string name="onboarding_5_body">我们的梦充满了人物、生物和角色。梦境意象帮助您追踪它们。\n\n• 保存经常出现的重复角色\n• 查看它们出现在哪些梦中\n• 注意规律 — 同一意象可能是清醒触发器\n\n您越了解梦中的居民，就越能快速意识到自己在做梦。</string>
+    <string name="onboarding_6_title">清醒梦技巧</string>
+    <string name="onboarding_6_body">应用包含经过验证的清醒梦技巧：\n\n• MILD — 睡前设定清醒意图\n• WILD — 保持意识进入睡眠\n• WBTB — 在夜间醒来练习\n• 现实检查 — 培养习惯\n\n每种技巧都可以详细学习。</string>
 </resources>

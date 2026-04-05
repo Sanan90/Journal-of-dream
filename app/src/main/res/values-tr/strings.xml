@@ -482,4 +482,9 @@
     <string name="stats_hint_top_character_pair">"%1$s" ve "%2$s" sık sık birlikte görünüyor — %3$d kez.</string>
     <string name="stats_lucid_short">Lucid</string>
     <string name="stats_this_month">bu ay</string>
+
+    <string name="onboarding_5_title">Rüya İmgeleri</string>
+    <string name="onboarding_5_body">Rüyalarımız insanlar, yaratıklar, karakterlerle dolu. Rüya imgeleri onları takip etmenize yardımcı olur.\n\n• Sık görünen yinelenen karakterleri kaydedin\n• Hangi rüyalarda göründüklerini görün\n• Kalıpları fark edin — aynı imge lucidlik tetikleyicisi olabilir\n\nRüyalarınızın sakinlerini ne kadar iyi tanırsanız rüya gördüğünüzü o kadar hızlı anlarsınız.</string>
+    <string name="onboarding_6_title">Lucid Rüya Teknikleri</string>
+    <string name="onboarding_6_body">Uygulama lucid rüya için kanıtlanmış teknikler içerir:\n\n• MILD — uyumadan önce lucid olma niyeti\n• WILD — bilinçle uykuya dalma\n• WBTB — pratik için gece ortasında uyanma\n• Gerçeklik kontrolleri — alışkanlık geliştirme\n\nHer teknik detaylı olarak incelenebilir.</string>
 </resources>

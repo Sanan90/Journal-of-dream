@@ -483,4 +483,9 @@
     <string name="stats_hint_top_character_pair">"%1$s" və "%2$s" tez-tez birlikdə görünür — %3$d dəfə.</string>
     <string name="stats_lucid_short">Şüurlu</string>
     <string name="stats_this_month">bu ay</string>
+
+    <string name="onboarding_5_title">Yuxu Obrazları</string>
+    <string name="onboarding_5_body">Yuxularımız insanlar, varlıqlar, personajlarla doludur. Yuxu obrazları onları izləməyə kömək edir.\n\n• Tez-tez görünən təkrarlanan personajları saxlayın\n• Hansı yuxularda göründüklərini görün\n• Nümunələri fərq edin — eyni obraz şüurluluq tetikleyicisi ola bilər\n\nYuxularınızın sakinlərini nə qədər yaxşı tanısanız, yuxu gördüyünüzü bir o qədər tez anlarsınız.</string>
+    <string name="onboarding_6_title">Şüurlu Yuxu Texnikaları</string>
+    <string name="onboarding_6_body">Tətbiq şüurlu yuxu üçün sınaqdan keçirilmiş texnikalar ehtiva edir:\n\n• MILD — yatmazdan əvvəl şüurluluq niyyəti\n• WILD — şüuru qoruyaraq yuxuya dalmaq\n• WBTB — məşq üçün gecə yarı oyanmaq\n• Gerçəklik yoxlamaları — vərdiş inkişaf etdirmək\n\nHər texnika ətraflı öyrənilə bilər.</string>
 </resources>
