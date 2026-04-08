@@ -488,4 +488,48 @@
     <string name="onboarding_5_body">I nostri sogni sono pieni di persone, creature, personaggi. Le immagini del sogno ti aiutano a tracciarli.\n\n• Salva i personaggi ricorrenti che appaiono spesso\n• Vedi in quali sogni appaiono\n• Nota i pattern — la stessa immagine può essere un trigger di lucidità\n\nPiù conosci gli abitanti dei tuoi sogni, più velocemente capirai che stai sognando.</string>
     <string name="onboarding_6_title">Tecniche per i sogni lucidi</string>
     <string name="onboarding_6_body">L\'app contiene tecniche provate per i sogni lucidi:\n\n• MILD — intenzione di lucidità prima di dormire\n• WILD — entrare nel sonno mantenendo la coscienza\n• WBTB — svegliarsi di notte per praticare\n• Controlli di realtà — sviluppare un\'abitudine\n\nOgni tecnica può essere studiata in dettaglio.</string>
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">Chat</string>
+    <string name="chat_coming_soon_title">Chat della community</string>
+    <string name="chat_coming_soon_message">Questa sezione è in fase di sviluppo.\n\nPresto ci sarà una chat dove i sognatori potranno condividere esperienze e aiutarsi a vicenda.\n\nRestate sintonizzati!</string>
+    <string name="profile_title">Il mio profilo</string>
+    <string name="profile_name_label">NOME DEL SOGNATORE</string>
+    <string name="profile_name_placeholder">Inserisci il nome…</string>
+    <string name="profile_name_empty">Nome non impostato</string>
+    <string name="profile_save">Salva</string>
+    <string name="reality_check_channel_name">Controllo della realtà</string>
+    <string name="reality_check_channel_description">Notifiche per i controlli della realtà durante il giorno</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">Ti piace l\'app?</string>
+    <string name="review_dialog_body">La tua recensione è molto importante per noi. Aiuta altri sognatori a trovare l\'app e a sviluppare la pratica del sogno lucido.</string>
+    <string name="review_dialog_rate">⭐  Valuta l\'app</string>
+    <string name="review_dialog_rated">✓  Ho già valutato</string>
+    <string name="review_dialog_later">Ricordamelo tra 7 giorni</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">Scegli sfondo</string>
+    <string name="bg_section_photos">Foto</string>
+    <string name="bg_section_gradients">Sfumature</string>
+    <string name="bg_none">Nessuno sfondo</string>
+    <string name="bg_photo">Foto</string>
+    <string name="bg_dream_photo">Sogno</string>
+    <string name="bg_location_photo">Luogo</string>
+    <string name="bg_character_photo">Personaggio</string>
+    <string name="bg_1">Cosmo profondo</string>
+    <string name="bg_2">Notte viola</string>
+    <string name="bg_3">Tramonto dorato</string>
+    <string name="bg_4">Luce di luna</string>
+    <string name="bg_5">Foresta smeraldo</string>
+    <string name="bg_6">Nebbia cremisi</string>
+    <string name="bg_7">Abisso ghiacciato</string>
+    <string name="bg_8">Polvere di stelle</string>
+    <string name="bg_9">Foschia rosa</string>
+    <string name="bg_10">Ambra</string>
+    <string name="bg_11">Aurora boreale</string>
+    <string name="bg_12">Vulcano</string>
+    <string name="bg_13">Oceano silenzioso</string>
+    <string name="bg_14">Lavanda</string>
+    <string name="bg_15">Nebbia</string>
 </resources>

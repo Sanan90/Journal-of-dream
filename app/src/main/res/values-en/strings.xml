@@ -491,4 +491,49 @@
     <string name="onboarding_5_body">Our dreams are filled with people, creatures, characters — real and imagined. Dream images help you track them.\n\n• Save recurring characters that appear often\n• See which dreams they appear in\n• Notice patterns — the same image can be a lucidity trigger\n\nThe better you know the inhabitants of your dreams, the faster you will realise you are dreaming.</string>
     <string name="onboarding_6_title">Lucid Dreaming Techniques</string>
     <string name="onboarding_6_body">The app contains proven techniques for entering a lucid dream:\n\n• MILD — set intention to become lucid before sleep\n• WILD — enter sleep while maintaining consciousness\n• WBTB — wake up in the middle of the night to practise\n• Reality checks — build a habit of checking reality\n\nEach technique can be studied in detail. Vote for your favourites to help other dreamers.</string>
+
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">Chat</string>
+    <string name="chat_coming_soon_title">Community Chat</string>
+    <string name="chat_coming_soon_message">This section is under development.\n\nSoon there will be a chat where dreamers can share experiences and help each other.\n\nStay tuned!</string>
+    <string name="profile_title">My Profile</string>
+    <string name="profile_name_label">DREAMER NAME</string>
+    <string name="profile_name_placeholder">Enter name…</string>
+    <string name="profile_name_empty">Name not set</string>
+    <string name="profile_save">Save</string>
+    <string name="reality_check_channel_name">Reality Check</string>
+    <string name="reality_check_channel_description">Notifications for reality checks during the day</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">Enjoying the app?</string>
+    <string name="review_dialog_body">Your review means a lot to us. It helps other dreamers discover the app and develop their lucid dreaming practice.</string>
+    <string name="review_dialog_rate">⭐  Rate the app</string>
+    <string name="review_dialog_rated">✓  I already rated it</string>
+    <string name="review_dialog_later">Remind me in 7 days</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">Choose background</string>
+    <string name="bg_section_photos">Photos</string>
+    <string name="bg_section_gradients">Gradients</string>
+    <string name="bg_none">No background</string>
+    <string name="bg_photo">Photo</string>
+    <string name="bg_dream_photo">Dream</string>
+    <string name="bg_location_photo">Location</string>
+    <string name="bg_character_photo">Character</string>
+    <string name="bg_1">Deep Space</string>
+    <string name="bg_2">Purple Night</string>
+    <string name="bg_3">Golden Sunset</string>
+    <string name="bg_4">Moonlight</string>
+    <string name="bg_5">Emerald Forest</string>
+    <string name="bg_6">Crimson Mist</string>
+    <string name="bg_7">Icy Abyss</string>
+    <string name="bg_8">Stardust</string>
+    <string name="bg_9">Pink Haze</string>
+    <string name="bg_10">Amber</string>
+    <string name="bg_11">Northern Lights</string>
+    <string name="bg_12">Volcano</string>
+    <string name="bg_13">Silent Ocean</string>
+    <string name="bg_14">Lavender</string>
+    <string name="bg_15">Fog</string>
 </resources>

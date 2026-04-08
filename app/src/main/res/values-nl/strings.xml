@@ -487,4 +487,48 @@
     <string name="onboarding_5_body">Onze dromen zijn gevuld met mensen, wezens, karakters. Droombeelden helpen je ze bij te houden.\n\n• Sla terugkerende personages op\n• Zie in welke dromen ze verschijnen\n• Merk patronen op — hetzelfde beeld kan een luciditeitsreferentie zijn\n\nHoe beter je de bewoners van je dromen kent, hoe sneller je zult beseffen dat je droomt.</string>
     <string name="onboarding_6_title">Technieken voor lucide dromen</string>
     <string name="onboarding_6_body">De app bevat bewezen technieken voor lucide dromen:\n\n• MILD — intentie tot luciditeit voor het slapen\n• WILD — in slaap vallen met behoud van bewustzijn\n• WBTB — s nachts wakker worden om te oefenen\n• Realiteitscontroles — een gewoonte ontwikkelen\n\nElke techniek kan uitgebreid worden bestudeerd.</string>
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">Chat</string>
+    <string name="chat_coming_soon_title">Gemeenschapschat</string>
+    <string name="chat_coming_soon_message">Deze sectie is in ontwikkeling.\n\nBinnenkort is er een chat waar dromers ervaringen kunnen delen en elkaar kunnen helpen.\n\nBlijf op de hoogte!</string>
+    <string name="profile_title">Mijn profiel</string>
+    <string name="profile_name_label">DROMERSNAAM</string>
+    <string name="profile_name_placeholder">Voer naam in…</string>
+    <string name="profile_name_empty">Naam niet ingesteld</string>
+    <string name="profile_save">Opslaan</string>
+    <string name="reality_check_channel_name">Realiteitscheck</string>
+    <string name="reality_check_channel_description">Meldingen voor realiteitschecks overdag</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">Bevalt de app?</string>
+    <string name="review_dialog_body">Jouw beoordeling is heel belangrijk voor ons. Het helpt andere dromers de app te vinden en hun lucide dromen-praktijk te ontwikkelen.</string>
+    <string name="review_dialog_rate">⭐  App beoordelen</string>
+    <string name="review_dialog_rated">✓  Al beoordeeld</string>
+    <string name="review_dialog_later">Over 7 dagen herinneren</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">Achtergrond kiezen</string>
+    <string name="bg_section_photos">Foto\'s</string>
+    <string name="bg_section_gradients">Kleurverlopen</string>
+    <string name="bg_none">Geen achtergrond</string>
+    <string name="bg_photo">Foto</string>
+    <string name="bg_dream_photo">Droom</string>
+    <string name="bg_location_photo">Locatie</string>
+    <string name="bg_character_photo">Figuur</string>
+    <string name="bg_1">Diepe ruimte</string>
+    <string name="bg_2">Paarse nacht</string>
+    <string name="bg_3">Gouden zonsondergang</string>
+    <string name="bg_4">Maanlicht</string>
+    <string name="bg_5">Smaragdgroen bos</string>
+    <string name="bg_6">Karmozijnrode mist</string>
+    <string name="bg_7">IJzige afgrond</string>
+    <string name="bg_8">Sterrenstof</string>
+    <string name="bg_9">Roze waas</string>
+    <string name="bg_10">Amber</string>
+    <string name="bg_11">Noorderlicht</string>
+    <string name="bg_12">Vulkaan</string>
+    <string name="bg_13">Stille oceaan</string>
+    <string name="bg_14">Lavendel</string>
+    <string name="bg_15">Mist</string>
 </resources>

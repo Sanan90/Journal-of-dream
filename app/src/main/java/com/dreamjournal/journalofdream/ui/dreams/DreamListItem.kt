@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.dreamjournal.journalofdream.R
 import com.dreamjournal.journalofdream.model.Dream
+import com.dreamjournal.journalofdream.ui.common.DreamBackgrounds
 import com.dreamjournal.journalofdream.util.localizeCategory
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -58,9 +59,7 @@ private fun formatDate(date: String): String {
         val input = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val output = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         output.format(input.parse(date)!!)
-    } catch (e: Exception) {
-        date
-    }
+    } catch (e: Exception) { date }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,11 +74,12 @@ fun DreamListItem(
     var showDeleteDialog by remember { mutableStateOf(false) }
     val accentColor = categoryColor?.let { hexToColor(it) } ?: FallbackAccent
 
+    // Фон карточки из DreamBackgrounds (если выбран)
+    val customBackground = DreamBackgrounds.getById(dream.backgroundId)
+
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { value ->
-            if (value == SwipeToDismissBoxValue.EndToStart) {
-                showDeleteDialog = true
-            }
+            if (value == SwipeToDismissBoxValue.EndToStart) showDeleteDialog = true
             false
         }
     )
@@ -87,24 +87,10 @@ fun DreamListItem(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = {
-                Text(
-                    text = stringResource(R.string.dialog_delete_dream_title),
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            text = {
-                Text(
-                    text = stringResource(R.string.dialog_delete_dream_message, dream.title),
-                    color = Color.White.copy(alpha = 0.82f)
-                )
-            },
+            title = { Text(stringResource(R.string.dialog_delete_dream_title), color = Color.White, fontWeight = FontWeight.Bold) },
+            text  = { Text(stringResource(R.string.dialog_delete_dream_message, dream.title), color = Color.White.copy(alpha = 0.82f)) },
             confirmButton = {
-                TextButton(onClick = {
-                    showDeleteDialog = false
-                    onDelete?.invoke(dream)
-                }) {
+                TextButton(onClick = { showDeleteDialog = false; onDelete?.invoke(dream) }) {
                     Text(stringResource(R.string.btn_delete), color = Color(0xFFFF8A80))
                 }
             },
@@ -131,25 +117,12 @@ fun DreamListItem(
                     .fillMaxSize()
                     .padding(vertical = 4.dp)
                     .clip(RoundedCornerShape(24.dp))
-                    .background(
-                        Brush.horizontalGradient(
-                            listOf(
-                                Color(0x80201010),
-                                Color(0xFFD63A3A)
-                            )
-                        )
-                    ),
+                    .background(Brush.horizontalGradient(listOf(Color(0x80201010), Color(0xFFD63A3A)))),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = stringResource(R.string.btn_delete),
+                Icon(Icons.Default.Delete, stringResource(R.string.btn_delete),
                     tint = Color.White,
-                    modifier = Modifier
-                        .padding(end = 24.dp)
-                        .scale(scale)
-                        .size(28.dp)
-                )
+                    modifier = Modifier.padding(end = 24.dp).scale(scale).size(28.dp))
             }
         }
     ) {
@@ -161,37 +134,38 @@ fun DreamListItem(
             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
-            ) {
+            Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
+                // Цветная полоска категории слева
                 Box(
                     modifier = Modifier
                         .width(8.dp)
                         .fillMaxHeight()
-                        .background(
-                            Brush.verticalGradient(
-                                listOf(
-                                    accentColor.copy(alpha = 0.95f),
-                                    accentColor.copy(alpha = 0.55f)
-                                )
-                            )
-                        )
+                        .background(Brush.verticalGradient(
+                            listOf(accentColor.copy(alpha = 0.95f), accentColor.copy(alpha = 0.55f))
+                        ))
                 )
 
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .clip(RoundedCornerShape(topEnd = 24.dp, bottomEnd = 24.dp))
-                        .background(
-                            Brush.linearGradient(
-                                listOf(
-                                    accentColor.copy(alpha = 0.18f),
-                                    Color(0xFF29184E).copy(alpha = 0.82f),
-                                    Color(0xFF180F34).copy(alpha = 0.88f)
+                        // Если есть кастомный фон — используем его, иначе стандартный градиент
+                        .then(
+                            if (customBackground != null) {
+                                Modifier
+                                    .background(customBackground)
+                                    .background(Color.Black.copy(alpha = 0.30f))
+                            } else {
+                                Modifier.background(
+                                    Brush.linearGradient(
+                                        listOf(
+                                            accentColor.copy(alpha = 0.18f),
+                                            Color(0xFF29184E).copy(alpha = 0.82f),
+                                            Color(0xFF180F34).copy(alpha = 0.88f)
+                                        )
+                                    )
                                 )
-                            )
+                            }
                         )
                         .padding(horizontal = 16.dp, vertical = 14.dp)
                 ) {
@@ -203,24 +177,15 @@ fun DreamListItem(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
-
                         Spacer(modifier = Modifier.height(6.dp))
-
                         val dateLine = if (dream.time.isNotBlank()) {
                             "${formatDate(dream.date)}   🕐 ${dream.time}"
                         } else {
                             formatDate(dream.date)
                         }
-
-                        Text(
-                            text = dateLine,
-                            color = Color.White.copy(alpha = 0.72f),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-
+                        Text(text = dateLine, color = Color.White.copy(alpha = 0.72f),
+                            maxLines = 1, overflow = TextOverflow.Ellipsis)
                         Spacer(modifier = Modifier.height(6.dp))
-
                         Text(
                             text = if (dream.category.isNotBlank() && dream.category != "Без категории") {
                                 localizeCategory(

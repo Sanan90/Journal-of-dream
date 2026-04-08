@@ -87,6 +87,8 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
 
+
+
     // UI Components
     implementation(libs.material)
     implementation(libs.androidx.viewpager2)
@@ -100,6 +102,8 @@ dependencies {
     kapt(libs.androidx.room.compiler)
 
     implementation("androidx.compose.material:material-icons-extended")
+    implementation("com.google.android.play:review-ktx:2.0.2")
+
 
     // Testing
     testImplementation(libs.junit)

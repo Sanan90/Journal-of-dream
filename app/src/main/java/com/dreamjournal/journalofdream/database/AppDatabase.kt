@@ -26,8 +26,7 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
         var columnExists = false
         while (cursor.moveToNext()) {
             if (cursor.getString(cursor.getColumnIndexOrThrow("name")) == "locationId") {
-                columnExists = true
-                break
+                columnExists = true; break
             }
         }
         cursor.close()
@@ -43,8 +42,7 @@ val MIGRATION_3_4 = object : Migration(3, 4) {
         var columnExists = false
         while (cursor.moveToNext()) {
             if (cursor.getString(cursor.getColumnIndexOrThrow("name")) == "category") {
-                columnExists = true
-                break
+                columnExists = true; break
             }
         }
         cursor.close()
@@ -60,15 +58,13 @@ val MIGRATION_4_5 = object : Migration(4, 5) {
         var hasTime = false
         while (dreamsCursor.moveToNext()) {
             if (dreamsCursor.getString(dreamsCursor.getColumnIndexOrThrow("name")) == "time") {
-                hasTime = true
-                break
+                hasTime = true; break
             }
         }
         dreamsCursor.close()
         if (!hasTime) {
             database.execSQL("ALTER TABLE dreams ADD COLUMN time TEXT NOT NULL DEFAULT ''")
         }
-
         database.execSQL(
             "CREATE TABLE IF NOT EXISTS `categories` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `isCustom` INTEGER NOT NULL, `ownerUid` TEXT NOT NULL, `color` TEXT NOT NULL)"
         )
@@ -78,9 +74,7 @@ val MIGRATION_4_5 = object : Migration(4, 5) {
 val MIGRATION_5_6 = object : Migration(5, 6) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("PRAGMA foreign_keys=OFF")
-
-        database.execSQL(
-            """
+        database.execSQL("""
             CREATE TABLE IF NOT EXISTS `dreams_new` (
                 `localId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 `ownerUid` TEXT NOT NULL,
@@ -90,17 +84,12 @@ val MIGRATION_5_6 = object : Migration(5, 6) {
                 `time` TEXT NOT NULL,
                 `category` TEXT NOT NULL
             )
-            """.trimIndent()
-        )
-
-        database.execSQL(
-            """
+        """.trimIndent())
+        database.execSQL("""
             INSERT INTO `dreams_new` (`localId`, `ownerUid`, `title`, `content`, `date`, `time`, `category`)
             SELECT `localId`, `ownerUid`, `title`, `content`, `date`, `time`, `category`
             FROM `dreams`
-            """.trimIndent()
-        )
-
+        """.trimIndent())
         database.execSQL("DROP TABLE `dreams`")
         database.execSQL("ALTER TABLE `dreams_new` RENAME TO `dreams`")
         database.execSQL("PRAGMA foreign_keys=ON")
@@ -118,6 +107,18 @@ val MIGRATION_6_7 = object : Migration(6, 7) {
     }
 }
 
+// MIGRATION 7→8: добавляем backgroundId в dreams, locations, characters
+val MIGRATION_7_8 = object : Migration(7, 8) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        // Добавляем backgroundId в таблицу снов
+        database.execSQL("ALTER TABLE dreams ADD COLUMN backgroundId INTEGER NOT NULL DEFAULT 0")
+        // Добавляем backgroundId в таблицу локаций
+        database.execSQL("ALTER TABLE locations ADD COLUMN backgroundId INTEGER NOT NULL DEFAULT 0")
+        // Добавляем backgroundId в таблицу образов
+        database.execSQL("ALTER TABLE characters ADD COLUMN backgroundId INTEGER NOT NULL DEFAULT 0")
+    }
+}
+
 @Database(
     entities = [
         Dream::class,
@@ -127,7 +128,7 @@ val MIGRATION_6_7 = object : Migration(6, 7) {
         DreamCharacterCrossRef::class,
         Category::class
     ],
-    version = 7,
+    version = 8,  // ← повышена с 7 до 8
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -154,7 +155,8 @@ abstract class AppDatabase : RoomDatabase() {
                         MIGRATION_3_4,
                         MIGRATION_4_5,
                         MIGRATION_5_6,
-                        MIGRATION_6_7
+                        MIGRATION_6_7,
+                        MIGRATION_7_8   // ← добавлена новая миграция
                     )
                     .build()
                 INSTANCE = instance

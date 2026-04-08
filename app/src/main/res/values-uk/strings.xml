@@ -494,4 +494,48 @@
     <string name="onboarding_5_body">Наші сни сповнені людей, істот, персонажів. Образи сну допомагають їх відстежувати.\n\n• Зберігайте персонажів що часто з\'являються\n• Дивіться в яких снах вони зустрічаються\n• Помічайте паттерни — один образ може бути тригером усвідомленості\n\nЧим краще ти знаєш мешканців своїх снів, тим швидше зрозумієш що спиш.</string>
     <string name="onboarding_6_title">Техніки усвідомлених снів</string>
     <string name="onboarding_6_body">У додатку зібрані перевірені техніки для входу в усвідомлений сон:\n\n• MILD — намір усвідомитись перед сном\n• WILD — вхід у сон зі збереженням свідомості\n• WBTB — пробудження вночі для практики\n• Перевірки реальності — виробити звичку\n\nКожну техніку можна вивчити детально.</string>
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">Чат</string>
+    <string name="chat_coming_soon_title">Чат спільноти</string>
+    <string name="chat_coming_soon_message">Цей розділ знаходиться в розробці.\n\nСкоро тут з\'явиться чат, де сновидці зможуть ділитися досвідом та допомагати одне одному.\n\nСтежте за оновленнями!</string>
+    <string name="profile_title">Мій профіль</string>
+    <string name="profile_name_label">ІМ\'Я СНОВИДЦЯ</string>
+    <string name="profile_name_placeholder">Введіть ім\'я…</string>
+    <string name="profile_name_empty">Ім\'я не задано</string>
+    <string name="profile_save">Зберегти</string>
+    <string name="reality_check_channel_name">Перевірка реальності</string>
+    <string name="reality_check_channel_description">Сповіщення для перевірки реальності вдень</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">Подобається застосунок?</string>
+    <string name="review_dialog_body">Ваш відгук дуже важливий для нас. Він допомагає іншим сновидцям знайти застосунок і розвивати практику усвідомлених снів.</string>
+    <string name="review_dialog_rate">⭐  Оцінити застосунок</string>
+    <string name="review_dialog_rated">✓  Я вже оцінив(-ла)</string>
+    <string name="review_dialog_later">Нагадати через 7 днів</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">Оберіть фон</string>
+    <string name="bg_section_photos">Фотографії</string>
+    <string name="bg_section_gradients">Градієнти</string>
+    <string name="bg_none">Без фону</string>
+    <string name="bg_photo">Фото</string>
+    <string name="bg_dream_photo">Сон</string>
+    <string name="bg_location_photo">Локація</string>
+    <string name="bg_character_photo">Образ</string>
+    <string name="bg_1">Глибокий космос</string>
+    <string name="bg_2">Пурпурна ніч</string>
+    <string name="bg_3">Золотий захід</string>
+    <string name="bg_4">Місячне світло</string>
+    <string name="bg_5">Смарагдовий ліс</string>
+    <string name="bg_6">Багряний туман</string>
+    <string name="bg_7">Крижана безодня</string>
+    <string name="bg_8">Зоряний пил</string>
+    <string name="bg_9">Рожевий туман</string>
+    <string name="bg_10">Бурштиновий</string>
+    <string name="bg_11">Північне сяйво</string>
+    <string name="bg_12">Вулкан</string>
+    <string name="bg_13">Тихий океан</string>
+    <string name="bg_14">Бузковий</string>
+    <string name="bg_15">Туман</string>
 </resources>

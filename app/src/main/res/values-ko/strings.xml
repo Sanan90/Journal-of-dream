@@ -487,4 +487,48 @@
     <string name="onboarding_5_body">우리 꿈은 사람들, 생명체, 캐릭터로 가득 차 있습니다. 꿈의 이미지는 그들을 추적하는 데 도움이 됩니다.\n\n• 자주 등장하는 반복 캐릭터를 저장하세요\n• 어떤 꿈에 나타나는지 확인하세요\n• 패턴을 알아차리세요 — 같은 이미지가 루시드 트리거가 될 수 있습니다\n\n꿈의 주민들을 잘 알수록 꿈을 꾸고 있다는 것을 더 빨리 깨달을 수 있습니다.</string>
     <string name="onboarding_6_title">자각몽 기술</string>
     <string name="onboarding_6_body">앱에는 자각몽을 위한 검증된 기술이 수록되어 있습니다:\n\n• MILD — 잠들기 전 자각 의도 갖기\n• WILD — 의식을 유지하며 수면에 들기\n• WBTB — 연습을 위해 한밤중에 깨기\n• 리얼리티 체크 — 습관 기르기\n\n각 기술을 자세히 공부할 수 있습니다.</string>
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">채팅</string>
+    <string name="chat_coming_soon_title">커뮤니티 채팅</string>
+    <string name="chat_coming_soon_message">이 섹션은 개발 중입니다.\n\n곧 꿈꾸는 사람들이 경험을 나누고 서로 도울 수 있는 채팅이 생깁니다.\n\n기대해 주세요!</string>
+    <string name="profile_title">내 프로필</string>
+    <string name="profile_name_label">드리머 이름</string>
+    <string name="profile_name_placeholder">이름 입력…</string>
+    <string name="profile_name_empty">이름 미설정</string>
+    <string name="profile_save">저장</string>
+    <string name="reality_check_channel_name">현실 확인</string>
+    <string name="reality_check_channel_description">낮 동안 현실 확인 알림</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">앱이 마음에 드세요?</string>
+    <string name="review_dialog_body">리뷰는 저희에게 매우 중요합니다. 다른 꿈꾸는 사람들이 앱을 발견하고 자각몽 연습을 발전시키는 데 도움이 됩니다.</string>
+    <string name="review_dialog_rate">⭐  앱 평가하기</string>
+    <string name="review_dialog_rated">✓  이미 평가했어요</string>
+    <string name="review_dialog_later">7일 후에 알림</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">배경 선택</string>
+    <string name="bg_section_photos">사진</string>
+    <string name="bg_section_gradients">그라데이션</string>
+    <string name="bg_none">배경 없음</string>
+    <string name="bg_photo">사진</string>
+    <string name="bg_dream_photo">꿈</string>
+    <string name="bg_location_photo">장소</string>
+    <string name="bg_character_photo">인물</string>
+    <string name="bg_1">깊은 우주</string>
+    <string name="bg_2">보라빛 밤</string>
+    <string name="bg_3">황금 석양</string>
+    <string name="bg_4">달빛</string>
+    <string name="bg_5">에메랄드 숲</string>
+    <string name="bg_6">진홍빛 안개</string>
+    <string name="bg_7">얼음 심연</string>
+    <string name="bg_8">별 먼지</string>
+    <string name="bg_9">핑크 안개</string>
+    <string name="bg_10">호박색</string>
+    <string name="bg_11">오로라</string>
+    <string name="bg_12">화산</string>
+    <string name="bg_13">고요한 바다</string>
+    <string name="bg_14">라벤더</string>
+    <string name="bg_15">안개</string>
 </resources>

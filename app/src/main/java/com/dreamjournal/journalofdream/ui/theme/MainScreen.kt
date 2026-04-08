@@ -1,5 +1,6 @@
 package com.dreamjournal.journalofdream.ui.theme
 
+import android.app.Activity
 import androidx.compose.ui.platform.LocalContext
 
 import androidx.compose.animation.AnimatedVisibility
@@ -54,6 +55,9 @@ import com.dreamjournal.journalofdream.viewmodel.DreamViewModel
 import com.dreamjournal.journalofdream.viewmodel.LocationViewModel
 import com.dreamjournal.journalofdream.viewmodel.CharacterViewModel
 import com.dreamjournal.journalofdream.R
+import com.dreamjournal.journalofdream.ui.profile.AvatarItem
+import com.dreamjournal.journalofdream.ui.profile.dreamAvatars
+import com.dreamjournal.journalofdream.util.ReviewHelper
 
 private val GoldLight = Color(0xFFF0D68C)
 
@@ -68,16 +72,42 @@ fun MainScreen(
     onLogout: () -> Unit,
     isGuest: Boolean,
     displayName: String?,
+    currentUid: String? = null,
     dreamViewModel: DreamViewModel = viewModel(),
     locationViewModel: LocationViewModel = viewModel(),
     characterViewModel: CharacterViewModel = viewModel()
 ) {
+    val context = LocalContext.current
+    val activity = context as? Activity
+
     val allDreams by dreamViewModel.dreams.observeAsState(emptyList())
     val allLocations by locationViewModel.locations.observeAsState(emptyList())
     val allCharacters by characterViewModel.characters.observeAsState(emptyList())
 
     var isVisible by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
+
+    // ── Диалог с просьбой оставить отзыв ──
+    var showReviewDialog by remember { mutableStateOf(false) }
+    LaunchedEffect(allDreams.size) {
+        activity?.let { ReviewHelper.tryRequestReview(it, allDreams.size) }
+        // Показываем собственный красивый диалог при 3+ снах
+        if (allDreams.size >= 0 && !isGuest) {
+            val prefs = context.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
+            val reviewDone     = prefs.getBoolean("review_dialog_done", false)
+            val postponedUntil = prefs.getLong("review_postponed_until", 0L)
+            val now            = System.currentTimeMillis()
+            if (!reviewDone && now > postponedUntil) {
+                showReviewDialog = true
+            }
+        }
+    }
+
+    // Аватар пользователя из SharedPreferences — привязан к UID аккаунта
+    val prefs = remember { context.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE) }
+    val avatarKey = "avatar_id_${currentUid ?: "guest"}"
+    val avatarId = remember(avatarKey) { prefs.getInt(avatarKey, 1) }
+    val currentAvatar = remember(avatarId) { dreamAvatars.find { it.id == avatarId } ?: dreamAvatars.first() }
 
     val lucidPercent = remember(allDreams) {
         if (allDreams.isEmpty()) 0
@@ -106,7 +136,6 @@ fun MainScreen(
         label = "fab_alpha"
     )
 
-    // Анимация нажатия кнопки "+"
     var fabPressed by remember { mutableStateOf(false) }
     val fabScale by animateFloatAsState(
         targetValue = if (fabPressed) 1.15f else 1f,
@@ -133,11 +162,13 @@ fun MainScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // ═══ ВЕРХНЯЯ ПАНЕЛЬ ═══
+            // Слева — аватар/профиль, справа — кнопка чата
             Row(
                 Modifier.fillMaxWidth().padding(top = 4.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Левый угол: аватар профиля (для авторизованных) или гостевая метка
                 if (isGuest) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(stringResource(R.string.main_guest), color = Color.White.copy(0.7f), fontSize = 13.sp)
@@ -146,10 +177,40 @@ fun MainScreen(
                             Text(stringResource(R.string.btn_login), fontSize = 12.sp)
                         }
                     }
-                } else Spacer(Modifier.width(1.dp))
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .shadow(8.dp, CircleShape)
+                            .clip(CircleShape)
+                            .border(1.5.dp, GoldLight.copy(0.6f), CircleShape)
+                            .clickable { navController.navigate("profile") }
+                    ) {
+                        Image(
+                            painter = painterResource(currentAvatar.resId),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                }
 
-                if (!isGuest) {
-
+                // Правый угол: кнопка чата
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .shadow(8.dp, RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(
+                            Brush.verticalGradient(
+                                listOf(Color(0xFF3B1A58).copy(0.85f), Color(0xFF1A0C30).copy(0.90f))
+                            )
+                        )
+                        .border(1.dp, GoldLight.copy(0.2f), RoundedCornerShape(12.dp))
+                        .clickable { navController.navigate("chat_coming_soon") },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("💬", fontSize = 20.sp)
                 }
             }
 
@@ -189,9 +250,7 @@ fun MainScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            // ═══════════════════════════════════════
-            // ═══ ХРУСТАЛЬНЫЙ ШАР ═════════════════
-            // ═══════════════════════════════════════
+            // ═══ ХРУСТАЛЬНЫЙ ШАР ═══
             AnimatedVisibility(
                 visible = isVisible,
                 enter = fadeIn(tween(800)) + scaleIn(initialScale = 0.85f, animationSpec = tween(800))
@@ -254,9 +313,7 @@ fun MainScreen(
 
             Spacer(Modifier.height(14.dp))
 
-            // ═══════════════════════════════════════
-            // ═══ КНОПКИ НАВИГАЦИИ 2×2 ════════════
-            // ═══════════════════════════════════════
+            // ═══ КНОПКИ НАВИГАЦИИ 2×2 ═══
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 NavButton(Modifier.weight(1f), stringResource(R.string.nav_diary), R.drawable.dream_journal_icon, R.drawable.dreamy_purple_blue) {
                     navController.navigate("dreams")
@@ -277,9 +334,7 @@ fun MainScreen(
 
             Spacer(Modifier.weight(1f))
 
-            // ═══════════════════════════════════════
-            // ═══ НИЖНЯЯ ПАНЕЛЬ ═══════════════════
-            // ═══════════════════════════════════════
+            // ═══ НИЖНЯЯ ПАНЕЛЬ ═══
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -319,14 +374,13 @@ fun MainScreen(
                     }
                 }
 
-                // Кнопка "+" — увеличена вдвое (120dp), с анимацией нажатия
+                // Кнопка "+"
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .offset(y = (-10).dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    // Свечение
                     Box(
                         modifier = Modifier
                             .size(30.dp)
@@ -336,7 +390,6 @@ fun MainScreen(
                                 CircleShape
                             )
                     )
-                    // Сама кнопка с картинкой
                     Image(
                         painter = painterResource(R.drawable.add_button),
                         contentDescription = null,
@@ -371,6 +424,45 @@ fun MainScreen(
             )
         }
 
+        // ═══ ДИАЛОГ ОТЗЫВА ═══
+        if (showReviewDialog) {
+            ReviewRequestDialog(
+                onRate = {
+                    // Открываем страницу приложения в Play Store
+                    val packageName = context.packageName
+                    try {
+                        context.startActivity(
+                            android.content.Intent(
+                                android.content.Intent.ACTION_VIEW,
+                                android.net.Uri.parse("market://details?id=$packageName")
+                            ).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                        )
+                    } catch (e: Exception) {
+                        context.startActivity(
+                            android.content.Intent(
+                                android.content.Intent.ACTION_VIEW,
+                                android.net.Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                            ).addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                        )
+                    }
+                    context.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
+                        .edit().putBoolean("review_dialog_done", true).apply()
+                    showReviewDialog = false
+                },
+                onLater = {
+                    // Откладываем на 7 дней
+                    val until = System.currentTimeMillis() + 7L * 24 * 60 * 60 * 1000
+                    context.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
+                        .edit().putLong("review_postponed_until", until).apply()
+                    showReviewDialog = false
+                },
+                onAlreadyRated = {
+                    context.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
+                        .edit().putBoolean("review_dialog_done", true).apply()
+                    showReviewDialog = false
+                }
+            )
+        }
     }
 }
 
@@ -499,4 +591,129 @@ private fun AutoSizeText(
         },
         modifier = Modifier.alpha(if (readyToDraw) 1f else 0f)
     )
+}
+
+// ═══ ДИАЛОГ ПРОСЬБЫ ОСТАВИТЬ ОТЗЫВ ════════════════════════════════════════════
+@Composable
+fun ReviewRequestDialog(
+    onRate: () -> Unit,
+    onLater: () -> Unit,
+    onAlreadyRated: () -> Unit
+) {
+    androidx.compose.ui.window.Dialog(
+        onDismissRequest = onLater
+    ) {
+        androidx.compose.foundation.layout.Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(28.dp))
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            Color(0xFF2E1A58).copy(alpha = 0.97f),
+                            Color(0xFF1A0C35).copy(alpha = 0.99f)
+                        )
+                    )
+                )
+                .border(
+                    1.dp,
+                    Brush.verticalGradient(
+                        listOf(Color(0xFFF0D68C).copy(0.5f), Color(0xFFF0D68C).copy(0.1f))
+                    ),
+                    RoundedCornerShape(28.dp)
+                )
+                .padding(24.dp)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(14.dp)
+            ) {
+                // Иконка
+                Text("🌙", fontSize = 48.sp)
+
+                // Заголовок
+                Text(
+                    text = stringResource(R.string.review_dialog_title),
+                    color = Color(0xFFF0D68C),
+                    fontFamily = PlayfairFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+
+                // Звёзды — декоративные
+                Row(
+                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
+                ) {
+                    repeat(5) {
+                        Text("★", fontSize = 26.sp, color = Color(0xFFF0D68C))
+                    }
+                }
+
+                // Текст
+                Text(
+                    text = stringResource(R.string.review_dialog_body),
+                    color = Color.White.copy(alpha = 0.82f),
+                    fontSize = 14.sp,
+                    lineHeight = 21.sp,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+
+                Spacer(Modifier.height(4.dp))
+
+                // Кнопка «Оценить»
+                androidx.compose.foundation.layout.Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(Color(0xFF7B3FA0), Color(0xFF4A2870))
+                            )
+                        )
+                        .border(1.dp, Color(0xFFF0D68C).copy(0.5f), RoundedCornerShape(16.dp))
+                        .clickable { onRate() }
+                        .padding(vertical = 14.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        stringResource(R.string.review_dialog_rate),
+                        color = Color(0xFFF0D68C),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp
+                    )
+                }
+
+                // Кнопка «Уже оценил»
+                androidx.compose.foundation.layout.Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color.White.copy(0.08f))
+                        .border(1.dp, Color.White.copy(0.15f), RoundedCornerShape(16.dp))
+                        .clickable { onAlreadyRated() }
+                        .padding(vertical = 12.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        stringResource(R.string.review_dialog_rated),
+                        color = Color.White.copy(0.75f),
+                        fontSize = 14.sp
+                    )
+                }
+
+                // Кнопка «Позже»
+                androidx.compose.material3.TextButton(
+                    onClick = onLater,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        stringResource(R.string.review_dialog_later),
+                        color = Color.White.copy(0.45f),
+                        fontSize = 13.sp
+                    )
+                }
+            }
+        }
+    }
 }

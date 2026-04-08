@@ -488,4 +488,49 @@
     <string name="onboarding_5_body">Yuxularımız insanlar, varlıqlar, personajlarla doludur. Yuxu obrazları onları izləməyə kömək edir.\n\n• Tez-tez görünən təkrarlanan personajları saxlayın\n• Hansı yuxularda göründüklərini görün\n• Nümunələri fərq edin — eyni obraz şüurluluq tetikleyicisi ola bilər\n\nYuxularınızın sakinlərini nə qədər yaxşı tanısanız, yuxu gördüyünüzü bir o qədər tez anlarsınız.</string>
     <string name="onboarding_6_title">Şüurlu Yuxu Texnikaları</string>
     <string name="onboarding_6_body">Tətbiq şüurlu yuxu üçün sınaqdan keçirilmiş texnikalar ehtiva edir:\n\n• MILD — yatmazdan əvvəl şüurluluq niyyəti\n• WILD — şüuru qoruyaraq yuxuya dalmaq\n• WBTB — məşq üçün gecə yarı oyanmaq\n• Gerçəklik yoxlamaları — vərdiş inkişaf etdirmək\n\nHər texnika ətraflı öyrənilə bilər.</string>
+
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">Söhbət</string>
+    <string name="chat_coming_soon_title">İcma söhbəti</string>
+    <string name="chat_coming_soon_message">Bu bölmə hazırlanır.\n\nTezliklə yuxugörənlərin təcrübə paylaşacağı söhbət burada olacaq.\n\nYenilikləri izləyin!</string>
+    <string name="profile_title">Mənim profilim</string>
+    <string name="profile_name_label">YUXUGÖRƏNIN ADI</string>
+    <string name="profile_name_placeholder">Ad daxil edin…</string>
+    <string name="profile_name_empty">Ad təyin edilməyib</string>
+    <string name="profile_save">Yadda saxla</string>
+    <string name="reality_check_channel_name">Gerçəklik yoxlaması</string>
+    <string name="reality_check_channel_description">Gündüz gerçəklik yoxlaması bildirişləri</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">Tətbiq xoşunuza gəlir?</string>
+    <string name="review_dialog_body">Rəyiniz bizim üçün çox önəmlidir. Bu, digər yuxugörənlərə tətbiqi tapıb şüurlu yuxu praktikasını inkişaf etdirməyə kömək edir.</string>
+    <string name="review_dialog_rate">⭐  Tətbiqi qiymətləndir</string>
+    <string name="review_dialog_rated">✓  Artıq qiymətləndirmişəm</string>
+    <string name="review_dialog_later">7 gün sonra xatırlat</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">Fon seçin</string>
+    <string name="bg_section_photos">Fotolar</string>
+    <string name="bg_section_gradients">Gradientlər</string>
+    <string name="bg_none">Fonsuz</string>
+    <string name="bg_photo">Foto</string>
+    <string name="bg_dream_photo">Yuxu</string>
+    <string name="bg_location_photo">Məkan</string>
+    <string name="bg_character_photo">Obraz</string>
+    <string name="bg_1">Dərin kəhkəşan</string>
+    <string name="bg_2">Bənövşəyi gecə</string>
+    <string name="bg_3">Qızıl qürub</string>
+    <string name="bg_4">Ay işığı</string>
+    <string name="bg_5">Zümrüd meşəsi</string>
+    <string name="bg_6">Al duman</string>
+    <string name="bg_7">Buz uçurumu</string>
+    <string name="bg_8">Ulduz tozu</string>
+    <string name="bg_9">Çəhrayı duman</string>
+    <string name="bg_10">Kəhrəba</string>
+    <string name="bg_11">Şimal işığı</string>
+    <string name="bg_12">Vulkan</string>
+    <string name="bg_13">Sakit okean</string>
+    <string name="bg_14">Bənövşəyi</string>
+    <string name="bg_15">Duman</string>
 </resources>

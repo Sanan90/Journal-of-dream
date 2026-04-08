@@ -487,4 +487,48 @@
     <string name="onboarding_5_body">Nasze sny są pełne ludzi, stworzeń, postaci. Obrazy snów pomagają je śledzić.\n\n• Zapisuj powtarzające się postacie\n• Zobacz w jakich snach się pojawiają\n• Zauważaj wzorce — ten sam obraz może być wyzwalaczem lucydności\n\nIm lepiej znasz mieszkańców swoich snów, tym szybciej zdasz sobie sprawę, że śnisz.</string>
     <string name="onboarding_6_title">Techniki snów lucydnych</string>
     <string name="onboarding_6_body">Aplikacja zawiera sprawdzone techniki snów lucydnych:\n\n• MILD — intencja lucydności przed snem\n• WILD — wejście w sen z zachowaniem świadomości\n• WBTB — budzenie się w nocy do ćwiczeń\n• Kontrole rzeczywistości — budowanie nawyku\n\nKażdą technikę można szczegółowo poznać.</string>
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">Czat</string>
+    <string name="chat_coming_soon_title">Czat społeczności</string>
+    <string name="chat_coming_soon_message">Ta sekcja jest w trakcie tworzenia.\n\nWkrótce pojawi się czat, gdzie śniący będą mogli dzielić się doświadczeniami i pomagać sobie nawzajem.\n\nŚledź aktualizacje!</string>
+    <string name="profile_title">Mój profil</string>
+    <string name="profile_name_label">IMIĘ ŚNIĄCEGO</string>
+    <string name="profile_name_placeholder">Wprowadź imię…</string>
+    <string name="profile_name_empty">Imię nie ustawione</string>
+    <string name="profile_save">Zapisz</string>
+    <string name="reality_check_channel_name">Sprawdzanie rzeczywistości</string>
+    <string name="reality_check_channel_description">Powiadomienia do sprawdzania rzeczywistości w ciągu dnia</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">Podoba Ci się aplikacja?</string>
+    <string name="review_dialog_body">Twoja opinia jest dla nas bardzo ważna. Pomaga innym śniącym znaleźć aplikację i rozwijać praktykę świadomego śnienia.</string>
+    <string name="review_dialog_rate">⭐  Oceń aplikację</string>
+    <string name="review_dialog_rated">✓  Już oceniłem(-am)</string>
+    <string name="review_dialog_later">Przypomnij za 7 dni</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">Wybierz tło</string>
+    <string name="bg_section_photos">Zdjęcia</string>
+    <string name="bg_section_gradients">Gradienty</string>
+    <string name="bg_none">Bez tła</string>
+    <string name="bg_photo">Zdjęcie</string>
+    <string name="bg_dream_photo">Sen</string>
+    <string name="bg_location_photo">Miejsce</string>
+    <string name="bg_character_photo">Postać</string>
+    <string name="bg_1">Głęboki kosmos</string>
+    <string name="bg_2">Purpurowa noc</string>
+    <string name="bg_3">Złoty zachód słońca</string>
+    <string name="bg_4">Blask księżyca</string>
+    <string name="bg_5">Szmaragdowy las</string>
+    <string name="bg_6">Szkarłatna mgła</string>
+    <string name="bg_7">Lodowa otchłań</string>
+    <string name="bg_8">Gwiezdny pył</string>
+    <string name="bg_9">Różowa mgła</string>
+    <string name="bg_10">Bursztyn</string>
+    <string name="bg_11">Zorza polarna</string>
+    <string name="bg_12">Wulkan</string>
+    <string name="bg_13">Spokojny ocean</string>
+    <string name="bg_14">Lawenda</string>
+    <string name="bg_15">Mgła</string>
 </resources>

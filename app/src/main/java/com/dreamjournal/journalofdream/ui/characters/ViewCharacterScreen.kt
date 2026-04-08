@@ -33,6 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.dreamjournal.journalofdream.R
+import androidx.compose.material.icons.filled.Palette
+import com.dreamjournal.journalofdream.ui.common.BackgroundPickerSheet
+import com.dreamjournal.journalofdream.ui.common.DreamBackgrounds
+import com.dreamjournal.journalofdream.ui.common.DreamBackgroundLayer
 import com.dreamjournal.journalofdream.ui.dreams.DreamListItem
 import com.dreamjournal.journalofdream.ui.locations.LocAlertDialog
 import com.dreamjournal.journalofdream.ui.locations.LocFieldLabel
@@ -65,6 +69,8 @@ fun ViewCharacterScreen(
     var nameInput  by remember { mutableStateOf("") }
     var descInput  by remember { mutableStateOf("") }
     var nameError  by remember { mutableStateOf(false) }
+    var selectedBackgroundId by remember { mutableStateOf(0) }
+    var showBackgroundPicker by remember { mutableStateOf(false) }
 
     characterWithDreams?.let { cwd ->
         val character  = cwd.character
@@ -75,6 +81,7 @@ fun ViewCharacterScreen(
 
         LaunchedEffect(character) {
             if (!isEditing) { nameInput = character.name; descInput = character.description }
+            selectedBackgroundId = character.backgroundId
         }
 
         if (showDeleteDialog) {
@@ -90,6 +97,7 @@ fun ViewCharacterScreen(
 
         Box(Modifier.fillMaxSize()) {
             Image(painterResource(R.drawable.new_fon), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+            DreamBackgroundLayer(selectedBackgroundId)
 
             Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
 
@@ -110,8 +118,14 @@ fun ViewCharacterScreen(
                         onTextLayout = { if (it.didOverflowWidth && titleFontSize > 16.sp) titleFontSize = (titleFontSize.value * 0.9f).sp },
                         modifier = Modifier.weight(1f)
                     )
-                    if (!isEditing) {
-                        IconButton(onClick = { nameInput = character.name; descInput = character.description; isEditing = true }) {
+                    if (isEditing) {
+                        IconButton(onClick = { showBackgroundPicker = true }) {
+                            Icon(Icons.Default.Palette, null,
+                                tint = if (selectedBackgroundId != 0) GoldLightCh else GoldLightCh.copy(0.4f),
+                                modifier = Modifier.size(22.dp))
+                        }
+                    } else {
+                        IconButton(onClick = { nameInput = character.name; descInput = character.description; selectedBackgroundId = character.backgroundId; isEditing = true }) {
                             Icon(Icons.Default.Edit, null, tint = GoldLightCh, modifier = Modifier.size(22.dp))
                         }
                         IconButton(onClick = { showDeleteDialog = true }) {
@@ -219,7 +233,7 @@ fun ViewCharacterScreen(
                             modifier = Modifier.align(Alignment.End),
                             onClick = {
                                 if (nameInput.isBlank()) { nameError = true; return@LocSaveButton }
-                                characterViewModel.updateCharacter(character.copy(name = nameInput.trim(), description = descInput.trim()))
+                                characterViewModel.updateCharacter(character.copy(name = nameInput.trim(), description = descInput.trim(), backgroundId = selectedBackgroundId))
                                 isEditing = false
                             }
                         )
@@ -227,6 +241,14 @@ fun ViewCharacterScreen(
                 }
             }
         }
+    if (showBackgroundPicker) {
+        BackgroundPickerSheet(
+            currentBackgroundId = selectedBackgroundId,
+            backgroundType = DreamBackgrounds.Type.CHARACTER,
+            onBackgroundSelected = { selectedBackgroundId = it; showBackgroundPicker = false },
+            onDismiss = { showBackgroundPicker = false }
+        )
+    }
     } ?: Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Image(painterResource(R.drawable.new_fon), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
         CircularProgressIndicator(color = GoldLightCh, strokeWidth = 2.dp)

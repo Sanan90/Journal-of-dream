@@ -487,4 +487,48 @@
     <string name="onboarding_5_body">Rüyalarımız insanlar, yaratıklar, karakterlerle dolu. Rüya imgeleri onları takip etmenize yardımcı olur.\n\n• Sık görünen yinelenen karakterleri kaydedin\n• Hangi rüyalarda göründüklerini görün\n• Kalıpları fark edin — aynı imge lucidlik tetikleyicisi olabilir\n\nRüyalarınızın sakinlerini ne kadar iyi tanırsanız rüya gördüğünüzü o kadar hızlı anlarsınız.</string>
     <string name="onboarding_6_title">Lucid Rüya Teknikleri</string>
     <string name="onboarding_6_body">Uygulama lucid rüya için kanıtlanmış teknikler içerir:\n\n• MILD — uyumadan önce lucid olma niyeti\n• WILD — bilinçle uykuya dalma\n• WBTB — pratik için gece ortasında uyanma\n• Gerçeklik kontrolleri — alışkanlık geliştirme\n\nHer teknik detaylı olarak incelenebilir.</string>
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">Sohbet</string>
+    <string name="chat_coming_soon_title">Topluluk sohbeti</string>
+    <string name="chat_coming_soon_message">Bu bölüm geliştirme aşamasındadır.\n\nYakında rüya görenler deneyimlerini paylaşıp birbirlerine yardım edebileceği bir sohbet olacak.\n\nGelişmeleri takip edin!</string>
+    <string name="profile_title">Profilim</string>
+    <string name="profile_name_label">RÜYA GÖRENİN ADI</string>
+    <string name="profile_name_placeholder">Ad girin…</string>
+    <string name="profile_name_empty">Ad belirlenmemiş</string>
+    <string name="profile_save">Kaydet</string>
+    <string name="reality_check_channel_name">Gerçeklik kontrolü</string>
+    <string name="reality_check_channel_description">Gündüz gerçeklik kontrolü bildirimleri</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">Uygulamayı beğeniyor musunuz?</string>
+    <string name="review_dialog_body">Yorumunuz bizim için çok önemli. Diğer rüya görenların uygulamayı bulmasına ve bilinçli rüya pratiğini geliştirmesine yardımcı olur.</string>
+    <string name="review_dialog_rate">⭐  Uygulamayı değerlendir</string>
+    <string name="review_dialog_rated">✓  Zaten değerlendirdim</string>
+    <string name="review_dialog_later">7 gün sonra hatırlat</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">Arka plan seç</string>
+    <string name="bg_section_photos">Fotoğraflar</string>
+    <string name="bg_section_gradients">Gradyanlar</string>
+    <string name="bg_none">Arka plan yok</string>
+    <string name="bg_photo">Fotoğraf</string>
+    <string name="bg_dream_photo">Rüya</string>
+    <string name="bg_location_photo">Konum</string>
+    <string name="bg_character_photo">Karakter</string>
+    <string name="bg_1">Derin uzay</string>
+    <string name="bg_2">Mor gece</string>
+    <string name="bg_3">Altın günbatımı</string>
+    <string name="bg_4">Ay ışığı</string>
+    <string name="bg_5">Zümrüt orman</string>
+    <string name="bg_6">Kızıl sis</string>
+    <string name="bg_7">Buzlu uçurum</string>
+    <string name="bg_8">Yıldız tozu</string>
+    <string name="bg_9">Pembe sis</string>
+    <string name="bg_10">Kehribar</string>
+    <string name="bg_11">Kuzey ışıkları</string>
+    <string name="bg_12">Yanardağ</string>
+    <string name="bg_13">Sessiz okyanus</string>
+    <string name="bg_14">Lavanta</string>
+    <string name="bg_15">Sis</string>
 </resources>

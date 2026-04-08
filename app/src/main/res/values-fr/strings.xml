@@ -487,4 +487,48 @@
     <string name="onboarding_5_body">Nos rêves sont peuplés de personnes, créatures, personnages. Les images du rêve vous aident à les suivre.\n\n• Sauvegardez les personnages récurrents\n• Voyez dans quels rêves ils apparaissent\n• Repérez les schémas — la même image peut déclencher la lucidité\n\nMieux vous connaissez les habitants de vos rêves, plus vite vous réaliserez que vous rêvez.</string>
     <string name="onboarding_6_title">Techniques de rêve lucide</string>
     <string name="onboarding_6_body">L\'application contient des techniques éprouvées pour le rêve lucide:\n\n• MILD — intention de lucidité avant le sommeil\n• WILD — entrer dans le sommeil en maintenant la conscience\n• WBTB — se réveiller au milieu de la nuit pour pratiquer\n• Vérifications de réalité — développer une habitude\n\nChaque technique peut être étudiée en détail.</string>
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">Chat</string>
+    <string name="chat_coming_soon_title">Chat communautaire</string>
+    <string name="chat_coming_soon_message">Cette section est en cours de développement.\n\nBientôt, il y aura un chat où les rêveurs pourront partager leurs expériences et s\'entraider.\n\nRestez à l\'écoute !</string>
+    <string name="profile_title">Mon profil</string>
+    <string name="profile_name_label">NOM DE RÊVEUR</string>
+    <string name="profile_name_placeholder">Entrez votre nom…</string>
+    <string name="profile_name_empty">Nom non défini</string>
+    <string name="profile_save">Enregistrer</string>
+    <string name="reality_check_channel_name">Test de réalité</string>
+    <string name="reality_check_channel_description">Notifications pour les tests de réalité pendant la journée</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">Vous aimez l\'appli ?</string>
+    <string name="review_dialog_body">Votre avis compte beaucoup pour nous. Il aide d\'autres rêveurs à découvrir l\'application et à développer leur pratique du rêve lucide.</string>
+    <string name="review_dialog_rate">⭐  Noter l\'application</string>
+    <string name="review_dialog_rated">✓  J\'ai déjà noté</string>
+    <string name="review_dialog_later">Me rappeler dans 7 jours</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">Choisir un fond</string>
+    <string name="bg_section_photos">Photos</string>
+    <string name="bg_section_gradients">Dégradés</string>
+    <string name="bg_none">Sans fond</string>
+    <string name="bg_photo">Photo</string>
+    <string name="bg_dream_photo">Rêve</string>
+    <string name="bg_location_photo">Lieu</string>
+    <string name="bg_character_photo">Personnage</string>
+    <string name="bg_1">Cosmos profond</string>
+    <string name="bg_2">Nuit pourpre</string>
+    <string name="bg_3">Coucher doré</string>
+    <string name="bg_4">Clair de lune</string>
+    <string name="bg_5">Forêt d\'émeraude</string>
+    <string name="bg_6">Brume écarlate</string>
+    <string name="bg_7">Abîme glacé</string>
+    <string name="bg_8">Poussière d\'étoiles</string>
+    <string name="bg_9">Brume rosée</string>
+    <string name="bg_10">Ambre</string>
+    <string name="bg_11">Aurore boréale</string>
+    <string name="bg_12">Volcan</string>
+    <string name="bg_13">Océan silencieux</string>
+    <string name="bg_14">Lavande</string>
+    <string name="bg_15">Brouillard</string>
 </resources>

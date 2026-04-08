@@ -8,10 +8,12 @@ import androidx.compose.ui.res.stringResource
 import com.dreamjournal.journalofdream.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -103,6 +105,18 @@ fun EditDreamScreen(
         var isCharacterDialogOpen  by remember { mutableStateOf(false) }
         val selectedLocationIds  = remember { mutableStateListOf<Int>() }
         val selectedCharacterIds = remember { mutableStateListOf<Int>() }
+
+        // Быстрое создание локации прямо из диалога
+        var showQuickAddLocation   by remember { mutableStateOf(false) }
+        var quickLocationName      by remember { mutableStateOf("") }
+        var quickLocationDesc      by remember { mutableStateOf("") }
+        var showQuickLocationDesc  by remember { mutableStateOf(false) }
+
+        // Быстрое создание образа прямо из диалога
+        var showQuickAddCharacter  by remember { mutableStateOf(false) }
+        var quickCharacterName     by remember { mutableStateOf("") }
+        var quickCharacterDesc     by remember { mutableStateOf("") }
+        var showQuickCharacterDesc by remember { mutableStateOf(false) }
         var selectedTime  by remember { mutableStateOf(dream.time.ifBlank { getCurrentTime() }) }
         var showTimePicker by remember { mutableStateOf(false) }
 
@@ -148,19 +162,172 @@ fun EditDreamScreen(
                 .also { it.setOnCancelListener { showTimePicker = false }; it.show() }
         }
         if (isLocationDialogOpen) {
-            DreamPickerDialog(stringResource(R.string.dream_pick_locations), { isLocationDialogOpen = false }) {
-                items(allLocations) { loc ->
-                    val sel = selectedLocationIds.contains(loc.id)
-                    DreamPickerRow(loc.name, sel) { if (sel) selectedLocationIds.remove(loc.id) else selectedLocationIds.add(loc.id) }
-                }
+            if (showQuickAddLocation) {
+                AlertDialog(
+                    onDismissRequest = {
+                        showQuickAddLocation = false
+                        quickLocationName = ""; quickLocationDesc = ""; showQuickLocationDesc = false
+                    },
+                    title = { Text(stringResource(R.string.location_add_title), color = GoldLightE, fontWeight = FontWeight.Bold) },
+                    text = {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            OutlinedTextField(
+                                value = quickLocationName,
+                                onValueChange = { quickLocationName = it },
+                                placeholder = { Text(stringResource(R.string.location_field_name), color = Color.White.copy(0.4f)) },
+                                singleLine = true,
+                                textStyle = TextStyle(color = Color.White),
+                                colors = editFieldColors(),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            if (showQuickLocationDesc) {
+                                OutlinedTextField(
+                                    value = quickLocationDesc,
+                                    onValueChange = { quickLocationDesc = it },
+                                    placeholder = { Text(stringResource(R.string.location_field_desc), color = Color.White.copy(0.4f)) },
+                                    textStyle = TextStyle(color = Color.White),
+                                    colors = editFieldColors(),
+                                    modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp)
+                                )
+                            } else {
+                                TextButton(onClick = { showQuickLocationDesc = true }, modifier = Modifier.padding(0.dp)) {
+                                    Text("+ ${stringResource(R.string.location_field_desc)}", color = GoldLightE.copy(0.75f), fontSize = 13.sp)
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                if (quickLocationName.isNotBlank()) {
+                                    locationViewModel.addLocation(quickLocationName.trim(), quickLocationDesc.trim())
+                                    quickLocationName = ""; quickLocationDesc = ""
+                                    showQuickLocationDesc = false; showQuickAddLocation = false
+                                }
+                            },
+                            enabled = quickLocationName.isNotBlank()
+                        ) { Text(stringResource(R.string.btn_save), color = GoldLightE, fontWeight = FontWeight.Bold) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            showQuickAddLocation = false; quickLocationName = ""
+                            quickLocationDesc = ""; showQuickLocationDesc = false
+                        }) { Text(stringResource(R.string.btn_cancel), color = Color.White.copy(0.6f)) }
+                    },
+                    containerColor = Color(0xFF2A1548)
+                )
+            } else {
+                AlertDialog(
+                    onDismissRequest = { isLocationDialogOpen = false },
+                    title = { Text(stringResource(R.string.dream_pick_locations), color = GoldLightE, fontWeight = FontWeight.Bold) },
+                    text = {
+                        Column {
+                            TextButton(onClick = { showQuickAddLocation = true }, modifier = Modifier.fillMaxWidth()) {
+                                Text("+ ${stringResource(R.string.location_add_title)}", color = GoldLightE, fontSize = 13.sp)
+                            }
+                            Box(Modifier.fillMaxWidth().height(1.dp).background(Color.White.copy(0.1f)))
+                            LazyColumn {
+                                items(allLocations) { loc ->
+                                    val sel = selectedLocationIds.contains(loc.id)
+                                    DreamPickerRow(loc.name, sel) {
+                                        if (sel) selectedLocationIds.remove(loc.id) else selectedLocationIds.add(loc.id)
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { isLocationDialogOpen = false }) {
+                            Text(stringResource(R.string.ok), color = GoldLightE, fontWeight = FontWeight.Bold)
+                        }
+                    },
+                    containerColor = Color(0xFF2A1548)
+                )
             }
         }
+
         if (isCharacterDialogOpen) {
-            DreamPickerDialog(stringResource(R.string.dream_pick_characters), { isCharacterDialogOpen = false }) {
-                items(allCharacters) { ch ->
-                    val sel = selectedCharacterIds.contains(ch.id)
-                    DreamPickerRow(ch.name, sel) { if (sel) selectedCharacterIds.remove(ch.id) else selectedCharacterIds.add(ch.id) }
-                }
+            if (showQuickAddCharacter) {
+                AlertDialog(
+                    onDismissRequest = {
+                        showQuickAddCharacter = false
+                        quickCharacterName = ""; quickCharacterDesc = ""; showQuickCharacterDesc = false
+                    },
+                    title = { Text(stringResource(R.string.character_add_title), color = GoldLightE, fontWeight = FontWeight.Bold) },
+                    text = {
+                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            OutlinedTextField(
+                                value = quickCharacterName,
+                                onValueChange = { quickCharacterName = it },
+                                placeholder = { Text(stringResource(R.string.character_field_name), color = Color.White.copy(0.4f)) },
+                                singleLine = true,
+                                textStyle = TextStyle(color = Color.White),
+                                colors = editFieldColors(),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            if (showQuickCharacterDesc) {
+                                OutlinedTextField(
+                                    value = quickCharacterDesc,
+                                    onValueChange = { quickCharacterDesc = it },
+                                    placeholder = { Text(stringResource(R.string.character_field_desc), color = Color.White.copy(0.4f)) },
+                                    textStyle = TextStyle(color = Color.White),
+                                    colors = editFieldColors(),
+                                    modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp)
+                                )
+                            } else {
+                                TextButton(onClick = { showQuickCharacterDesc = true }, modifier = Modifier.padding(0.dp)) {
+                                    Text("+ ${stringResource(R.string.character_field_desc)}", color = GoldLightE.copy(0.75f), fontSize = 13.sp)
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                if (quickCharacterName.isNotBlank()) {
+                                    characterViewModel.addCharacter(quickCharacterName.trim(), quickCharacterDesc.trim())
+                                    quickCharacterName = ""; quickCharacterDesc = ""
+                                    showQuickCharacterDesc = false; showQuickAddCharacter = false
+                                }
+                            },
+                            enabled = quickCharacterName.isNotBlank()
+                        ) { Text(stringResource(R.string.btn_save), color = GoldLightE, fontWeight = FontWeight.Bold) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            showQuickAddCharacter = false; quickCharacterName = ""
+                            quickCharacterDesc = ""; showQuickCharacterDesc = false
+                        }) { Text(stringResource(R.string.btn_cancel), color = Color.White.copy(0.6f)) }
+                    },
+                    containerColor = Color(0xFF2A1548)
+                )
+            } else {
+                AlertDialog(
+                    onDismissRequest = { isCharacterDialogOpen = false },
+                    title = { Text(stringResource(R.string.dream_pick_characters), color = GoldLightE, fontWeight = FontWeight.Bold) },
+                    text = {
+                        Column {
+                            TextButton(onClick = { showQuickAddCharacter = true }, modifier = Modifier.fillMaxWidth()) {
+                                Text("+ ${stringResource(R.string.character_add_title)}", color = GoldLightE, fontSize = 13.sp)
+                            }
+                            Box(Modifier.fillMaxWidth().height(1.dp).background(Color.White.copy(0.1f)))
+                            LazyColumn {
+                                items(allCharacters) { ch ->
+                                    val sel = selectedCharacterIds.contains(ch.id)
+                                    DreamPickerRow(ch.name, sel) {
+                                        if (sel) selectedCharacterIds.remove(ch.id) else selectedCharacterIds.add(ch.id)
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { isCharacterDialogOpen = false }) {
+                            Text(stringResource(R.string.ok), color = GoldLightE, fontWeight = FontWeight.Bold)
+                        }
+                    },
+                    containerColor = Color(0xFF2A1548)
+                )
             }
         }
         if (showCategoryManager) {

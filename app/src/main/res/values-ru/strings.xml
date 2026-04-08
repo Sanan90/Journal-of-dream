@@ -492,4 +492,49 @@
     <string name="onboarding_5_body">Во снах нас окружают люди, существа, персонажи — реальные и выдуманные. Образы сна помогают тебе их отслеживать.\n\n• Сохраняй повторяющихся персонажей, которые часто появляются\n• Смотри в каких снах они встречаются\n• Замечай паттерны — один и тот же образ может быть знаком осознанности\n\nЧем лучше ты знаешь «жителей» своих снов, тем быстрее поймёшь что спишь.</string>
     <string name="onboarding_6_title">Техники осознанных снов</string>
     <string name="onboarding_6_body">В приложении собраны проверенные техники для входа в осознанный сон:\n\n• MILD — намерение осознаться перед сном\n• WILD — вход в сон с сохранением сознания\n• WBTB — пробуждение посреди ночи для практики\n• Реальность-чеки — привычка проверять реальность\n\nКаждую технику можно изучить подробно. Голосуй за понравившиеся, чтобы помочь другим сновидцам.</string>
+
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">Чат</string>
+    <string name="chat_coming_soon_title">Чат сообщества</string>
+    <string name="chat_coming_soon_message">Этот раздел находится в разработке.\n\nСкоро здесь появится чат, где сновидцы смогут делиться опытом и помогать друг другу.\n\nСледите за обновлениями!</string>
+    <string name="profile_title">Мой профиль</string>
+    <string name="profile_name_label">ИМЯ СНОВИДЦА</string>
+    <string name="profile_name_placeholder">Введите имя…</string>
+    <string name="profile_name_empty">Имя не задано</string>
+    <string name="profile_save">Сохранить</string>
+    <string name="reality_check_channel_name">Проверка реальности</string>
+    <string name="reality_check_channel_description">Уведомления для проверки реальности во сне</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">Нравится приложение?</string>
+    <string name="review_dialog_body">Ваш отзыв очень важен для нас. Это помогает другим сновидцам найти приложение и развивать практику осознанных снов.</string>
+    <string name="review_dialog_rate">⭐  Оценить приложение</string>
+    <string name="review_dialog_rated">✓  Я уже оценил</string>
+    <string name="review_dialog_later">Напомнить через 7 дней</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">Выберите фон</string>
+    <string name="bg_section_photos">Фотографии</string>
+    <string name="bg_section_gradients">Градиенты</string>
+    <string name="bg_none">Без фона</string>
+    <string name="bg_photo">Фото</string>
+    <string name="bg_dream_photo">Сон</string>
+    <string name="bg_location_photo">Локация</string>
+    <string name="bg_character_photo">Образ</string>
+    <string name="bg_1">Глубокий космос</string>
+    <string name="bg_2">Пурпурная ночь</string>
+    <string name="bg_3">Золотой закат</string>
+    <string name="bg_4">Лунный свет</string>
+    <string name="bg_5">Изумрудный лес</string>
+    <string name="bg_6">Алый туман</string>
+    <string name="bg_7">Ледяная бездна</string>
+    <string name="bg_8">Звёздная пыль</string>
+    <string name="bg_9">Розовый туман</string>
+    <string name="bg_10">Янтарный</string>
+    <string name="bg_11">Северное сияние</string>
+    <string name="bg_12">Вулкан</string>
+    <string name="bg_13">Тихий океан</string>
+    <string name="bg_14">Сиреневый</string>
+    <string name="bg_15">Туман</string>
 </resources>

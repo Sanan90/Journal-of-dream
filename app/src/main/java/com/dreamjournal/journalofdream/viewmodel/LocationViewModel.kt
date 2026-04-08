@@ -18,7 +18,6 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
     private val remoteDb = FirebaseFirestore.getInstance()
     private val locationRepository = LocationRepository(db, auth, remoteDb)
 
-    // LiveData списка локаций текущего пользователя
     private val _locations = MediatorLiveData<List<Location>>()
     val locations: LiveData<List<Location>> get() = _locations
 
@@ -29,31 +28,22 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
     val syncError: LiveData<String?> get() = _syncError
 
     init {
-        // Инициализируем текущего владельца (UID пользователя или "guest")
         val user = auth.currentUser
         _currentOwnerUid.value = user?.uid ?: "guest"
 
-        // При смене UID переключаем источник данных для списка локаций
         _locations.addSource(_currentOwnerUid) { newUid ->
             locationsSource?.let { _locations.removeSource(it) }
             val newSource = db.locationDao().getLocationsByOwner(newUid)
             locationsSource = newSource
-            _locations.addSource(newSource) { list ->
-                _locations.value = list
-            }
+            _locations.addSource(newSource) { list -> _locations.value = list }
         }
 
-        // Если при запуске уже есть авторизованный пользователь, начинаем синхронизацию локаций
         if (user != null) {
             locationRepository.onSyncError = { message -> _syncError.postValue(message) }
             locationRepository.startSync()
         }
     }
 
-    /**
-     * Вызывается при успешном входе пользователя.
-     * Переключает отображение на данные пользователя и мигрирует гостевые локации.
-     */
     fun onUserLogin(user: FirebaseUser) {
         _currentOwnerUid.value = user.uid
         viewModelScope.launch {
@@ -62,21 +52,17 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /**
-     * Вызывается при выходе из аккаунта.
-     * Останавливает синхронизацию и переключается на гостевые данные.
-     */
     fun onUserLogout() {
         locationRepository.stopSync()
         _currentOwnerUid.value = "guest"
     }
 
     /**
-     * Добавить новую локацию (для текущего пользователя или гостя).
+     * Добавить локацию с опциональным фоном.
      */
-    fun addLocation(name: String, description: String) {
+    fun addLocation(name: String, description: String, backgroundId: Int = 0) {
         val uid = _currentOwnerUid.value ?: "guest"
-        val newLocation = Location(ownerUid = uid, name = name, description = description)
+        val newLocation = Location(ownerUid = uid, name = name, description = description, backgroundId = backgroundId)
         viewModelScope.launch {
             val result = locationRepository.upsertLocation(newLocation)
             if (result.isFailure) {
@@ -105,29 +91,18 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun clearSyncError() {
-        _syncError.value = null
-    }
+    fun clearSyncError() { _syncError.value = null }
 
-    /**
-     * Получить LiveData конкретной локации по ID (с учётом текущего владельца).
-     */
     fun getLocationById(locationId: Int): LiveData<Location> {
         val uid = _currentOwnerUid.value ?: "guest"
         return db.locationDao().getLocationById(locationId, uid)
     }
 
-    /**
-     * Получить LiveData объекта LocationWithDreams для просмотра связанного списка снов.
-     */
     fun getLocationWithDreams(locationId: Int): LiveData<LocationWithDreams> {
         val uid = _currentOwnerUid.value ?: "guest"
         return db.locationDao().getLocationWithDreams(locationId, uid)
     }
 
-    /**
-     * Все локации со списком снов — для счётчика и сортировки в списке.
-     */
     fun getAllLocationsWithDreams(): LiveData<List<LocationWithDreams>> {
         val uid = _currentOwnerUid.value ?: "guest"
         return db.locationDao().getAllLocationsWithDreams(uid)

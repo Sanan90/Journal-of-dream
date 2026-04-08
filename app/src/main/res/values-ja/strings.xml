@@ -487,4 +487,48 @@
     <string name="onboarding_5_body">夢には人物、生き物、キャラクターがたくさん登場します。夢のイメージはそれらを追跡するのに役立ちます。\n\n• よく登場する繰り返しのキャラクターを保存する\n• どの夢に登場するかを確認する\n• パターンに気づく — 同じイメージが明晰さのトリガーになることがある\n\n夢の住人をよく知るほど、夢を見ていることに早く気づけます。</string>
     <string name="onboarding_6_title">明晰夢のテクニック</string>
     <string name="onboarding_6_body">アプリには明晰夢のための実証済みテクニックが収録されています:\n\n• MILD — 就寝前に明晰になる意図を持つ\n• WILD — 意識を保ちながら睡眠に入る\n• WBTB — 夜中に目を覚まして練習する\n• リアリティチェック — 習慣を身につける\n\n各テクニックを詳しく学ぶことができます。</string>
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">チャット</string>
+    <string name="chat_coming_soon_title">コミュニティチャット</string>
+    <string name="chat_coming_soon_message">このセクションは開発中です。\n\nまもなく、夢見る人たちが経験を共有し助け合えるチャットが登場します。\n\nお楽しみに！</string>
+    <string name="profile_title">マイプロフィール</string>
+    <string name="profile_name_label">ドリーマー名</string>
+    <string name="profile_name_placeholder">名前を入力…</string>
+    <string name="profile_name_empty">名前未設定</string>
+    <string name="profile_save">保存</string>
+    <string name="reality_check_channel_name">リアリティチェック</string>
+    <string name="reality_check_channel_description">日中のリアリティチェック通知</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">アプリを気に入っていますか？</string>
+    <string name="review_dialog_body">あなたのレビューは私たちにとって非常に大切です。他の夢見る人がアプリを見つけ、明晰夢の練習を深める助けになります。</string>
+    <string name="review_dialog_rate">⭐  アプリを評価する</string>
+    <string name="review_dialog_rated">✓  すでに評価しました</string>
+    <string name="review_dialog_later">7日後に通知する</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">背景を選択</string>
+    <string name="bg_section_photos">写真</string>
+    <string name="bg_section_gradients">グラデーション</string>
+    <string name="bg_none">背景なし</string>
+    <string name="bg_photo">写真</string>
+    <string name="bg_dream_photo">夢</string>
+    <string name="bg_location_photo">場所</string>
+    <string name="bg_character_photo">キャラ</string>
+    <string name="bg_1">深宇宙</string>
+    <string name="bg_2">紫の夜</string>
+    <string name="bg_3">黄金の夕暮れ</string>
+    <string name="bg_4">月明かり</string>
+    <string name="bg_5">エメラルドの森</string>
+    <string name="bg_6">深紅の霧</string>
+    <string name="bg_7">氷の深淵</string>
+    <string name="bg_8">星の塵</string>
+    <string name="bg_9">ピンクの霞</string>
+    <string name="bg_10">琥珀</string>
+    <string name="bg_11">オーロラ</string>
+    <string name="bg_12">火山</string>
+    <string name="bg_13">静かな海</string>
+    <string name="bg_14">ラベンダー</string>
+    <string name="bg_15">霧</string>
 </resources>

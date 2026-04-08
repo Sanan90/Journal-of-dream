@@ -488,4 +488,48 @@
     <string name="onboarding_5_body">我们的梦充满了人物、生物和角色。梦境意象帮助您追踪它们。\n\n• 保存经常出现的重复角色\n• 查看它们出现在哪些梦中\n• 注意规律 — 同一意象可能是清醒触发器\n\n您越了解梦中的居民，就越能快速意识到自己在做梦。</string>
     <string name="onboarding_6_title">清醒梦技巧</string>
     <string name="onboarding_6_body">应用包含经过验证的清醒梦技巧：\n\n• MILD — 睡前设定清醒意图\n• WILD — 保持意识进入睡眠\n• WBTB — 在夜间醒来练习\n• 现实检查 — 培养习惯\n\n每种技巧都可以详细学习。</string>
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">聊天</string>
+    <string name="chat_coming_soon_title">社区聊天</string>
+    <string name="chat_coming_soon_message">此功能正在开发中。\n\n即将推出聊天功能，梦境探索者可以在这里分享经验、互相帮助。\n\n敬请期待！</string>
+    <string name="profile_title">我的主页</string>
+    <string name="profile_name_label">梦境者名称</string>
+    <string name="profile_name_placeholder">输入名称…</string>
+    <string name="profile_name_empty">未设置名称</string>
+    <string name="profile_save">保存</string>
+    <string name="reality_check_channel_name">现实检验</string>
+    <string name="reality_check_channel_description">白天现实检验提醒通知</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">喜欢这款应用吗？</string>
+    <string name="review_dialog_body">您的评价对我们非常重要。它能帮助其他梦境探索者发现这款应用，并发展他们的清醒梦练习。</string>
+    <string name="review_dialog_rate">⭐  给应用评分</string>
+    <string name="review_dialog_rated">✓  我已经评过了</string>
+    <string name="review_dialog_later">7天后提醒我</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">选择背景</string>
+    <string name="bg_section_photos">照片</string>
+    <string name="bg_section_gradients">渐变</string>
+    <string name="bg_none">无背景</string>
+    <string name="bg_photo">照片</string>
+    <string name="bg_dream_photo">梦境</string>
+    <string name="bg_location_photo">地点</string>
+    <string name="bg_character_photo">人物</string>
+    <string name="bg_1">深邃宇宙</string>
+    <string name="bg_2">紫色夜晚</string>
+    <string name="bg_3">金色日落</string>
+    <string name="bg_4">月光</string>
+    <string name="bg_5">翡翠森林</string>
+    <string name="bg_6">深红迷雾</string>
+    <string name="bg_7">冰冷深渊</string>
+    <string name="bg_8">星尘</string>
+    <string name="bg_9">粉色薄雾</string>
+    <string name="bg_10">琥珀</string>
+    <string name="bg_11">极光</string>
+    <string name="bg_12">火山</string>
+    <string name="bg_13">宁静海洋</string>
+    <string name="bg_14">薰衣草</string>
+    <string name="bg_15">薄雾</string>
 </resources>

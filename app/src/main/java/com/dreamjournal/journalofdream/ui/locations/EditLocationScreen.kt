@@ -28,6 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.dreamjournal.journalofdream.R
+import androidx.compose.material.icons.filled.Palette
+import com.dreamjournal.journalofdream.ui.common.BackgroundPickerSheet
+import com.dreamjournal.journalofdream.ui.common.DreamBackgrounds
+import com.dreamjournal.journalofdream.ui.common.DreamBackgroundLayer
 import com.dreamjournal.journalofdream.viewmodel.LocationViewModel
 
 private val GoldLightE = Color(0xFFF0D68C)
@@ -44,12 +48,15 @@ fun EditLocationScreen(
     var locationName        by remember { mutableStateOf("") }
     var locationDescription by remember { mutableStateOf("") }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var selectedBackgroundId by remember { mutableStateOf(0) }
+    var showBackgroundPicker by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(locationState) {
         locationState?.let { loc ->
             locationName = loc.name
             locationDescription = loc.description
+            selectedBackgroundId = loc.backgroundId
         }
     }
 
@@ -69,6 +76,7 @@ fun EditLocationScreen(
 
     Box(Modifier.fillMaxSize()) {
         Image(painterResource(R.drawable.new_fon), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+        DreamBackgroundLayer(selectedBackgroundId)
 
         if (locationState == null) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -85,7 +93,11 @@ fun EditLocationScreen(
                     Text(stringResource(R.string.location_edit_title), color = GoldLightE,
                         fontFamily = PlayfairFamilyE, fontWeight = FontWeight.Bold,
                         fontSize = 26.sp, modifier = Modifier.weight(1f))
-                    // Кнопка удаления
+                    IconButton(onClick = { showBackgroundPicker = true }) {
+                        Icon(Icons.Default.Palette, null,
+                            tint = if (selectedBackgroundId != 0) GoldLightE else GoldLightE.copy(0.4f),
+                            modifier = Modifier.size(22.dp))
+                    }
                     IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(Icons.Default.Delete, null, tint = Color(0xFFEF5350), modifier = Modifier.size(22.dp))
                     }
@@ -130,7 +142,8 @@ fun EditLocationScreen(
                             locationState?.let { loc ->
                                 locationViewModel.updateLocation(loc.copy(
                                     name = locationName.trim(),
-                                    description = locationDescription.trim()
+                                    description = locationDescription.trim(),
+                                    backgroundId = selectedBackgroundId
                                 ))
                             }
                             keyboardController?.hide()

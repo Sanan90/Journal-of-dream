@@ -2,6 +2,7 @@ package com.dreamjournal.journalofdream.ui.characters
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -9,10 +10,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -26,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.dreamjournal.journalofdream.R
+import com.dreamjournal.journalofdream.ui.common.BackgroundPickerSheet
+import com.dreamjournal.journalofdream.ui.common.DreamBackgrounds
 import com.dreamjournal.journalofdream.ui.locations.LocAlertDialog
 import com.dreamjournal.journalofdream.ui.locations.LocFieldLabel
 import com.dreamjournal.journalofdream.ui.locations.LocSaveButton
@@ -45,6 +50,8 @@ fun AddCharacterScreen(
     var description by remember { mutableStateOf("") }
     var showError      by remember { mutableStateOf(false) }
     var showExitDialog by remember { mutableStateOf(false) }
+    var selectedBackgroundId by remember { mutableStateOf(0) }
+    var showBackgroundPicker by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val hasUnsavedChanges = name.isNotBlank() || description.isNotBlank()
 
@@ -61,8 +68,20 @@ fun AddCharacterScreen(
         )
     }
 
+    if (showBackgroundPicker) {
+        BackgroundPickerSheet(
+            currentBackgroundId = selectedBackgroundId,
+            backgroundType = DreamBackgrounds.Type.CHARACTER,
+            onBackgroundSelected = { selectedBackgroundId = it; showBackgroundPicker = false },
+            onDismiss = { showBackgroundPicker = false }
+        )
+    }
+
     Box(Modifier.fillMaxSize()) {
         Image(painterResource(R.drawable.new_fon), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+
+        // Фон образа поверх
+        DreamBackgroundLayer(selectedBackgroundId)
 
         Column(Modifier.fillMaxSize().statusBarsPadding().imePadding()) {
             // Заголовок
@@ -74,6 +93,12 @@ fun AddCharacterScreen(
                 Text(stringResource(R.string.character_add_title), color = GoldLightC,
                     fontFamily = PlayfairFamilyC, fontWeight = FontWeight.Bold,
                     fontSize = 26.sp, modifier = Modifier.weight(1f))
+                // Кнопка выбора фона
+                IconButton(onClick = { showBackgroundPicker = true }) {
+                    Icon(Icons.Default.Palette, "Фон",
+                        tint = if (selectedBackgroundId != 0) GoldLightC else GoldLightC.copy(0.4f),
+                        modifier = Modifier.size(24.dp))
+                }
                 Image(painterResource(R.drawable.dreamers_icon), null,
                     Modifier.size(32.dp).padding(end = 10.dp), contentScale = ContentScale.Fit)
             }
@@ -117,7 +142,7 @@ fun AddCharacterScreen(
                     modifier = Modifier.align(Alignment.End),
                     onClick = {
                         if (name.isBlank()) { showError = true; return@LocSaveButton }
-                        characterViewModel.addCharacter(name.trim(), description.trim())
+                        characterViewModel.addCharacter(name.trim(), description.trim(), selectedBackgroundId)
                         keyboardController?.hide()
                         navController.popBackStack()
                     }
@@ -125,5 +150,31 @@ fun AddCharacterScreen(
                 Spacer(Modifier.height(20.dp))
             }
         }
+    }
+}
+
+// ─── Универсальный слой фона (градиент или фото) ──────────────────────────────
+@Composable
+fun DreamBackgroundLayer(backgroundId: Int) {
+    if (backgroundId == 0) return
+    if (DreamBackgrounds.isPhoto(backgroundId)) {
+        val resId = com.dreamjournal.journalofdream.ui.common.photoResId(backgroundId) ?: return
+        Image(
+            painter = painterResource(resId),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.30f)),
+            contentScale = ContentScale.Crop,
+            alpha = 0.70f
+        )
+    } else {
+        val brush = DreamBackgrounds.getBrush(backgroundId) ?: return
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(brush)
+                .background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.35f))
+        )
     }
 }

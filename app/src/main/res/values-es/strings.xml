@@ -487,4 +487,49 @@
     <string name="onboarding_5_body">Nuestros sueños están llenos de personas, criaturas, personajes. Las imágenes del sueño te ayudan a seguirlos.\n\n• Guarda personajes recurrentes que aparecen frecuentemente\n• Ve en qué sueños aparecen\n• Nota patrones — la misma imagen puede ser un disparador de lucidez\n\nCuanto mejor conozcas a los habitantes de tus sueños, más rápido te darás cuenta de que estás soñando.</string>
     <string name="onboarding_6_title">Técnicas de sueño lúcido</string>
     <string name="onboarding_6_body">La app contiene técnicas probadas para el sueño lúcido:\n\n• MILD — intención de lucidez antes de dormir\n• WILD — entrar al sueño manteniendo la conciencia\n• WBTB — despertar a mitad de la noche para practicar\n• Controles de realidad — desarrollar un hábito\n\nCada técnica se puede estudiar en detalle.</string>
+
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">Chat</string>
+    <string name="chat_coming_soon_title">Chat de la comunidad</string>
+    <string name="chat_coming_soon_message">Esta sección está en desarrollo.\n\nPronto habrá un chat donde los soñadores podrán compartir experiencias y ayudarse mutuamente.\n\n¡Permanece atento!</string>
+    <string name="profile_title">Mi perfil</string>
+    <string name="profile_name_label">NOMBRE DE SOÑADOR</string>
+    <string name="profile_name_placeholder">Introduce tu nombre…</string>
+    <string name="profile_name_empty">Nombre no definido</string>
+    <string name="profile_save">Guardar</string>
+    <string name="reality_check_channel_name">Verificación de realidad</string>
+    <string name="reality_check_channel_description">Notificaciones para verificaciones de realidad durante el día</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">¿Te gusta la app?</string>
+    <string name="review_dialog_body">Tu reseña es muy importante para nosotros. Ayuda a otros soñadores a encontrar la app y desarrollar su práctica de sueños lúcidos.</string>
+    <string name="review_dialog_rate">⭐  Valorar la app</string>
+    <string name="review_dialog_rated">✓  Ya la he valorado</string>
+    <string name="review_dialog_later">Recordarme en 7 días</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">Elegir fondo</string>
+    <string name="bg_section_photos">Fotos</string>
+    <string name="bg_section_gradients">Degradados</string>
+    <string name="bg_none">Sin fondo</string>
+    <string name="bg_photo">Foto</string>
+    <string name="bg_dream_photo">Sueño</string>
+    <string name="bg_location_photo">Lugar</string>
+    <string name="bg_character_photo">Personaje</string>
+    <string name="bg_1">Cosmos profundo</string>
+    <string name="bg_2">Noche púrpura</string>
+    <string name="bg_3">Atardecer dorado</string>
+    <string name="bg_4">Luz de luna</string>
+    <string name="bg_5">Bosque esmeralda</string>
+    <string name="bg_6">Niebla carmesí</string>
+    <string name="bg_7">Abismo helado</string>
+    <string name="bg_8">Polvo de estrellas</string>
+    <string name="bg_9">Bruma rosa</string>
+    <string name="bg_10">Ámbar</string>
+    <string name="bg_11">Aurora boreal</string>
+    <string name="bg_12">Volcán</string>
+    <string name="bg_13">Océano silencioso</string>
+    <string name="bg_14">Lavanda</string>
+    <string name="bg_15">Niebla</string>
 </resources>

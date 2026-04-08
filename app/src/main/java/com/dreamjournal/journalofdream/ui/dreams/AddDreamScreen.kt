@@ -14,11 +14,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,6 +27,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -35,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -50,8 +50,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.dreamjournal.journalofdream.model.Category
 import com.dreamjournal.journalofdream.model.Dream
+import com.dreamjournal.journalofdream.ui.common.BackgroundPickerSheet
+import com.dreamjournal.journalofdream.ui.common.DreamBackgrounds
 import com.dreamjournal.journalofdream.util.rememberSpeechLauncher
-import com.dreamjournal.journalofdream.ui.dreams.CategoryManagerDialog
 import com.dreamjournal.journalofdream.viewmodel.CategoryViewModel
 import com.dreamjournal.journalofdream.viewmodel.DreamViewModel
 import com.dreamjournal.journalofdream.viewmodel.LocationViewModel
@@ -121,6 +122,22 @@ fun AddDreamScreen(
     val selectedLocationIds  = remember { mutableStateListOf<Int>() }
     val selectedCharacterIds = remember { mutableStateListOf<Int>() }
 
+    // Быстрое создание локации прямо из диалога
+    var showQuickAddLocation    by remember { mutableStateOf(false) }
+    var quickLocationName       by remember { mutableStateOf("") }
+    var quickLocationDesc       by remember { mutableStateOf("") }
+    var showQuickLocationDesc   by remember { mutableStateOf(false) }
+
+    // Быстрое создание образа прямо из диалога
+    var showQuickAddCharacter   by remember { mutableStateOf(false) }
+    var quickCharacterName      by remember { mutableStateOf("") }
+    var quickCharacterDesc      by remember { mutableStateOf("") }
+    var showQuickCharacterDesc  by remember { mutableStateOf(false) }
+
+    // Фон
+    var selectedBackgroundId by remember { mutableStateOf(0) }
+    var showBackgroundPicker by remember { mutableStateOf(false) }
+
     val categoryViewModel: CategoryViewModel = viewModel()
     val categories    by categoryViewModel.allCategories.observeAsState(listOf())
     val allLocations  by locationViewModel.locations.observeAsState(emptyList())
@@ -159,19 +176,213 @@ fun AddDreamScreen(
             .also { it.setOnCancelListener { showTimePicker = false }; it.show() }
     }
     if (isLocationDialogOpen) {
-        DreamPickerDialog(stringResource(R.string.dream_pick_locations), { isLocationDialogOpen = false }) {
-            items(allLocations) { loc ->
-                val sel = selectedLocationIds.contains(loc.id)
-                DreamPickerRow(loc.name, sel) { if (sel) selectedLocationIds.remove(loc.id) else selectedLocationIds.add(loc.id) }
-            }
+        // ── Диалог выбора / быстрого создания локации ──
+        if (showQuickAddLocation) {
+            // Окошко быстрого создания локации
+            AlertDialog(
+                onDismissRequest = {
+                    showQuickAddLocation = false
+                    quickLocationName = ""
+                    quickLocationDesc = ""
+                    showQuickLocationDesc = false
+                },
+                title = { Text(stringResource(R.string.location_add_title), color = GoldLight, fontWeight = FontWeight.Bold) },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        OutlinedTextField(
+                            value = quickLocationName,
+                            onValueChange = { quickLocationName = it },
+                            placeholder = { Text(stringResource(R.string.location_field_name), color = Color.White.copy(0.4f)) },
+                            singleLine = true,
+                            textStyle = androidx.compose.ui.text.TextStyle(color = Color.White),
+                            colors = dreamFieldColors(),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        if (showQuickLocationDesc) {
+                            OutlinedTextField(
+                                value = quickLocationDesc,
+                                onValueChange = { quickLocationDesc = it },
+                                placeholder = { Text(stringResource(R.string.location_field_desc), color = Color.White.copy(0.4f)) },
+                                textStyle = androidx.compose.ui.text.TextStyle(color = Color.White),
+                                colors = dreamFieldColors(),
+                                modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp)
+                            )
+                        } else {
+                            TextButton(
+                                onClick = { showQuickLocationDesc = true },
+                                modifier = Modifier.padding(0.dp)
+                            ) {
+                                Text("+ ${stringResource(R.string.location_field_desc)}", color = GoldLight.copy(0.75f), fontSize = 13.sp)
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            if (quickLocationName.isNotBlank()) {
+                                locationViewModel.addLocation(quickLocationName.trim(), quickLocationDesc.trim())
+                                // После сохранения ждём появления в списке и автовыбираем
+                                quickLocationName = ""
+                                quickLocationDesc = ""
+                                showQuickLocationDesc = false
+                                showQuickAddLocation = false
+                            }
+                        },
+                        enabled = quickLocationName.isNotBlank()
+                    ) {
+                        Text(stringResource(R.string.btn_save), color = GoldLight, fontWeight = FontWeight.Bold)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        showQuickAddLocation = false
+                        quickLocationName = ""
+                        quickLocationDesc = ""
+                        showQuickLocationDesc = false
+                    }) {
+                        Text(stringResource(R.string.btn_cancel), color = Color.White.copy(0.6f))
+                    }
+                },
+                containerColor = Color(0xFF2A1548)
+            )
+        } else {
+            // Основной диалог выбора локаций
+            AlertDialog(
+                onDismissRequest = { isLocationDialogOpen = false },
+                title = { Text(stringResource(R.string.dream_pick_locations), color = GoldLight, fontWeight = FontWeight.Bold) },
+                text = {
+                    Column {
+                        // Кнопка быстрого создания — вверху
+                        TextButton(
+                            onClick = { showQuickAddLocation = true },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("+ ${stringResource(R.string.location_add_title)}", color = GoldLight, fontSize = 13.sp)
+                        }
+                        Box(Modifier.fillMaxWidth().height(1.dp).background(Color.White.copy(0.1f)))
+                        LazyColumn {
+                            items(allLocations) { loc ->
+                                val sel = selectedLocationIds.contains(loc.id)
+                                DreamPickerRow(loc.name, sel) {
+                                    if (sel) selectedLocationIds.remove(loc.id)
+                                    else selectedLocationIds.add(loc.id)
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { isLocationDialogOpen = false }) {
+                        Text(stringResource(R.string.ok), color = GoldLight, fontWeight = FontWeight.Bold)
+                    }
+                },
+                containerColor = Color(0xFF2A1548)
+            )
         }
     }
+
     if (isCharacterDialogOpen) {
-        DreamPickerDialog(stringResource(R.string.dream_pick_characters), { isCharacterDialogOpen = false }) {
-            items(allCharacters) { ch ->
-                val sel = selectedCharacterIds.contains(ch.id)
-                DreamPickerRow(ch.name, sel) { if (sel) selectedCharacterIds.remove(ch.id) else selectedCharacterIds.add(ch.id) }
-            }
+        // ── Диалог выбора / быстрого создания образа ──
+        if (showQuickAddCharacter) {
+            AlertDialog(
+                onDismissRequest = {
+                    showQuickAddCharacter = false
+                    quickCharacterName = ""
+                    quickCharacterDesc = ""
+                    showQuickCharacterDesc = false
+                },
+                title = { Text(stringResource(R.string.character_add_title), color = GoldLight, fontWeight = FontWeight.Bold) },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        OutlinedTextField(
+                            value = quickCharacterName,
+                            onValueChange = { quickCharacterName = it },
+                            placeholder = { Text(stringResource(R.string.character_field_name), color = Color.White.copy(0.4f)) },
+                            singleLine = true,
+                            textStyle = androidx.compose.ui.text.TextStyle(color = Color.White),
+                            colors = dreamFieldColors(),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        if (showQuickCharacterDesc) {
+                            OutlinedTextField(
+                                value = quickCharacterDesc,
+                                onValueChange = { quickCharacterDesc = it },
+                                placeholder = { Text(stringResource(R.string.character_field_desc), color = Color.White.copy(0.4f)) },
+                                textStyle = androidx.compose.ui.text.TextStyle(color = Color.White),
+                                colors = dreamFieldColors(),
+                                modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp)
+                            )
+                        } else {
+                            TextButton(
+                                onClick = { showQuickCharacterDesc = true },
+                                modifier = Modifier.padding(0.dp)
+                            ) {
+                                Text("+ ${stringResource(R.string.character_field_desc)}", color = GoldLight.copy(0.75f), fontSize = 13.sp)
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            if (quickCharacterName.isNotBlank()) {
+                                characterViewModel.addCharacter(quickCharacterName.trim(), quickCharacterDesc.trim())
+                                quickCharacterName = ""
+                                quickCharacterDesc = ""
+                                showQuickCharacterDesc = false
+                                showQuickAddCharacter = false
+                            }
+                        },
+                        enabled = quickCharacterName.isNotBlank()
+                    ) {
+                        Text(stringResource(R.string.btn_save), color = GoldLight, fontWeight = FontWeight.Bold)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        showQuickAddCharacter = false
+                        quickCharacterName = ""
+                        quickCharacterDesc = ""
+                        showQuickCharacterDesc = false
+                    }) {
+                        Text(stringResource(R.string.btn_cancel), color = Color.White.copy(0.6f))
+                    }
+                },
+                containerColor = Color(0xFF2A1548)
+            )
+        } else {
+            AlertDialog(
+                onDismissRequest = { isCharacterDialogOpen = false },
+                title = { Text(stringResource(R.string.dream_pick_characters), color = GoldLight, fontWeight = FontWeight.Bold) },
+                text = {
+                    Column {
+                        // Кнопка быстрого создания — вверху
+                        TextButton(
+                            onClick = { showQuickAddCharacter = true },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("+ ${stringResource(R.string.character_add_title)}", color = GoldLight, fontSize = 13.sp)
+                        }
+                        Box(Modifier.fillMaxWidth().height(1.dp).background(Color.White.copy(0.1f)))
+                        LazyColumn {
+                            items(allCharacters) { ch ->
+                                val sel = selectedCharacterIds.contains(ch.id)
+                                DreamPickerRow(ch.name, sel) {
+                                    if (sel) selectedCharacterIds.remove(ch.id)
+                                    else selectedCharacterIds.add(ch.id)
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { isCharacterDialogOpen = false }) {
+                        Text(stringResource(R.string.ok), color = GoldLight, fontWeight = FontWeight.Bold)
+                    }
+                },
+                containerColor = Color(0xFF2A1548)
+            )
         }
     }
     if (showCategoryManager) {
@@ -181,9 +392,21 @@ fun AddDreamScreen(
             onCategorySelected = { selectedCategory = it }
         )
     }
+    if (showBackgroundPicker) {
+        BackgroundPickerSheet(
+            currentBackgroundId = selectedBackgroundId,
+            backgroundType = DreamBackgrounds.Type.DREAM,
+            onBackgroundSelected = { selectedBackgroundId = it; showBackgroundPicker = false },
+            onDismiss = { showBackgroundPicker = false }
+        )
+    }
 
     Box(Modifier.fillMaxSize()) {
+        // Фон приложения
         Image(painterResource(R.drawable.new_fon), null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+
+        // Выбранный фон сна поверх — фото или градиент
+        DreamBackgroundLayer(selectedBackgroundId)
 
         Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding().imePadding()) {
 
@@ -196,6 +419,15 @@ fun AddDreamScreen(
                 Text(stringResource(R.string.dream_add_title), color = GoldLight,
                     fontFamily = PlayfairFamily, fontWeight = FontWeight.Bold,
                     fontSize = 26.sp, modifier = Modifier.weight(1f))
+                // Кнопка выбора фона
+                IconButton(onClick = { showBackgroundPicker = true }) {
+                    Icon(
+                        Icons.Default.Palette,
+                        contentDescription = "Выбрать фон",
+                        tint = if (selectedBackgroundId != 0) GoldLight else GoldLight.copy(0.4f),
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
                 Image(painterResource(R.drawable.dream_field_content), null,
                     Modifier.size(32.dp).padding(end = 10.dp), contentScale = ContentScale.Fit)
             }
@@ -234,7 +466,7 @@ fun AddDreamScreen(
                     DreamTapChip(Modifier.weight(0.65f), R.drawable.dream_view_time, selectedTime) { showTimePicker = true }
                 }
 
-                // 3. Описание сна (с кнопками локаций/образов над полем)
+                // 3. Локации / Образы
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     DreamTapChip(
                         modifier = Modifier.weight(1f),
@@ -252,6 +484,7 @@ fun AddDreamScreen(
                     )
                 }
 
+                // 4. Описание сна
                 DreamSectionLabel(R.drawable.dream_field_content, stringResource(R.string.dream_field_desc))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.Top) {
@@ -282,7 +515,7 @@ fun AddDreamScreen(
                     }
                 }
 
-                // 4. Категория
+                // 5. Категория
                 DreamSectionLabel(R.drawable.dream_view_category, stringResource(R.string.dream_label_category))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically) {
@@ -330,9 +563,16 @@ fun AddDreamScreen(
                         .clickable {
                             val finalTitle = if (title.isBlank()) formatDateForTitle(selectedDate, context) else title.trim()
                             dreamViewModel.addDream(
-                                Dream(title = finalTitle, content = content.trim(), date = selectedDate,
-                                    time = selectedTime, category = selectedCategory?.name ?: context.getString(R.string.dreams_no_category)),
-                                selectedLocationIds.toList(), selectedCharacterIds.toList()
+                                Dream(
+                                    title = finalTitle,
+                                    content = content.trim(),
+                                    date = selectedDate,
+                                    time = selectedTime,
+                                    category = selectedCategory?.name ?: context.getString(R.string.dreams_no_category),
+                                    backgroundId = selectedBackgroundId
+                                ),
+                                selectedLocationIds.toList(),
+                                selectedCharacterIds.toList()
                             )
                             navController.popBackStack()
                         }
@@ -446,9 +686,34 @@ fun dreamFieldColors() = OutlinedTextFieldDefaults.colors(
     unfocusedPlaceholderColor = Color.White.copy(0.35f)
 )
 
-// Алиасы
 @Composable fun SmallLabel(iconRes: Int, text: String) = DreamSectionLabel(iconRes, text)
 @Composable fun DreamInputBox(modifier: Modifier = Modifier.fillMaxWidth(), content: @Composable () -> Unit) = DreamInputCard(modifier, content)
 @Composable fun DreamSmallChip(modifier: Modifier = Modifier, iconRes: Int, text: String, onClick: () -> Unit) = DreamTapChip(modifier, iconRes, text, onClick)
 @Composable fun DreamFieldLabel(iconRes: Int, text: String) = DreamSectionLabel(iconRes, text)
 @Composable fun DreamChipButton(modifier: Modifier = Modifier, iconRes: Int, text: String, onClick: () -> Unit) = DreamTapChip(modifier, iconRes, text, onClick)
+
+// ─── Универсальный слой фона (градиент или фото) ──────────────────────────────
+@Composable
+fun DreamBackgroundLayer(backgroundId: Int) {
+    if (backgroundId == 0) return
+    if (DreamBackgrounds.isPhoto(backgroundId)) {
+        val resId = com.dreamjournal.journalofdream.ui.common.photoResId(backgroundId) ?: return
+        Image(
+            painter = painterResource(resId),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.30f)),
+            contentScale = ContentScale.Crop,
+            alpha = 0.70f
+        )
+    } else {
+        val brush = DreamBackgrounds.getBrush(backgroundId) ?: return
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(brush)
+                .background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.35f))
+        )
+    }
+}

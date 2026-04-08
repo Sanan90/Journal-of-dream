@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 class CharacterViewModel(application: Application) : AndroidViewModel(application) {
+
     private val db = AppDatabase.getInstance(application)
     private val auth = FirebaseAuth.getInstance()
     private val remoteDb = FirebaseFirestore.getInstance()
@@ -58,10 +59,15 @@ class CharacterViewModel(application: Application) : AndroidViewModel(applicatio
         _currentOwnerUid.value = "guest"
     }
 
-    fun addCharacter(name: String, description: String) {
+    /**
+     * Добавить образ с опциональным фоном.
+     */
+    fun addCharacter(name: String, description: String, backgroundId: Int = 0) {
         val uid = _currentOwnerUid.value ?: "guest"
         viewModelScope.launch {
-            val result = repository.upsertCharacter(DreamCharacter(ownerUid = uid, name = name, description = description))
+            val result = repository.upsertCharacter(
+                DreamCharacter(ownerUid = uid, name = name, description = description, backgroundId = backgroundId)
+            )
             if (result.isFailure) _syncError.postValue("Персонаж сохранён локально, но не синхронизирован")
         }
     }

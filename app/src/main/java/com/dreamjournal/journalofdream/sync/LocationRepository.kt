@@ -42,11 +42,26 @@ class LocationRepository(
                         val docId = dc.document.id
                         val locId = docId.toIntOrNull()
                         when (dc.type) {
-                            DocumentChange.Type.ADDED,
+                            DocumentChange.Type.ADDED -> {
+                                val remoteLoc = dc.document.toObject(Location::class.java)
+                                if (remoteLoc != null && locId != null) {
+                                    val existing = db.locationDao().getLocationByIdOnce(locId, userId)
+                                    if (existing == null) {
+                                        // Новая локация — вставляем
+                                        db.locationDao().insert(remoteLoc.copy(id = locId, ownerUid = userId))
+                                    } else {
+                                        // Уже есть — обновляем без DELETE+INSERT чтобы не снести CASCADE
+                                        db.locationDao().update(remoteLoc.copy(id = locId, ownerUid = userId))
+                                    }
+                                }
+                            }
                             DocumentChange.Type.MODIFIED -> {
                                 val remoteLoc = dc.document.toObject(Location::class.java)
                                 if (remoteLoc != null && locId != null) {
-                                    db.locationDao().insert(remoteLoc.copy(id = locId, ownerUid = userId))
+                                    // ВАЖНО: используем update а не insert(REPLACE).
+                                    // insert(REPLACE) делает DELETE+INSERT что триггерит
+                                    // ON DELETE CASCADE и удаляет все связи снов с локацией.
+                                    db.locationDao().update(remoteLoc.copy(id = locId, ownerUid = userId))
                                 }
                             }
                             DocumentChange.Type.REMOVED -> {
@@ -70,8 +85,16 @@ class LocationRepository(
 
     suspend fun upsertLocation(location: Location): Result<Unit> {
         val locationDao = db.locationDao()
-        val newRowId = locationDao.insert(location)
-        val finalLocation = if (location.id == 0) location.copy(id = newRowId.toInt()) else location
+        // ВАЖНО: используем update для существующих локаций (id != 0).
+        // insert с OnConflictStrategy.REPLACE делает DELETE + INSERT,
+        // что триггерит CASCADE и удаляет все связи снов с этой локацией.
+        val finalLocation = if (location.id == 0) {
+            val newRowId = locationDao.insert(location)
+            location.copy(id = newRowId.toInt())
+        } else {
+            locationDao.update(location)
+            location
+        }
 
         auth.currentUser?.let { user ->
             try {

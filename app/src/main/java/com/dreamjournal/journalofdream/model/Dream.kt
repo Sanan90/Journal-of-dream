@@ -10,6 +10,7 @@ import androidx.room.PrimaryKey
  * locationIds и characterIds игнорируются Room, но используются для хранения связей в Firestore.
  * time — время записи сна в формате "HH:mm" (например "07:30").
  * Для старых записей без времени — пустая строка.
+ * backgroundId — ID выбранного фона из DreamBackgrounds (0 = без фона).
  */
 @Entity(tableName = "dreams")
 data class Dream(
@@ -19,8 +20,9 @@ data class Dream(
     var title: String = "",
     var content: String = "",
     var date: String = "",
-    var time: String = "",   // "HH:mm" — время записи сна
+    var time: String = "",
     var category: String = "",
+    var backgroundId: Int = 0,   // ID фона из DreamBackgrounds (0 = без фона)
     @Ignore
     var locationIds: List<Int> = emptyList(),
     @Ignore

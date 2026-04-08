@@ -488,4 +488,48 @@
     <string name="onboarding_5_body">أحلامنا مليئة بالأشخاص والمخلوقات والشخصيات. تساعدك صور الأحلام على تتبعها.\n\n• احفظ الشخصيات المتكررة\n• شاهد في أي أحلام تظهر\n• لاحظ الأنماط — قد تكون نفس الصورة محفزاً للوضوح\n\nكلما عرفت سكان أحلامك بشكل أفضل، كلما أدركت بسرعة أنك تحلم.</string>
     <string name="onboarding_6_title">تقنيات الحلم الواضح</string>
     <string name="onboarding_6_body">يحتوي التطبيق على تقنيات مجربة للحلم الواضح:\n\n• MILD — نية الوضوح قبل النوم\n• WILD — الدخول في النوم مع الحفاظ على الوعي\n• WBTB — الاستيقاظ في منتصف الليل للممارسة\n• فحوصات الواقع — تطوير عادة\n\nيمكن دراسة كل تقنية بالتفصيل.</string>
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">الدردشة</string>
+    <string name="chat_coming_soon_title">دردشة المجتمع</string>
+    <string name="chat_coming_soon_message">هذا القسم قيد التطوير.\n\nقريباً سيكون هناك دردشة يمكن فيها لأصحاب الأحلام تبادل الخبرات ومساعدة بعضهم.\n\nابقَ على اطلاع!</string>
+    <string name="profile_title">ملفي الشخصي</string>
+    <string name="profile_name_label">اسم الحالم</string>
+    <string name="profile_name_placeholder">أدخل الاسم…</string>
+    <string name="profile_name_empty">لم يُحدَّد الاسم</string>
+    <string name="profile_save">حفظ</string>
+    <string name="reality_check_channel_name">فحص الواقع</string>
+    <string name="reality_check_channel_description">إشعارات فحص الواقع خلال النهار</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">هل تستمتع بالتطبيق؟</string>
+    <string name="review_dialog_body">تقييمك مهم جداً لنا. يساعد أصحاب الأحلام الآخرين في اكتشاف التطبيق وتطوير ممارسة الأحلام الواضحة.</string>
+    <string name="review_dialog_rate">⭐  تقييم التطبيق</string>
+    <string name="review_dialog_rated">✓  لقد قيّمت بالفعل</string>
+    <string name="review_dialog_later">ذكّرني بعد 7 أيام</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">اختر الخلفية</string>
+    <string name="bg_section_photos">صور</string>
+    <string name="bg_section_gradients">تدرجات</string>
+    <string name="bg_none">بدون خلفية</string>
+    <string name="bg_photo">صورة</string>
+    <string name="bg_dream_photo">حلم</string>
+    <string name="bg_location_photo">مكان</string>
+    <string name="bg_character_photo">شخصية</string>
+    <string name="bg_1">أعماق الفضاء</string>
+    <string name="bg_2">ليلة أرجوانية</string>
+    <string name="bg_3">غروب ذهبي</string>
+    <string name="bg_4">ضوء القمر</string>
+    <string name="bg_5">غابة زمردية</string>
+    <string name="bg_6">ضباب قرمزي</string>
+    <string name="bg_7">هاوية جليدية</string>
+    <string name="bg_8">غبار النجوم</string>
+    <string name="bg_9">ضباب وردي</string>
+    <string name="bg_10">كهرمان</string>
+    <string name="bg_11">الشفق القطبي</string>
+    <string name="bg_12">بركان</string>
+    <string name="bg_13">المحيط الهادئ</string>
+    <string name="bg_14">لافندر</string>
+    <string name="bg_15">ضباب</string>
 </resources>

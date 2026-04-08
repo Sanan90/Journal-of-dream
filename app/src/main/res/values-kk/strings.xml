@@ -494,4 +494,48 @@
     <string name="onboarding_5_body">Түстерімізде адамдар, жандықтар, кейіпкерлер толып жатады. Түс бейнелері оларды бақылауға көмектеседі.\n\n• Жиі кездесетін қайталанатын кейіпкерлерді сақтаңыз\n• Олар қандай түстерде кездесетінін қараңыз\n• Үлгілерді байқаңыз — бір бейне саналылық триггері болуы мүмкін\n\nТүстерінің тұрғындарын неғұрлым жақсы білсеңіз, соғұрлым ерте түс көріп жатқаныңызды сезесіз.</string>
     <string name="onboarding_6_title">Саналы түс техникалары</string>
     <string name="onboarding_6_body">Қолданбада саналы түске кіру үшін тексерілген техникалар бар:\n\n• MILD — ұйқыға дейін саналылық ниеті\n• WILD — санасын сақтап ұйқыға кіру\n• WBTB — жаттығу үшін түн ортасында ояну\n• Шындықты тексеру — әдет қалыптастыру\n\nӘр техниканы толық зерттеуге болады.</string>
+
+    <!-- v1.1.0 -->
+    <string name="nav_chat">Чат</string>
+    <string name="chat_coming_soon_title">Қоғамдастық чаты</string>
+    <string name="chat_coming_soon_message">Бұл бөлім әзірленуде.\n\nЖақын арада арман иелері тәжірибе бөлісіп, бір-біріне көмектесе алатын чат пайда болады.\n\nЖаңалықтарды күтіңіз!</string>
+    <string name="profile_title">Менің профилім</string>
+    <string name="profile_name_label">АРМАНДАУШЫ АТЫ</string>
+    <string name="profile_name_placeholder">Атыңызды енгізіңіз…</string>
+    <string name="profile_name_empty">Ат белгіленбеген</string>
+    <string name="profile_save">Сақтау</string>
+    <string name="reality_check_channel_name">Шындықты тексеру</string>
+    <string name="reality_check_channel_description">Күндіз шындықты тексеру хабарландырулары</string>
+
+    <!-- v1.1.0 — Диалог отзыва -->
+    <string name="review_dialog_title">Қолданба ұнады ма?</string>
+    <string name="review_dialog_body">Сіздің пікіріңіз бізге өте маңызды. Бұл басқа армандаушыларға қолданбаны табуға және саналы түс практикасын дамытуға көмектеседі.</string>
+    <string name="review_dialog_rate">⭐  Қолданбаны бағалау</string>
+    <string name="review_dialog_rated">✓  Мен бағалап қойдым</string>
+    <string name="review_dialog_later">7 күннен кейін еске салу</string>
+
+    <!-- v1.1.0 — Фоны -->
+    <string name="bg_picker_title">Фонды таңдау</string>
+    <string name="bg_section_photos">Фотолар</string>
+    <string name="bg_section_gradients">Градиенттер</string>
+    <string name="bg_none">Фонсыз</string>
+    <string name="bg_photo">Фото</string>
+    <string name="bg_dream_photo">Түс</string>
+    <string name="bg_location_photo">Орын</string>
+    <string name="bg_character_photo">Бейне</string>
+    <string name="bg_1">Терең ғарыш</string>
+    <string name="bg_2">Күлгін түн</string>
+    <string name="bg_3">Алтын күн батысы</string>
+    <string name="bg_4">Ай жарығы</string>
+    <string name="bg_5">Зумрад орман</string>
+    <string name="bg_6">Қызыл тұман</string>
+    <string name="bg_7">Мұзды тұңғиық</string>
+    <string name="bg_8">Жұлдыз шаңы</string>
+    <string name="bg_9">Қызғылт тұман</string>
+    <string name="bg_10">Янтарь</string>
+    <string name="bg_11">Солтүстік шұғыла</string>
+    <string name="bg_12">Жанартау</string>
+    <string name="bg_13">Тыныш мұхит</string>
+    <string name="bg_14">Сирень</string>
+    <string name="bg_15">Тұман</string>
 </resources>
