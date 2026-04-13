@@ -7,7 +7,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Palette
@@ -33,6 +32,14 @@ import com.dreamjournal.journalofdream.R
 import com.dreamjournal.journalofdream.ui.common.BackgroundPickerSheet
 import com.dreamjournal.journalofdream.ui.common.DreamBackgrounds
 import com.dreamjournal.journalofdream.viewmodel.LocationViewModel
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.text.input.ImeAction
+import kotlinx.coroutines.launch
 
 private val GoldLight = Color(0xFFF0D68C)
 private val GoldDark  = Color(0xFFD4A76A)
@@ -41,7 +48,7 @@ private val LocFieldBg = Brush.verticalGradient(
     listOf(Color(0xFF2E1650).copy(0.80f), Color(0xFF160930).copy(0.90f))
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun AddLocationScreen(
     navController: NavHostController,
@@ -84,7 +91,7 @@ fun AddLocationScreen(
         // Фон локации поверх
         DreamBackgroundLayer(selectedBackgroundId)
 
-        Column(Modifier.fillMaxSize().statusBarsPadding().imePadding()) {
+        Column(Modifier.fillMaxSize().statusBarsPadding()) {
             // Заголовок
             Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically) {
@@ -104,56 +111,76 @@ fun AddLocationScreen(
                     Modifier.size(32.dp).padding(end = 10.dp), contentScale = ContentScale.Fit)
             }
 
-            Column(
+            // LazyColumn — точно как в ViewLocationScreen (рабочий паттерн)
+            val bringIntoViewRequester = remember { BringIntoViewRequester() }
+            var descFieldFocused by remember { mutableStateOf(false) }
+            LaunchedEffect(locationDescription, descFieldFocused) {
+                if (descFieldFocused) bringIntoViewRequester.bringIntoView()
+            }
+
+            LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth().weight(1f)
-                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
+                    .weight(1f)
                     .padding(horizontal = 14.dp)
+                    .imePadding()
                     .navigationBarsPadding(),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                contentPadding = PaddingValues(top = 8.dp, bottom = 28.dp)
             ) {
-                Spacer(Modifier.height(4.dp))
-
-                LocFieldLabel(R.drawable.location_icon_gold, stringResource(R.string.location_field_name))
-                OutlinedTextField(
-                    value = locationName,
-                    onValueChange = { locationName = it; if (it.isNotBlank()) showError = false },
-                    placeholder = { Text(stringResource(R.string.location_field_name), color = Color.White.copy(0.35f)) },
-                    textStyle = TextStyle(color = Color.White, fontSize = 17.sp),
-                    singleLine = true, isError = showError,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(14.dp),
-                    colors = locFieldColors()
-                )
-                if (showError) Text(stringResource(R.string.location_error_name),
-                    color = Color(0xFFEF5350), fontSize = 11.sp)
-
-                LocFieldLabel(R.drawable.location_map_icon, stringResource(R.string.location_field_desc))
-                OutlinedTextField(
-                    value = locationDescription,
-                    onValueChange = { locationDescription = it },
-                    textStyle = TextStyle(color = Color.White, fontSize = 16.sp, lineHeight = 22.sp),
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 120.dp),
-                    shape = RoundedCornerShape(14.dp),
-                    colors = locFieldColors()
-                )
-
-                Spacer(Modifier.height(4.dp))
-                LocSaveButton(
-                    text = stringResource(R.string.btn_save),
-                    modifier = Modifier.align(Alignment.End),
-                    onClick = {
-                        if (locationName.isBlank()) { showError = true; return@LocSaveButton }
-                        locationViewModel.addLocation(
-                            locationName.trim(),
-                            locationDescription.trim(),
-                            selectedBackgroundId
+                item { LocFieldLabel(R.drawable.location_icon_gold, stringResource(R.string.location_field_name)) }
+                item {
+                    OutlinedTextField(
+                        value = locationName,
+                        onValueChange = { locationName = it; if (it.isNotBlank()) showError = false },
+                        placeholder = { Text(stringResource(R.string.location_field_name), color = Color.White.copy(0.35f)) },
+                        textStyle = TextStyle(color = Color.White, fontSize = 17.sp),
+                        singleLine = true, isError = showError,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = locFieldColors()
+                    )
+                    if (showError) Text(stringResource(R.string.location_error_name),
+                        color = Color(0xFFEF5350), fontSize = 11.sp)
+                }
+                item { LocFieldLabel(R.drawable.location_map_icon, stringResource(R.string.location_field_desc)) }
+                item {
+                    OutlinedTextField(
+                        value = locationDescription,
+                        onValueChange = { locationDescription = it },
+                        textStyle = TextStyle(color = Color.White, fontSize = 16.sp, lineHeight = 22.sp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 120.dp, max = 420.dp)
+                            .bringIntoViewRequester(bringIntoViewRequester)
+                            .onFocusChanged { descFieldFocused = it.isFocused },
+                        shape = RoundedCornerShape(14.dp),
+                        colors = locFieldColors(),
+                        singleLine = false,
+                        minLines = 5,
+                        maxLines = Int.MAX_VALUE,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default)
+                    )
+                }
+                item { Spacer(Modifier.height(4.dp)) }
+                item {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                        LocSaveButton(
+                            text = stringResource(R.string.btn_save),
+                            onClick = {
+                                if (locationName.isBlank()) { showError = true; return@LocSaveButton }
+                                locationViewModel.addLocation(
+                                    locationName.trim(),
+                                    locationDescription.trim(),
+                                    selectedBackgroundId
+                                )
+                                keyboardController?.hide()
+                                navController.popBackStack()
+                            }
                         )
-                        keyboardController?.hide()
-                        navController.popBackStack()
                     }
-                )
-                Spacer(Modifier.height(20.dp))
+                }
+                item { Spacer(Modifier.height(20.dp)) }
             }
         }
     }
@@ -206,7 +233,7 @@ fun LocAlertDialog(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun locFieldColors() = OutlinedTextFieldDefaults.colors(
     focusedBorderColor      = GoldLight.copy(0.65f),

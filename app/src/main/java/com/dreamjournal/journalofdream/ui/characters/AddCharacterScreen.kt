@@ -36,11 +36,18 @@ import com.dreamjournal.journalofdream.ui.locations.LocFieldLabel
 import com.dreamjournal.journalofdream.ui.locations.LocSaveButton
 import com.dreamjournal.journalofdream.ui.locations.locFieldColors
 import com.dreamjournal.journalofdream.viewmodel.CharacterViewModel
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.text.input.ImeAction
+import kotlinx.coroutines.launch
 
 private val GoldLightC = Color(0xFFF0D68C)
 private val PlayfairFamilyC = FontFamily(Font(R.font.playfair_display_bold, FontWeight.Bold))
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun AddCharacterScreen(
     navController: NavHostController,
@@ -128,12 +135,25 @@ fun AddCharacterScreen(
                     color = Color(0xFFEF5350), fontSize = 11.sp)
 
                 LocFieldLabel(R.drawable.magic_glass_icon, stringResource(R.string.character_field_desc))
+                val bringIntoViewRequester = remember { BringIntoViewRequester() }
+                var descFieldFocused by remember { mutableStateOf(false) }
+                LaunchedEffect(description, descFieldFocused) {
+                    if (descFieldFocused) bringIntoViewRequester.bringIntoView()
+                }
                 OutlinedTextField(
                     value = description, onValueChange = { description = it },
                     textStyle = TextStyle(color = Color.White, fontSize = 16.sp, lineHeight = 22.sp),
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 120.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 120.dp, max = 420.dp)
+                        .bringIntoViewRequester(bringIntoViewRequester)
+                        .onFocusChanged { descFieldFocused = it.isFocused },
                     shape = RoundedCornerShape(14.dp),
-                    colors = locFieldColors()
+                    colors = locFieldColors(),
+                    singleLine = false,
+                    minLines = 5,
+                    maxLines = Int.MAX_VALUE,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default)
                 )
 
                 Spacer(Modifier.height(4.dp))

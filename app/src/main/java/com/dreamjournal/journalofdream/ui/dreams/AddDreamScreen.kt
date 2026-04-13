@@ -60,9 +60,9 @@ import com.dreamjournal.journalofdream.viewmodel.CharacterViewModel
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.ui.focus.onFocusChanged
 
 fun getCurrentDate(): String =
     SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
@@ -104,8 +104,6 @@ fun AddDreamScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val scrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
-    val descriptionBringIntoViewRequester = remember { BringIntoViewRequester() }
 
     var title   by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
@@ -488,20 +486,25 @@ fun AddDreamScreen(
                 DreamSectionLabel(R.drawable.dream_field_content, stringResource(R.string.dream_field_desc))
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.Top) {
+                    val contentBringIntoView = remember { BringIntoViewRequester() }
+                    var contentFocused by remember { mutableStateOf(false) }
+                    LaunchedEffect(content, contentFocused) {
+                        if (contentFocused) contentBringIntoView.bringIntoView()
+                    }
                     OutlinedTextField(
                         value = content,
-                        onValueChange = { content = it
-                            coroutineScope.launch {
-                                delay(100)
-                                scrollState.scrollTo(scrollState.value + 60)
-                            }
-                        },
+                        onValueChange = { content = it },
                         textStyle = TextStyle(color = Color.White, fontSize = 16.sp, lineHeight = 24.sp),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
-                        modifier = Modifier.weight(1f).heightIn(min = 160.dp)
-                            .bringIntoViewRequester(descriptionBringIntoViewRequester),
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = 160.dp, max = 420.dp)
+                            .bringIntoViewRequester(contentBringIntoView)
+                            .onFocusChanged { contentFocused = it.isFocused },
                         shape = RoundedCornerShape(14.dp),
-                        colors = dreamFieldColors()
+                        colors = dreamFieldColors(),
+                        singleLine = false,
+                        maxLines = Int.MAX_VALUE
                     )
                     Box(
                         modifier = Modifier.padding(top = 2.dp).size(46.dp)

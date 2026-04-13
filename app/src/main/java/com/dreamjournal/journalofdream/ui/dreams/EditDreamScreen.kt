@@ -58,7 +58,7 @@ import com.dreamjournal.journalofdream.viewmodel.CharacterViewModel
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
+import androidx.compose.ui.focus.onFocusChanged
 
 private val GoldLightE      = Color(0xFFF0D68C)
 private val GoldDarkE       = Color(0xFFD4A76A)
@@ -82,8 +82,6 @@ fun EditDreamScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val dreamIdInt  = dreamId.toIntOrNull() ?: 0
     val scrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
-    val descriptionBringIntoViewRequester = remember { BringIntoViewRequester() }
 
     val dreamWithLocationsState by dreamViewModel.getDreamWithLocationsById(dreamIdInt).observeAsState()
     val allLocations  by locationViewModel.locations.observeAsState(emptyList())
@@ -431,20 +429,25 @@ fun EditDreamScreen(
                     }
 
                     DreamSectionLabel(R.drawable.dream_field_content, stringResource(R.string.dream_field_desc))
+                    val contentBringIntoView = remember { BringIntoViewRequester() }
+                    var contentFocused by remember { mutableStateOf(false) }
+                    LaunchedEffect(content, contentFocused) {
+                        if (contentFocused) contentBringIntoView.bringIntoView()
+                    }
                     OutlinedTextField(
                         value = content,
-                        onValueChange = { content = it
-                            coroutineScope.launch {
-                                delay(100)
-                                scrollState.scrollTo(scrollState.value + 60)
-                            }
-                        },
+                        onValueChange = { content = it },
                         textStyle = TextStyle(color = Color.White, fontSize = 16.sp, lineHeight = 24.sp),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
-                        modifier = Modifier.fillMaxWidth().heightIn(min = 180.dp)
-                            .bringIntoViewRequester(descriptionBringIntoViewRequester),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 180.dp, max = 420.dp)
+                            .bringIntoViewRequester(contentBringIntoView)
+                            .onFocusChanged { contentFocused = it.isFocused },
                         shape = RoundedCornerShape(14.dp),
-                        colors = editFieldColors()
+                        colors = editFieldColors(),
+                        singleLine = false,
+                        maxLines = Int.MAX_VALUE
                     )
 
                     // 4. Категория

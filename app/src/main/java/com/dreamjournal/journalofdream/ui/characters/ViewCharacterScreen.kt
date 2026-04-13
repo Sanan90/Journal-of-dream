@@ -46,6 +46,13 @@ import com.dreamjournal.journalofdream.ui.locations.locFieldColors
 import com.dreamjournal.journalofdream.viewmodel.CharacterViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.zIndex
+import kotlinx.coroutines.launch
 
 private fun formatDateShort(date: String): String = try {
     SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
@@ -56,7 +63,7 @@ private val GoldLightCh = Color(0xFFF0D68C)
 private val GoldDarkCh  = Color(0xFFD4A76A)
 private val PlayfairFamilyCh = FontFamily(Font(R.font.playfair_display_bold, FontWeight.Bold))
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ViewCharacterScreen(
     navController: NavHostController,
@@ -71,6 +78,7 @@ fun ViewCharacterScreen(
     var nameError  by remember { mutableStateOf(false) }
     var selectedBackgroundId by remember { mutableStateOf(0) }
     var showBackgroundPicker by remember { mutableStateOf(false) }
+    var showExitDialog     by remember { mutableStateOf(false) }
 
     characterWithDreams?.let { cwd ->
         val character  = cwd.character
@@ -82,6 +90,28 @@ fun ViewCharacterScreen(
         LaunchedEffect(character) {
             if (!isEditing) { nameInput = character.name; descInput = character.description }
             selectedBackgroundId = character.backgroundId
+        }
+
+        val hasUnsavedChanges = isEditing && (
+            nameInput != character.name ||
+            descInput != character.description ||
+            selectedBackgroundId != character.backgroundId
+        )
+        BackHandler(enabled = hasUnsavedChanges) { showExitDialog = true }
+
+        if (showExitDialog) {
+            LocAlertDialog(
+                title = stringResource(R.string.discard_title),
+                message = stringResource(R.string.discard_dream_message),
+                confirmText = stringResource(R.string.discard_confirm),
+                confirmColor = Color(0xFFEF5350),
+                onConfirm = {
+                    showExitDialog = false; isEditing = false; nameError = false
+                    nameInput = character.name; descInput = character.description
+                    selectedBackgroundId = character.backgroundId
+                },
+                onDismiss = { showExitDialog = false }
+            )
         }
 
         if (showDeleteDialog) {
@@ -105,8 +135,13 @@ fun ViewCharacterScreen(
                 Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = {
-                        if (isEditing) { isEditing = false; nameError = false; nameInput = character.name; descInput = character.description }
-                        else navController.popBackStack()
+                        when {
+                            hasUnsavedChanges -> showExitDialog = true
+                            isEditing -> { isEditing = false; nameError = false
+                                nameInput = character.name; descInput = character.description
+                                selectedBackgroundId = character.backgroundId }
+                            else -> navController.popBackStack()
+                        }
                     }) {
                         Icon(Icons.Default.ArrowBack, null, tint = GoldLightCh, modifier = Modifier.size(28.dp))
                     }
@@ -204,39 +239,73 @@ fun ViewCharacterScreen(
                     }
                 } else {
                     // ── РЕДАКТИРОВАНИЕ ────────────────────────────────────────
-                    Column(
-                        modifier = Modifier.fillMaxWidth().weight(1f)
-                            .padding(horizontal = 14.dp).navigationBarsPadding(),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+                    var descFieldFocused by remember { mutableStateOf(false) }
+
+                    LaunchedEffect(descInput, descFieldFocused) {
+                        if (descFieldFocused) {
+                            bringIntoViewRequester.bringIntoView()
+                        }
+                    }
+
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(horizontal = 14.dp)
+                            .imePadding()
+                            .navigationBarsPadding(),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        contentPadding = PaddingValues(top = 8.dp, bottom = 28.dp)
                     ) {
-                        Spacer(Modifier.height(4.dp))
-                        LocFieldLabel(R.drawable.dreamers_icon, stringResource(R.string.character_field_name))
-                        OutlinedTextField(
-                            value = nameInput,
-                            onValueChange = { nameInput = it; if (it.isNotBlank()) nameError = false },
-                            textStyle = TextStyle(color = Color.White, fontSize = 17.sp),
-                            singleLine = true, isError = nameError,
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(14.dp), colors = locFieldColors(),
-                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-                        )
-                        LocFieldLabel(R.drawable.magic_glass_icon, stringResource(R.string.character_field_desc))
-                        OutlinedTextField(
-                            value = descInput, onValueChange = { descInput = it },
-                            textStyle = TextStyle(color = Color.White, fontSize = 16.sp, lineHeight = 22.sp),
-                            modifier = Modifier.fillMaxWidth().heightIn(min = 120.dp),
-                            shape = RoundedCornerShape(14.dp), colors = locFieldColors()
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        LocSaveButton(
-                            text = stringResource(R.string.btn_save),
-                            modifier = Modifier.align(Alignment.End),
-                            onClick = {
-                                if (nameInput.isBlank()) { nameError = true; return@LocSaveButton }
-                                characterViewModel.updateCharacter(character.copy(name = nameInput.trim(), description = descInput.trim(), backgroundId = selectedBackgroundId))
-                                isEditing = false
+                        item {
+                            LocFieldLabel(R.drawable.dreamers_icon, stringResource(R.string.character_field_name))
+                        }
+                        item {
+                            OutlinedTextField(
+                                value = nameInput,
+                                onValueChange = { nameInput = it; if (it.isNotBlank()) nameError = false },
+                                textStyle = TextStyle(color = Color.White, fontSize = 17.sp),
+                                singleLine = true, isError = nameError,
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(14.dp), colors = locFieldColors(),
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                            )
+                        }
+                        item {
+                            LocFieldLabel(R.drawable.magic_glass_icon, stringResource(R.string.character_field_desc))
+                        }
+                        item {
+                            OutlinedTextField(
+                                value = descInput,
+                                onValueChange = { descInput = it },
+                                textStyle = TextStyle(color = Color.White, fontSize = 16.sp, lineHeight = 22.sp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(min = 120.dp, max = 420.dp)
+                                    .bringIntoViewRequester(bringIntoViewRequester)
+                                    .onFocusChanged { descFieldFocused = it.isFocused },
+                                shape = RoundedCornerShape(14.dp),
+                                colors = locFieldColors(),
+                                singleLine = false,
+                                minLines = 5,
+                                maxLines = Int.MAX_VALUE,
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default)
+                            )
+                        }
+                        item { Spacer(Modifier.height(4.dp)) }
+                        item {
+                            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                                LocSaveButton(
+                                    text = stringResource(R.string.btn_save),
+                                    onClick = {
+                                        if (nameInput.isBlank()) { nameError = true; return@LocSaveButton }
+                                        characterViewModel.updateCharacter(character.copy(name = nameInput.trim(), description = descInput.trim(), backgroundId = selectedBackgroundId))
+                                        isEditing = false
+                                    }
+                                )
                             }
-                        )
+                        }
                     }
                 }
             }
