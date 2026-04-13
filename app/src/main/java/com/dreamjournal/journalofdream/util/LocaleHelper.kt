@@ -35,7 +35,14 @@ object LocaleHelper {
         AppLanguage("it", "Italiano", "🇮🇹"),
         AppLanguage("zh", "中文", "🇨🇳"),
         AppLanguage("uk", "Українська", "🇺🇦"),
-        AppLanguage("kk", "Қазақша", "🇰🇿")
+        AppLanguage("kk", "Қазақша", "🇰🇿"),
+        AppLanguage("hi", "हिन्दी", "🇮🇳"),
+        AppLanguage("in", "Bahasa Indonesia", "🇮🇩"),
+        AppLanguage("vi", "Tiếng Việt", "🇻🇳"),
+        AppLanguage("th", "ภาษาไทย", "🇹🇭"),
+        AppLanguage("fa", "فارسی", "🇮🇷"),
+        AppLanguage("cs", "Čeština", "🇨🇿"),
+        AppLanguage("ro", "Română", "🇷🇴")
     )
 
     // Получить сохранённый код языка (или "system")
