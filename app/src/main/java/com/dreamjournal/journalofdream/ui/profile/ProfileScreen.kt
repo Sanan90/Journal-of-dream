@@ -35,6 +35,9 @@ import androidx.navigation.NavHostController
 import com.dreamjournal.journalofdream.R
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import kotlinx.coroutines.tasks.await
 
 private val GoldLight      = Color(0xFFF0D68C)
 private val GoldDark       = Color(0xFFD4A76A)
@@ -78,7 +81,18 @@ val dreamAvatars: List<AvatarItem> = listOf(
     AvatarItem(57, R.drawable.ava57), AvatarItem(58, R.drawable.ava58),
     AvatarItem(59, R.drawable.ava59), AvatarItem(60, R.drawable.ava60),
     AvatarItem(61, R.drawable.ava61), AvatarItem(62, R.drawable.ava62),
-    AvatarItem(63, R.drawable.ava63)
+    AvatarItem(63, R.drawable.ava63),
+    AvatarItem(64, R.drawable.ava64), AvatarItem(65, R.drawable.ava65),
+    AvatarItem(66, R.drawable.ava66), AvatarItem(67, R.drawable.ava67),
+    AvatarItem(68, R.drawable.ava68), AvatarItem(69, R.drawable.ava69),
+    AvatarItem(70, R.drawable.ava70), AvatarItem(71, R.drawable.ava71),
+    AvatarItem(72, R.drawable.ava72), AvatarItem(73, R.drawable.ava73),
+    AvatarItem(74, R.drawable.ava74), AvatarItem(75, R.drawable.ava75),
+    AvatarItem(76, R.drawable.ava76), AvatarItem(77, R.drawable.ava77),
+    AvatarItem(78, R.drawable.ava78), AvatarItem(79, R.drawable.ava79),
+    AvatarItem(80, R.drawable.ava80), AvatarItem(81, R.drawable.ava81),
+    AvatarItem(82, R.drawable.ava82), AvatarItem(83, R.drawable.ava83),
+    AvatarItem(84, R.drawable.ava84)
 )
 
 // Ключ аватара привязан к UID — каждый аккаунт хранит свой выбор
@@ -108,6 +122,35 @@ fun ProfileScreen(
     var showAvatarPicker by remember { mutableStateOf(false) }
 
     val currentAvatar = dreamAvatars.find { it.id == selectedAvatarId } ?: dreamAvatars.first()
+
+    // Загружаем профиль из Firestore при открытии — для синхронизации между устройствами
+    LaunchedEffect(currentUser?.uid) {
+        currentUser?.uid?.let { uid ->
+            try {
+                val doc = FirebaseFirestore.getInstance()
+                    .collection("users").document(uid)
+                    .get().await()
+                if (doc.exists()) {
+                    // Синхронизируем аватар
+                    doc.getLong("avatarId")?.toInt()?.let { remoteAvatarId ->
+                        if (remoteAvatarId != selectedAvatarId) {
+                            selectedAvatarId = remoteAvatarId
+                            prefs.edit().putInt(avatarKey(uid), remoteAvatarId).apply()
+                        }
+                    }
+                    // Синхронизируем имя (приоритет Firestore над Firebase Auth)
+                    doc.getString("displayName")?.takeIf { it.isNotBlank() }?.let { remoteName ->
+                        if (remoteName != displayName) {
+                            displayName = remoteName
+                            onNameUpdated(remoteName)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                // Нет сети — используем локальные данные, не критично
+            }
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(painterResource(R.drawable.new_fon), null,
@@ -206,9 +249,16 @@ fun ProfileScreen(
                                             .setDisplayName(nameInput.trim()).build()
                                         currentUser?.updateProfile(request)
                                             ?.addOnSuccessListener {
-                                                displayName = nameInput.trim()
+                                                val savedName = nameInput.trim()
+                                                displayName = savedName
                                                 editingName = false; isSaving = false
-                                                onNameUpdated(nameInput.trim())
+                                                onNameUpdated(savedName)
+                                                // Синхронизируем имя в Firestore для других устройств
+                                                currentUser.uid.let { uid ->
+                                                    FirebaseFirestore.getInstance()
+                                                        .collection("users").document(uid)
+                                                        .set(mapOf("displayName" to savedName), SetOptions.merge())
+                                                }
                                             }
                                             ?.addOnFailureListener { e -> saveError = e.message; isSaving = false }
                                     },
@@ -270,6 +320,12 @@ fun ProfileScreen(
             onSelected = { id ->
                 selectedAvatarId = id
                 prefs.edit().putInt(avatarKey(currentUser?.uid), id).apply()
+                // Синхронизируем аватар в Firestore для других устройств
+                currentUser?.uid?.let { uid ->
+                    FirebaseFirestore.getInstance()
+                        .collection("users").document(uid)
+                        .set(mapOf("avatarId" to id), SetOptions.merge())
+                }
                 showAvatarPicker = false
             },
             onDismiss = { showAvatarPicker = false }

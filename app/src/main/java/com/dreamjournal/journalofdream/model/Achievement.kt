@@ -220,8 +220,9 @@ val allAchievements = listOf(
         }
     ),
     Achievement(
-        "nightmare", "Кошмар", "Запишите сон с категорией «Кошмар»", "😱",
-        { dreams, _, _, _, _, _ -> dreams.any { it.category.equals("Кошмар", ignoreCase = true) } }
+        "nightmare", "Кошмар", "Запишите сон с категорией «Кошмары»", "😱",
+        // В БД категория хранится как "Кошмары" (внутренний ключ из CategoryViewModel)
+        { dreams, _, _, _, _, _ -> dreams.any { it.category.equals("Кошмары", ignoreCase = true) } }
     ),
     Achievement(
         "comeback", "Возвращение", "Вернитесь после перерыва в 7+ дней", "🔁",
@@ -255,12 +256,15 @@ val allAchievements = listOf(
         }
     ),
     Achievement(
-        "lucky_77", "Везунчик", "Запишите ровно 77 снов", "🎲",
-        { dreams, _, _, _, _, _ -> dreams.size == 77 }
+        "lucky_77", "Везунчик", "Запишите 77 снов", "🎲",
+        // >= а не == : достижение не должно исчезать при записи 78го сна
+        { dreams, _, _, _, _, _ -> dreams.size >= 77 }
     ),
     Achievement(
-        "ghost", "Призрак", "Создайте сон без заголовка", "👻",
-        { dreams, _, _, _, _, _ -> dreams.any { it.title.isBlank() } }
+        "ghost", "Призрак", "Запишите сон с заголовком в 1 символ", "👻",
+        // Сон без заголовка невозможен (валидация в AddDreamScreen).
+        // Засчитываем если заголовок очень короткий — 1-2 символа.
+        { dreams, _, _, _, _, _ -> dreams.any { it.title.trim().length <= 2 && it.title.isNotBlank() } }
     )
 )
 

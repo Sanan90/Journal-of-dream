@@ -23,6 +23,8 @@ import com.dreamjournal.journalofdream.ui.auth.hasPin
 import com.dreamjournal.journalofdream.ui.auth.isPinEnabled
 import com.dreamjournal.journalofdream.ui.auth.syncPinFromFirestore
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 import com.google.firebase.auth.FirebaseUser
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -154,9 +156,8 @@ fun JournalOfDreamApp() {
     // Определяем, гость ли текущий пользователь
     val isGuest = skipAuth.value
 
-    // Для отображения имени — отдельный mutableState чтобы обновлялся мгновенно
-    // при смене имени в ProfileScreen без перезапуска приложения
-    var displayName by remember {
+    // Для отображения имени — привязан к uid чтобы сбрасывался при смене аккаунта
+    var displayName by remember(currentUser.value?.uid) {
         mutableStateOf(
             currentUser.value?.let { user ->
                 val name = user.displayName
@@ -164,6 +165,22 @@ fun JournalOfDreamApp() {
                 else user.email?.substringBefore("@")
             }
         )
+    }
+
+    // При смене uid подтягиваем имя из Firestore — Firebase Auth не синхронизирует
+    // displayName между устройствами автоматически
+    LaunchedEffect(currentUser.value?.uid) {
+        val uid = currentUser.value?.uid ?: return@LaunchedEffect
+        try {
+            val doc = FirebaseFirestore.getInstance()
+                .collection("users").document(uid)
+                .get().await()
+            doc.getString("displayName")?.takeIf { it.isNotBlank() }?.let { remoteName ->
+                displayName = remoteName
+            }
+        } catch (e: Exception) {
+            // Нет сети — используем данные из Firebase Auth
+        }
     }
 
     // Определяем стартовый экран

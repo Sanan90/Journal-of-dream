@@ -63,17 +63,36 @@ fun AchievementsScreen(
     val pluralFew  = stringResource(R.string.plural_dreams_few)
     val pluralMany = stringResource(R.string.plural_dreams_many)
     val context    = LocalContext.current
-    val prefs      = remember { context.getSharedPreferences("achievements_prefs", android.content.Context.MODE_PRIVATE) }
+    // uid нужен для изоляции достижений по аккаунтам
+    val uid   = remember { com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: "guest" }
+    val prefs = remember(uid) { context.getSharedPreferences("achievements_prefs", android.content.Context.MODE_PRIVATE) }
 
-    val streak         = remember(dreams) { computeStreak(dreams) }
-    val usedCategories = remember(dreams) { dreams.map { it.category.ifBlank { context.getString(R.string.dreams_no_category) } }.toSet().size }
+    val streak         = remember(dreams) { computeStreakForgiving(dreams) }
+    val usedCategories = remember(dreams) {
+        // Исключаем "Без категории" — это не реальная категория
+        val noCategory = context.getString(R.string.dreams_no_category)
+        dreams.map { it.category.ifBlank { noCategory } }
+              .filter { it != noCategory && it != "Без категории" }
+              .toSet().size
+    }
 
     val locationsWithDreams by (locationViewModel?.getAllLocationsWithDreams()
         ?: androidx.lifecycle.MutableLiveData(emptyList())).observeAsState(emptyList())
 
     val locationsCount  = locationsWithDreams.size
     val maxDreamsInLoc  = remember(locationsWithDreams) { locationsWithDreams.maxOfOrNull { it.dreams.size } ?: 0 }
-    val maxLocsInDream  = remember(dreams) { dreams.maxOfOrNull { it.locationIds.size } ?: 0 }
+    // ФИКС: locationIds в Dream помечено @Ignore — Room его не заполняет, оно всегда пустое.
+    // Считаем количество локаций на сон через locationsWithDreams (обратная связь).
+    val maxLocsInDream  = remember(locationsWithDreams) {
+        // Строим карту dreamId -> количество локаций
+        val dreamLocCount = mutableMapOf<Int, Int>()
+        locationsWithDreams.forEach { locWithDreams ->
+            locWithDreams.dreams.forEach { dream ->
+                dreamLocCount[dream.localId] = (dreamLocCount[dream.localId] ?: 0) + 1
+            }
+        }
+        dreamLocCount.values.maxOrNull() ?: 0
+    }
 
     val currentLevel = remember(dreams) { getLevelForCount(dreams.size) }
     val nextLevel    = remember(currentLevel) { getNextLevel(currentLevel) }
@@ -84,11 +103,13 @@ fun AchievementsScreen(
         }.map { it.id }.toSet()
     }
 
-    val savedUnlocked = remember { prefs.getStringSet("unlocked_achievements", emptySet()) ?: emptySet() }
+    // Ключ содержит uid — изолируем достижения между аккаунтами
+    val prefsKey = "unlocked_achievements_$uid"
+    val savedUnlocked = remember(uid) { prefs.getStringSet(prefsKey, emptySet()) ?: emptySet() }
 
     val unlockedAchievements = remember(currentlyUnlocked, savedUnlocked) {
         (currentlyUnlocked + savedUnlocked).also { merged ->
-            prefs.edit().putStringSet("unlocked_achievements", merged).apply()
+            prefs.edit().putStringSet(prefsKey, merged).apply()
         }
     }
 
@@ -456,6 +477,51 @@ fun AchievementsCard(achievement: Achievement, isUnlocked: Boolean) {
 }
 
 // ─── Вспомогательная функция стрика (без изменений) ──────────────────────────
+/**
+ * "Прощающий" стрик — если сегодня сон ещё не записан, начинаем со вчера.
+ * Так достижение не слетает в течение дня до записи сна.
+ */
+fun computeStreakForgiving(dreams: List<com.dreamjournal.journalofdream.model.Dream>): Int {
+    if (dreams.isEmpty()) return 0
+    val dates = dreams.mapNotNull { dream ->
+        try {
+            val date = dream.date
+            if (date.matches(Regex("\\d{4}-\\d{2}-\\d{2}"))) date
+            else {
+                val sdf = java.text.SimpleDateFormat("dd.MM.yyyy", java.util.Locale.getDefault())
+                val cal = java.util.Calendar.getInstance()
+                cal.time = sdf.parse(date)!!
+                String.format("%04d-%02d-%02d",
+                    cal.get(java.util.Calendar.YEAR),
+                    cal.get(java.util.Calendar.MONTH) + 1,
+                    cal.get(java.util.Calendar.DAY_OF_MONTH))
+            }
+        } catch (e: Exception) { null }
+    }.toSortedSet(compareByDescending { it })
+
+    val cal = java.util.Calendar.getInstance()
+    val todayKey = String.format("%04d-%02d-%02d",
+        cal.get(java.util.Calendar.YEAR),
+        cal.get(java.util.Calendar.MONTH) + 1,
+        cal.get(java.util.Calendar.DAY_OF_MONTH))
+
+    // Если сегодня сна нет — начинаем со вчера (даём время до конца дня)
+    if (todayKey !in dates) {
+        cal.add(java.util.Calendar.DAY_OF_MONTH, -1)
+    }
+
+    var streak = 0
+    while (true) {
+        val key = String.format("%04d-%02d-%02d",
+            cal.get(java.util.Calendar.YEAR),
+            cal.get(java.util.Calendar.MONTH) + 1,
+            cal.get(java.util.Calendar.DAY_OF_MONTH))
+        if (key in dates) { streak++; cal.add(java.util.Calendar.DAY_OF_MONTH, -1) }
+        else break
+    }
+    return streak
+}
+
 fun computeStreak(dreams: List<com.dreamjournal.journalofdream.model.Dream>): Int {
     if (dreams.isEmpty()) return 0
     val dates = dreams.mapNotNull { dream ->

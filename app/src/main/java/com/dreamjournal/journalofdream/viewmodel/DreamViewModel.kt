@@ -77,6 +77,24 @@ class DreamViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /**
+     * Обновляет только фон сна — не трогает связи с локациями и образами.
+     * Читает текущие связи из БД и передаёт их обратно в upsertDream.
+     * Вызывать вместо updateDream(dream.copy(backgroundId=...), emptyList(), emptyList()).
+     */
+    fun updateDreamBackground(dream: Dream, newBackgroundId: Int) {
+        val uid = auth.currentUser?.uid ?: "guest"
+        viewModelScope.launch {
+            val locationIds   = localDb.dreamDao().getLocationIdsForDream(dream.localId)
+            val characterIds  = localDb.dreamDao().getCharacterIdsForDream(dream.localId)
+            val updatedDream  = dream.copy(backgroundId = newBackgroundId, ownerUid = uid)
+            val result = repository.upsertDream(updatedDream, locationIds, characterIds)
+            if (result.isFailure) {
+                _syncError.postValue("Изменения сохранены локально, но не синхронизированы — нет подключения к сети")
+            }
+        }
+    }
+
     fun deleteDream(dream: Dream) {
         viewModelScope.launch {
             localDb.dreamDao().deleteDreamLocationCrossRefs(dream.localId)

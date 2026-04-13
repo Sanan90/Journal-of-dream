@@ -58,6 +58,8 @@ import com.dreamjournal.journalofdream.R
 import com.dreamjournal.journalofdream.ui.profile.AvatarItem
 import com.dreamjournal.journalofdream.ui.profile.dreamAvatars
 import com.dreamjournal.journalofdream.util.ReviewHelper
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 private val GoldLight = Color(0xFFF0D68C)
 
@@ -92,7 +94,7 @@ fun MainScreen(
     LaunchedEffect(allDreams.size) {
         activity?.let { ReviewHelper.tryRequestReview(it, allDreams.size) }
         // Показываем собственный красивый диалог при 3+ снах
-        if (allDreams.size >= 0 && !isGuest) {
+        if (allDreams.size >= 3 && !isGuest) {
             val prefs = context.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE)
             val reviewDone     = prefs.getBoolean("review_dialog_done", false)
             val postponedUntil = prefs.getLong("review_postponed_until", 0L)
@@ -103,11 +105,31 @@ fun MainScreen(
         }
     }
 
-    // Аватар пользователя из SharedPreferences — привязан к UID аккаунта
+    // Аватар пользователя — читается из SharedPreferences + синхронизируется с Firestore
     val prefs = remember { context.getSharedPreferences("app_prefs", android.content.Context.MODE_PRIVATE) }
     val avatarKey = "avatar_id_${currentUid ?: "guest"}"
-    val avatarId = remember(avatarKey) { prefs.getInt(avatarKey, 1) }
+    var avatarId by remember(avatarKey) { mutableStateOf(prefs.getInt(avatarKey, 1)) }
     val currentAvatar = remember(avatarId) { dreamAvatars.find { it.id == avatarId } ?: dreamAvatars.first() }
+
+    // При запуске подтягиваем аватар и имя из Firestore (синхронизация между устройствами)
+    LaunchedEffect(currentUid) {
+        if (currentUid == null || isGuest) return@LaunchedEffect
+        try {
+            val doc = FirebaseFirestore.getInstance()
+                .collection("users").document(currentUid)
+                .get().await()
+            if (doc.exists()) {
+                doc.getLong("avatarId")?.toInt()?.let { remoteId ->
+                    if (remoteId != avatarId) {
+                        avatarId = remoteId
+                        prefs.edit().putInt(avatarKey, remoteId).apply()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            // Нет сети — используем локальные данные
+        }
+    }
 
     val lucidPercent = remember(allDreams) {
         if (allDreams.isEmpty()) 0

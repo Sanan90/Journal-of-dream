@@ -263,10 +263,9 @@ fun ViewDreamScreen(
             currentBackgroundId = dream.backgroundId,
             backgroundType = DreamBackgrounds.Type.DREAM,
             onBackgroundSelected = { newId ->
-                dreamViewModel.updateDream(
-                    dream.copy(backgroundId = newId),
-                    emptyList(), emptyList()
-                )
+                // ВАЖНО: используем updateDreamBackground а не updateDream(..., emptyList(), emptyList())
+                // чтобы не стереть связи сна с локациями и образами
+                dreamViewModel.updateDreamBackground(dream, newId)
                 showBackgroundPicker = false
             },
             onDismiss = { showBackgroundPicker = false }
@@ -317,7 +316,6 @@ private fun formatDreamDate(date: String): String {
         output.format(input.parse(date)!!)
     } catch (e: Exception) { date }
 }
-
 // ─── Универсальный слой фона (градиент или фото) ──────────────────────────────
 @Composable
 fun DreamBackgroundLayer(backgroundId: Int) {
